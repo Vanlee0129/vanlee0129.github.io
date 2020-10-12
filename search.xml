@@ -1,6 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>超好用的图片浏览器Irfanview</title>
+    <url>/Irfanview/</url>
+    <content><![CDATA[<hr>
+<p>再也不怕图片加载卡了。</p>
+<p>系统自带的图片浏览器和国产的图片浏览器不是卡就是广告非常多，看着就烦。</p>
+<p>所以，今天和大家推荐一款超好用的图片浏览器Irfanview，安装包仅3.37M。</p>
+<p>非常的精致小巧，开图片基本是秒开，不快你砍我好伐。</p>
+<blockquote>
+<p><a href="https://www.irfanview.com/main_download_engl.htm">官网下载地址</a> </p>
+</blockquote>
+<p>安装教程如下：</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/9708361-4551655311d56e73.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="057a1dfd746f63d3150c5b0caaff550.png"></p>
+<p><img src="https://upload-images.jianshu.io/upload_images/9708361-94b83d114d54150c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="09d81ca29f65081146ebe778d691d7c.png"></p>
+<p><img src="https://upload-images.jianshu.io/upload_images/9708361-2f04932a5140b62b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="a3ee830de8dad48e10aead84e4b1c37.png"></p>
+<p><img src="https://upload-images.jianshu.io/upload_images/9708361-977e0000f6bb75ff.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="41bf980aef3cda64f5a3be62be31a35.png"></p>
+<p>其余全部狂点下一步就行了  </p>
+<p>我保证开图片再也不卡了</p>
+]]></content>
+      <categories>
+        <category>实用工具</category>
+      </categories>
+  </entry>
+  <entry>
     <title>const</title>
     <url>/const/</url>
     <content><![CDATA[<p>首先来看看MDN的描述：</p>
@@ -26,29 +49,6 @@
         <tag>JavaScript</tag>
         <tag>const</tag>
       </tags>
-  </entry>
-  <entry>
-    <title>超好用的图片浏览器Irfanview</title>
-    <url>/Irfanview/</url>
-    <content><![CDATA[<hr>
-<p>再也不怕图片加载卡了。</p>
-<p>系统自带的图片浏览器和国产的图片浏览器不是卡就是广告非常多，看着就烦。</p>
-<p>所以，今天和大家推荐一款超好用的图片浏览器Irfanview，安装包仅3.37M。</p>
-<p>非常的精致小巧，开图片基本是秒开，不快你砍我好伐。</p>
-<blockquote>
-<p><a href="https://www.irfanview.com/main_download_engl.htm">官网下载地址</a> </p>
-</blockquote>
-<p>安装教程如下：</p>
-<p><img src="https://upload-images.jianshu.io/upload_images/9708361-4551655311d56e73.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="057a1dfd746f63d3150c5b0caaff550.png"></p>
-<p><img src="https://upload-images.jianshu.io/upload_images/9708361-94b83d114d54150c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="09d81ca29f65081146ebe778d691d7c.png"></p>
-<p><img src="https://upload-images.jianshu.io/upload_images/9708361-2f04932a5140b62b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="a3ee830de8dad48e10aead84e4b1c37.png"></p>
-<p><img src="https://upload-images.jianshu.io/upload_images/9708361-977e0000f6bb75ff.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="41bf980aef3cda64f5a3be62be31a35.png"></p>
-<p>其余全部狂点下一步就行了  </p>
-<p>我保证开图片再也不卡了</p>
-]]></content>
-      <categories>
-        <category>实用工具</category>
-      </categories>
   </entry>
   <entry>
     <title>深拷贝</title>
@@ -82,6 +82,34 @@
       </tags>
   </entry>
   <entry>
+    <title>使用Docker快速安装Jenkins</title>
+    <url>/dockerInstallJenkins/</url>
+    <content><![CDATA[<h2 id="安装环境"><a href="#安装环境" class="headerlink" title="安装环境"></a>安装环境</h2><p>CentOS Linux release 7.6.1810 (Core)<br>Docker version 19.03.12  </p>
+<h2 id="拉取镜像"><a href="#拉取镜像" class="headerlink" title="拉取镜像"></a>拉取镜像</h2><p>我这里安装的版本是<code>jenkinsci/blueocean</code>，可以去这里获取你需要的版本: <a href="https://hub.docker.com/_/jenkins?tab=tags">dockerHub</a>，注意版本之间的区别。  </p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> docker pull jenkinsci/blueocean</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="创建本地数据卷"><a href="#创建本地数据卷" class="headerlink" title="创建本地数据卷"></a>创建本地数据卷</h2><p>映射本地数据卷的路径为/data/jenkins_home/，想放别的地方可以自行修改</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> mkdir -p /data/jenkins_home/</span></span><br></pre></td></tr></table></figure>
+<p>需要修改下目录权限，因为当映射本地数据卷时，/data/jenkins_home/目录的拥有者为root用户，而容器中jenkins用户的 uid 为 1000。  </p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> chown -R 1000:1000 /data/jenkins_home/</span></span><br></pre></td></tr></table></figure>
+<h2 id="创建容器"><a href="#创建容器" class="headerlink" title="创建容器"></a>创建容器</h2><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> docker run -d --name jenkins -p 9021:8080 -p 50000:50000 -v /data/jenkins_home:/var/jenkins_home jenkins/jenkins:2.222.3-centos</span></span><br></pre></td></tr></table></figure>
+<p><code>-d</code> 标识是让 docker 容器在后台运行<br><code>--name</code> 定义一个容器的名字，如果没有指定，那么会自动生成一个随机数字符串当做UUID<br><code>-p</code> 9021:8080 端口映射，不被占用的合法端口都可以使用，我用的9021<br><code>-p</code> 50000:50000 端口映射<br><code>-v</code> /data/jenkins_home:/var/jenkins_home 绑定一个数据卷，/data/jenkins_home是刚才创建的本地数据卷</p>
+<h2 id="配置-Jenkins"><a href="#配置-Jenkins" class="headerlink" title="配置 Jenkins"></a>配置 Jenkins</h2><h3 id="打开-Jenkins"><a href="#打开-Jenkins" class="headerlink" title="打开 Jenkins"></a>打开 Jenkins</h3><p>通过浏览器访问 <code>http://xx.xx.xx.xx:9021/</code>（注意替换成你自己的IP和端口）进入初始页，如果 Jenkins 还没有启动完成，会显示如下内容<br><img src="https://ftp.bmp.ovh/imgs/2020/10/cd62632b22fa7dc1.png" alt="初始化界面"></p>
+<h3 id="输入管理员密码"><a href="#输入管理员密码" class="headerlink" title="输入管理员密码"></a>输入管理员密码</h3><p><img src="https://ftp.bmp.ovh/imgs/2020/10/305ce3669e4731d4.png" alt="输入管理员密码"><br>这里要求输入初始的管理员密码，根据提示密码在/var/jenkins_home/secrets/initialAdminPassword这个文件中，注意这个路径是 Docker 容器中的，所以我们通过如下命令获取  </p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> cat /data/jenkins_home/secrets/initialAdminPassword </span></span><br></pre></td></tr></table></figure>
+<p>输入密码后，点击<code>继续</code>    </p>
+<hr>
+<p>到此Jenkins就安装完毕，安装插件时可以先换源再安装，不然速度会很慢 </p>
+]]></content>
+      <categories>
+        <category>实用工具</category>
+      </categories>
+      <tags>
+        <tag>Jenkins</tag>
+        <tag>Docker</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>ES6中的let</title>
     <url>/es6-let/</url>
     <content><![CDATA[<p>let是ES6定义的新关键词，用于声明变量，例如：</p>
@@ -104,24 +132,6 @@
         <tag>JavaScript</tag>
         <tag>let</tag>
       </tags>
-  </entry>
-  <entry>
-    <title></title>
-    <url>/dockerInstallJenkins/</url>
-    <content><![CDATA[<h2 id="安装环境"><a href="#安装环境" class="headerlink" title="安装环境"></a>安装环境</h2><p>CentOS Linux release 7.6.1810 (Core)<br>Docker version 19.03.12  </p>
-<h2 id="拉取镜像"><a href="#拉取镜像" class="headerlink" title="拉取镜像"></a>拉取镜像</h2><p>我这里安装的版本是<code>jenkinsci/blueocean</code>，可以去这里获取你需要的版本: <a href="https://hub.docker.com/_/jenkins?tab=tags">dockerHub</a>  </p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> docker pull jenkinsci/blueocean</span></span><br><span class="line">```  </span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment"># 创建本地数据卷  </span></span></span><br><span class="line">映射本地数据卷的路径为/data/jenkins_home/，想放别的地方可以自行修改</span><br><span class="line">```shell</span><br><span class="line"><span class="meta">#</span><span class="bash"> mkdir -p /data/jenkins_home/</span></span><br></pre></td></tr></table></figure>
-<p>需要修改下目录权限，因为当映射本地数据卷时，/data/jenkins_home/目录的拥有者为root用户，而容器中jenkins用户的 uid 为 1000。  </p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> chown -R 1000:1000 /data/jenkins_home/</span></span><br></pre></td></tr></table></figure>
-<h2 id="创建容器"><a href="#创建容器" class="headerlink" title="创建容器"></a>创建容器</h2><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> docker run -d --name jenkins -p 9021:8080 -p 50000:50000 -v /data/jenkins_home:/var/jenkins_home jenkins/jenkins:2.222.3-centos</span></span><br></pre></td></tr></table></figure>
-<p><code>-d</code> 标识是让 docker 容器在后台运行<br><code>--name</code> 定义一个容器的名字，如果没有指定，那么会自动生成一个随机数字符串当做UUID<br><code>-p</code> 9021:8080 端口映射，不被占用的合法端口都可以使用，我用的9021<br><code>-p</code> 50000:50000 端口映射<br><code>-v</code> /data/jenkins_home:/var/jenkins_home 绑定一个数据卷，/data/jenkins_home是刚才创建的本地数据卷</p>
-<h2 id="配置-Jenkins"><a href="#配置-Jenkins" class="headerlink" title="配置 Jenkins"></a>配置 Jenkins</h2><h3 id="打开-Jenkins"><a href="#打开-Jenkins" class="headerlink" title="打开 Jenkins"></a>打开 Jenkins</h3><p>通过浏览器访问 <code>http://xx.xx.xx.xx:9021/</code>（注意替换成你自己的IP和端口）进入初始页，如果 Jenkins 还没有启动完成，会显示如下内容<br><img src="https://cdn.nlark.com/yuque/0/2020/png/1536171/1602465719430-6baff158-5892-4f47-a871-b46dd01957a5.png" alt="初始化界面"></p>
-<h3 id="输入管理员密码"><a href="#输入管理员密码" class="headerlink" title="输入管理员密码"></a>输入管理员密码</h3><p><img src="https://cdn.nlark.com/yuque/0/2020/png/1536171/1602465730614-64a02edf-2c48-4226-9787-0ebc48fd0145.png" alt="输入管理员密码"><br>这里要求输入初始的管理员密码，根据提示密码在/var/jenkins_home/secrets/initialAdminPassword这个文件中，注意这个路径是 Docker 容器中的，所以我们通过如下命令获取  </p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> cat /data/jenkins_home/secrets/initialAdminPassword </span></span><br></pre></td></tr></table></figure>
-<p>输入密码后，点击<code>继续</code>    </p>
-<hr>
-<p>到此Jenkins就安装完毕，安装插件时可以先换源再安装，不然速度会很慢 </p>
-]]></content>
   </entry>
   <entry>
     <title>Python草料二维码等计数二维码刷访客量</title>

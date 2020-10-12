@@ -9,7 +9,7 @@
     
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
   <title>
-     
+    使用Docker快速安装Jenkins |  
   </title>
   <meta name="generator" content="hexo-theme-ayer">
   
@@ -55,17 +55,30 @@
   data-scroll-reveal
 >
   <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  使用Docker快速安装Jenkins
+</h1>
+ 
+
+    </header>
      
     <div class="article-meta">
       <a href="/dockerInstallJenkins/" class="article-date">
-  <time datetime="2020-10-10T08:17:07.415Z" itemprop="datePublished">2020-10-10</time>
-</a>   
+  <time datetime="2020-10-10T08:34:44.000Z" itemprop="datePublished">2020-10-10</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%AE%9E%E7%94%A8%E5%B7%A5%E5%85%B7/">实用工具</a>
+  </div>
+  
 <div class="word_count">
     <span class="post-time">
         <span class="post-meta-item-icon">
             <i class="ri-quill-pen-line"></i>
             <span class="post-meta-item-text"> 字数统计:</span>
-            <span class="post-count">426</span>
+            <span class="post-count">435</span>
         </span>
     </span>
 
@@ -90,14 +103,17 @@
     <div class="article-entry" itemprop="articleBody">
        
   <h2 id="安装环境"><a href="#安装环境" class="headerlink" title="安装环境"></a>安装环境</h2><p>CentOS Linux release 7.6.1810 (Core)<br>Docker version 19.03.12  </p>
-<h2 id="拉取镜像"><a href="#拉取镜像" class="headerlink" title="拉取镜像"></a>拉取镜像</h2><p>我这里安装的版本是<code>jenkinsci/blueocean</code>，可以去这里获取你需要的版本: <a target="_blank" rel="noopener" href="https://hub.docker.com/_/jenkins?tab=tags">dockerHub</a>  </p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> docker pull jenkinsci/blueocean</span></span><br><span class="line">```  </span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment"># 创建本地数据卷  </span></span></span><br><span class="line">映射本地数据卷的路径为/data/jenkins_home/，想放别的地方可以自行修改</span><br><span class="line">```shell</span><br><span class="line"><span class="meta">#</span><span class="bash"> mkdir -p /data/jenkins_home/</span></span><br></pre></td></tr></table></figure>
+<h2 id="拉取镜像"><a href="#拉取镜像" class="headerlink" title="拉取镜像"></a>拉取镜像</h2><p>我这里安装的版本是<code>jenkinsci/blueocean</code>，可以去这里获取你需要的版本: <a target="_blank" rel="noopener" href="https://hub.docker.com/_/jenkins?tab=tags">dockerHub</a>，注意版本之间的区别。  </p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> docker pull jenkinsci/blueocean</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="创建本地数据卷"><a href="#创建本地数据卷" class="headerlink" title="创建本地数据卷"></a>创建本地数据卷</h2><p>映射本地数据卷的路径为/data/jenkins_home/，想放别的地方可以自行修改</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> mkdir -p /data/jenkins_home/</span></span><br></pre></td></tr></table></figure>
 <p>需要修改下目录权限，因为当映射本地数据卷时，/data/jenkins_home/目录的拥有者为root用户，而容器中jenkins用户的 uid 为 1000。  </p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> chown -R 1000:1000 /data/jenkins_home/</span></span><br></pre></td></tr></table></figure>
 <h2 id="创建容器"><a href="#创建容器" class="headerlink" title="创建容器"></a>创建容器</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> docker run -d --name jenkins -p 9021:8080 -p 50000:50000 -v /data/jenkins_home:/var/jenkins_home jenkins/jenkins:2.222.3-centos</span></span><br></pre></td></tr></table></figure>
 <p><code>-d</code> 标识是让 docker 容器在后台运行<br><code>--name</code> 定义一个容器的名字，如果没有指定，那么会自动生成一个随机数字符串当做UUID<br><code>-p</code> 9021:8080 端口映射，不被占用的合法端口都可以使用，我用的9021<br><code>-p</code> 50000:50000 端口映射<br><code>-v</code> /data/jenkins_home:/var/jenkins_home 绑定一个数据卷，/data/jenkins_home是刚才创建的本地数据卷</p>
-<h2 id="配置-Jenkins"><a href="#配置-Jenkins" class="headerlink" title="配置 Jenkins"></a>配置 Jenkins</h2><h3 id="打开-Jenkins"><a href="#打开-Jenkins" class="headerlink" title="打开 Jenkins"></a>打开 Jenkins</h3><p>通过浏览器访问 <code>http://xx.xx.xx.xx:9021/</code>（注意替换成你自己的IP和端口）进入初始页，如果 Jenkins 还没有启动完成，会显示如下内容<br><img src="https://cdn.nlark.com/yuque/0/2020/png/1536171/1602465719430-6baff158-5892-4f47-a871-b46dd01957a5.png" alt="初始化界面"></p>
-<h3 id="输入管理员密码"><a href="#输入管理员密码" class="headerlink" title="输入管理员密码"></a>输入管理员密码</h3><p><img src="https://cdn.nlark.com/yuque/0/2020/png/1536171/1602465730614-64a02edf-2c48-4226-9787-0ebc48fd0145.png" alt="输入管理员密码"><br>这里要求输入初始的管理员密码，根据提示密码在/var/jenkins_home/secrets/initialAdminPassword这个文件中，注意这个路径是 Docker 容器中的，所以我们通过如下命令获取  </p>
+<h2 id="配置-Jenkins"><a href="#配置-Jenkins" class="headerlink" title="配置 Jenkins"></a>配置 Jenkins</h2><h3 id="打开-Jenkins"><a href="#打开-Jenkins" class="headerlink" title="打开 Jenkins"></a>打开 Jenkins</h3><p>通过浏览器访问 <code>http://xx.xx.xx.xx:9021/</code>（注意替换成你自己的IP和端口）进入初始页，如果 Jenkins 还没有启动完成，会显示如下内容<br><img src="https://ftp.bmp.ovh/imgs/2020/10/cd62632b22fa7dc1.png" alt="初始化界面"></p>
+<h3 id="输入管理员密码"><a href="#输入管理员密码" class="headerlink" title="输入管理员密码"></a>输入管理员密码</h3><p><img src="https://ftp.bmp.ovh/imgs/2020/10/305ce3669e4731d4.png" alt="输入管理员密码"><br>这里要求输入初始的管理员密码，根据提示密码在/var/jenkins_home/secrets/initialAdminPassword这个文件中，注意这个路径是 Docker 容器中的，所以我们通过如下命令获取  </p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> cat /data/jenkins_home/secrets/initialAdminPassword </span></span><br></pre></td></tr></table></figure>
 <p>输入密码后，点击<code>继续</code>    </p>
 <hr>
@@ -169,6 +185,8 @@
 </div>
 
 <div id="share-mask"></div>  
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Docker/" rel="tag">Docker</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Jenkins/" rel="tag">Jenkins</a></li></ul>
+
     </footer>
   </div>
 
