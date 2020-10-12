@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search>
+  <entry>
+    <title>const</title>
+    <url>/const/</url>
+    <content><![CDATA[<p>首先来看看MDN的描述：</p>
+<blockquote>
+<p>const声明创建一个常量，其作用域可以是全局或本地声明的块。 与var变量不同，全局常量不会变为 window 对象的属性。需要一个常数的初始化器；也就是说，您必须在声明的同一语句中指定它的值（这是有道理的，因为以后不能更改）。<br />const声明创建一个值的只读引用。但这并不意味着它所持有的值是不可变的，只是变量标识符不能重新分配。例如，在引用内容是对象的情况下，这意味着可以改变对象的内容（例如，其参数）。<br />关于“暂存死区”的所有讨论都适用于let和const。一个常量不能和它所在作用域内的其他变量或函数拥有相同的名称。</p>
+</blockquote>
+<p>从MDN的描述中可以看出const如果用来声明一个值，那么这个值是不可变的，相当于常量。  </p>
+<p>如果声明一个对象，那么可以修改对象的内容，从某种意义上来说是可变的。</p>
+<p>考虑如下例子：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> a = <span class="number">1</span></span><br><span class="line"></span><br><span class="line">a = <span class="number">2</span> <span class="comment">//报错 </span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> b = &#123;</span><br><span class="line">    c: <span class="number">1</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">b = &#123;<span class="attr">c</span>: <span class="number">2</span>&#125; <span class="comment">//报错</span></span><br><span class="line"></span><br><span class="line">b.c = <span class="number">2</span> <span class="comment">//不报错  </span></span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(b) <span class="comment">// &#123;c: 2&#125;</span></span><br></pre></td></tr></table></figure>
+<p>当a初始化为1的时候，1是值类型Number，是直接存储在内存中的。而当b初始化为一个对象时，b所储存的其实这个对象的内存地址，这个地址是一个值类型。  </p>
+<p>此时b是对这个对象的引用。 </p>
+<p>所以将{c: 2}赋值给b时其实是相当于把一个新的对象的内存地址赋值给b了，改变了b原本存储的值。  </p>
+<p>当直接通过字面量修改c的值为2时，其实修改的是这个对象本身的内容，并没有改变这个对象的内存地址，所以是不报错的。  </p>
+<blockquote>
+<p>总结：const声明的变量是不可变的，但是如果这个变量是一个引用类型，可以修改这个引用类型本身的内容。  </p>
+</blockquote>
+]]></content>
+      <categories>
+        <category>ES6</category>
+      </categories>
+      <tags>
+        <tag>JavaScript</tag>
+        <tag>const</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>超好用的图片浏览器Irfanview</title>
+    <url>/Irfanview/</url>
+    <content><![CDATA[<hr>
+<p>再也不怕图片加载卡了。</p>
+<p>系统自带的图片浏览器和国产的图片浏览器不是卡就是广告非常多，看着就烦。</p>
+<p>所以，今天和大家推荐一款超好用的图片浏览器Irfanview，安装包仅3.37M。</p>
+<p>非常的精致小巧，开图片基本是秒开，不快你砍我好伐。</p>
+<blockquote>
+<p><a href="https://www.irfanview.com/main_download_engl.htm">官网下载地址</a> </p>
+</blockquote>
+<p>安装教程如下：</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/9708361-4551655311d56e73.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="057a1dfd746f63d3150c5b0caaff550.png"></p>
+<p><img src="https://upload-images.jianshu.io/upload_images/9708361-94b83d114d54150c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="09d81ca29f65081146ebe778d691d7c.png"></p>
+<p><img src="https://upload-images.jianshu.io/upload_images/9708361-2f04932a5140b62b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="a3ee830de8dad48e10aead84e4b1c37.png"></p>
+<p><img src="https://upload-images.jianshu.io/upload_images/9708361-977e0000f6bb75ff.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="41bf980aef3cda64f5a3be62be31a35.png"></p>
+<p>其余全部狂点下一步就行了  </p>
+<p>我保证开图片再也不卡了</p>
+]]></content>
+      <categories>
+        <category>实用工具</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>深拷贝</title>
+    <url>/deepCopy/</url>
+    <content><![CDATA[<p>由于JS中的数据类型分为值类型和引用类型，所以对于引用类型来说变量储存的其实是地址而不是这个对象本身。考虑如下例子：  </p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">let</span> a = &#123;</span><br><span class="line">    b: <span class="number">1</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> c = a</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(a, c) <span class="comment">// &#123;b: 1&#125; &#123;b: 1&#125;</span></span><br><span class="line"></span><br><span class="line">a.b = <span class="number">2</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(c) <span class="comment">// &#123;b: 2&#125;</span></span><br></pre></td></tr></table></figure>
+<p>从上面例子可以看出a变化后c也跟着变了，显然这不是我们想要的结果。出现以上的原因是直接将a赋值给c是一种浅拷贝。实际上是将a所对应的地址赋值给了c。  </p>
+<p>为了解决这个问题，我们需要深拷贝。对于以上例子我们可以采用以下办法：  </p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">let</span> c = <span class="built_in">JSON</span>.parse(<span class="built_in">JSON</span>.stringify(a))  </span><br></pre></td></tr></table></figure>
+
+<p>但是这个方法有以下局限性：  </p>
+<ul>
+<li><p>他无法实现对函数 、RegExp等特殊对象的克隆</p>
+</li>
+<li><p>会抛弃对象的constructor,所有的构造函数会指向Object</p>
+</li>
+<li><p>对象有循环引用,会报错  </p>
+</li>
+</ul>
+<p>在生产环境我们一般使用第三方库成熟的方法，但是核心原理其实是一样的。  </p>
+<p>现在们来实现一个简版的深拷贝：  </p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">let</span> deepCloneOne = <span class="function">(<span class="params">initalObj</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> obj = &#123;&#125;</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">typeof</span> initalObj !== <span class="string">&#x27;object&#x27;</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> initalObj</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">const</span> key <span class="keyword">in</span> initalObj) &#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">typeof</span> initalObj[key] === <span class="string">&#x27;object&#x27;</span>) &#123;</span><br><span class="line">            <span class="comment">//对数组特殊处理</span></span><br><span class="line">            <span class="keyword">if</span> (<span class="built_in">Array</span>.isArray(initalObj[key])) &#123;</span><br><span class="line">                <span class="comment">//用map方法返回新数组，将数组中的元素递归</span></span><br><span class="line">                obj[key] = initalObj[key].map(<span class="function"><span class="params">item</span> =&gt;</span> &#123;</span><br><span class="line">                    <span class="built_in">this</span>.deepCloneOne(item)</span><br><span class="line">                &#125;)</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="comment">//递归返回新对象</span></span><br><span class="line">                obj[key] = <span class="built_in">this</span>.deepCloneOne(initalObj[key])</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (<span class="keyword">typeof</span> initalObj[key] === <span class="string">&#x27;function&#x27;</span>) &#123;</span><br><span class="line">            <span class="comment">//返回新函数</span></span><br><span class="line">            obj[key] = initalObj[key].bind(obj)</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="comment">//基本类型直接返回</span></span><br><span class="line">            obj[key] = initalObj[key]</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> obj</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 深拷贝</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param <span class="type">&#123;Object&#125;</span></span>&#125; obj </span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">deepCloneTwo</span>(<span class="params">obj = &#123;&#125;</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">typeof</span> obj !== <span class="string">&#x27;object&#x27;</span> || obj == <span class="literal">null</span>) &#123;</span><br><span class="line">        <span class="comment">//obj是null或者不是对象</span></span><br><span class="line">        <span class="keyword">return</span> obj</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//初始化返回结果</span></span><br><span class="line">    <span class="keyword">let</span> result</span><br><span class="line">    <span class="keyword">if</span> (obj <span class="keyword">instanceof</span> <span class="built_in">Array</span>) &#123;</span><br><span class="line">        result = []</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        result = &#123;&#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">const</span> key <span class="keyword">in</span> obj) &#123;</span><br><span class="line">        <span class="keyword">if</span> (obj.hasOwnProperty(key)) &#123;</span><br><span class="line">            <span class="comment">//保证key不是原型的属性</span></span><br><span class="line">            <span class="keyword">if</span> (obj.hasOwnProperty(key)) &#123;</span><br><span class="line">                <span class="comment">//递归调用</span></span><br><span class="line">                result[key] = deepCloneTwo(obj[key])</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//返回结果</span></span><br><span class="line">    <span class="keyword">return</span> result</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>核心思路就先判断这个对象是哪种对象，然后根据这种对象的特点去构造一个新的对象，用递归的方法将这个对象的所有属性都挨个赋给新对象。  </p>
+<p>深拷贝产生的新对象和原来的对象没有一点关系，只是长得一样，但是是存储在一块新开辟的空间，两者之间不会互相影响。</p>
+]]></content>
+      <categories>
+        <category>ES6</category>
+      </categories>
+      <tags>
+        <tag>深拷贝</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>ES6中的let</title>
+    <url>/es6-let/</url>
+    <content><![CDATA[<p>let是ES6定义的新关键词，用于声明变量，例如：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">let</span> a = <span class="number">1</span></span><br><span class="line"><span class="built_in">console</span>.log(a) <span class="comment">//1</span></span><br></pre></td></tr></table></figure>
+<p>let声明的变量不能重复声明，例如： </p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">let</span> a = <span class="number">1</span> </span><br><span class="line"><span class="keyword">let</span> a = <span class="number">2</span> <span class="comment">//Identifier &#x27;a&#x27; has already been declared</span></span><br></pre></td></tr></table></figure>
+<p>let也可以不用初始化，例如：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">let</span> a;</span><br><span class="line"><span class="built_in">console</span>.log(a)<span class="comment">// undefined</span></span><br></pre></td></tr></table></figure>
+<p>let是块级作用域，可以解决for循环中变量泄露的问题，例如: </p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> arr = []</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; <span class="number">10</span>; i++) &#123;</span><br><span class="line">    arr.push(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;<span class="built_in">console</span>.log(i)&#125;)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">arr.forEach(<span class="function"><span class="keyword">function</span>(<span class="params">arr</span>)</span>&#123;</span><br><span class="line">    arr() <span class="comment">//打印10次10</span></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<p>上面为什么输出10次10呢？因为为变量 i 在循环的每次迭代中都被共享了，意味着循环内创建的那些函数都拥有对于同一 变量的引用。在循环结束后，变量 i 的值会是 10 ，因此当 console.log(i) 被调用时， 每次都打印出 10 。  </p>
+<p>现在用let改写这个例子： </p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> arr = []</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; <span class="number">10</span>; i++) &#123;</span><br><span class="line">    arr.push(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;<span class="built_in">console</span>.log(i)&#125;)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">arr.forEach(<span class="function"><span class="keyword">function</span>(<span class="params">arr</span>)</span>&#123;</span><br><span class="line">    arr() <span class="comment">//0-9</span></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<p>为什么let可以解决这个问题呢？因为在每次迭代中，let都会创建一个新的同名变量并对其进行初始化。在循环中 let 声明每次都创建了一个新的 i 变量，因此在循环内部创建的函数获得了各自的 i 副 本，而每个 i 副本的值都在每次循环迭代声明变量的时候被确定了。</p>
+]]></content>
+      <categories>
+        <category>ES6</category>
+      </categories>
+      <tags>
+        <tag>JavaScript</tag>
+        <tag>let</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title></title>
+    <url>/dockerInstallJenkins/</url>
+    <content><![CDATA[<h2 id="安装环境"><a href="#安装环境" class="headerlink" title="安装环境"></a>安装环境</h2><p>CentOS Linux release 7.6.1810 (Core)<br>Docker version 19.03.12  </p>
+<h2 id="拉取镜像"><a href="#拉取镜像" class="headerlink" title="拉取镜像"></a>拉取镜像</h2><p>我这里安装的版本是<code>jenkinsci/blueocean</code>，可以去这里获取你需要的版本: <a href="https://hub.docker.com/_/jenkins?tab=tags">dockerHub</a>  </p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> docker pull jenkinsci/blueocean</span></span><br><span class="line">```  </span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment"># 创建本地数据卷  </span></span></span><br><span class="line">映射本地数据卷的路径为/data/jenkins_home/，想放别的地方可以自行修改</span><br><span class="line">```shell</span><br><span class="line"><span class="meta">#</span><span class="bash"> mkdir -p /data/jenkins_home/</span></span><br></pre></td></tr></table></figure>
+<p>需要修改下目录权限，因为当映射本地数据卷时，/data/jenkins_home/目录的拥有者为root用户，而容器中jenkins用户的 uid 为 1000。  </p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> chown -R 1000:1000 /data/jenkins_home/</span></span><br></pre></td></tr></table></figure>
+<h2 id="创建容器"><a href="#创建容器" class="headerlink" title="创建容器"></a>创建容器</h2><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> docker run -d --name jenkins -p 9021:8080 -p 50000:50000 -v /data/jenkins_home:/var/jenkins_home jenkins/jenkins:2.222.3-centos</span></span><br></pre></td></tr></table></figure>
+<p><code>-d</code> 标识是让 docker 容器在后台运行<br><code>--name</code> 定义一个容器的名字，如果没有指定，那么会自动生成一个随机数字符串当做UUID<br><code>-p</code> 9021:8080 端口映射，不被占用的合法端口都可以使用，我用的9021<br><code>-p</code> 50000:50000 端口映射<br><code>-v</code> /data/jenkins_home:/var/jenkins_home 绑定一个数据卷，/data/jenkins_home是刚才创建的本地数据卷</p>
+<h2 id="配置-Jenkins"><a href="#配置-Jenkins" class="headerlink" title="配置 Jenkins"></a>配置 Jenkins</h2><h3 id="打开-Jenkins"><a href="#打开-Jenkins" class="headerlink" title="打开 Jenkins"></a>打开 Jenkins</h3><p>通过浏览器访问 <code>http://xx.xx.xx.xx:9021/</code>（注意替换成你自己的IP和端口）进入初始页，如果 Jenkins 还没有启动完成，会显示如下内容<br><img src="https://cdn.nlark.com/yuque/0/2020/png/1536171/1602465719430-6baff158-5892-4f47-a871-b46dd01957a5.png" alt="初始化界面"></p>
+<h3 id="输入管理员密码"><a href="#输入管理员密码" class="headerlink" title="输入管理员密码"></a>输入管理员密码</h3><p><img src="https://cdn.nlark.com/yuque/0/2020/png/1536171/1602465730614-64a02edf-2c48-4226-9787-0ebc48fd0145.png" alt="输入管理员密码"><br>这里要求输入初始的管理员密码，根据提示密码在/var/jenkins_home/secrets/initialAdminPassword这个文件中，注意这个路径是 Docker 容器中的，所以我们通过如下命令获取  </p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> cat /data/jenkins_home/secrets/initialAdminPassword </span></span><br></pre></td></tr></table></figure>
+<p>输入密码后，点击<code>继续</code>    </p>
+<hr>
+<p>到此Jenkins就安装完毕，安装插件时可以先换源再安装，不然速度会很慢 </p>
+]]></content>
+  </entry>
+  <entry>
+    <title>Python草料二维码等计数二维码刷访客量</title>
+    <url>/python/</url>
+    <content><![CDATA[<p>在生活中，很多时候被人邀请扫一扫二维码，刷一刷访客量。但是一个ip只能算作一个访问量，对此我们用Python来实现批量刷访客量。</p>
+<p>Python版本3.6</p>
+<p>首先上代码</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/python  </span></span><br><span class="line"><span class="comment"># -*- coding: UTF-8 -*-  </span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> urllib.parse  </span><br><span class="line"><span class="keyword">import</span> urllib.request  </span><br><span class="line"><span class="keyword">import</span> time  </span><br><span class="line"><span class="keyword">from</span> lxml <span class="keyword">import</span> etree</span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">from</span> selenium <span class="keyword">import</span> webdriver</span><br><span class="line"><span class="keyword">import</span> random</span><br><span class="line"></span><br><span class="line"><span class="comment"># 短网址还原 </span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">revertShortLink</span>(<span class="params">url</span>):</span></span><br><span class="line">	re = requests.head(url)</span><br><span class="line">	<span class="keyword">return</span> re.headers.get(<span class="string">&#x27;location&#x27;</span>)</span><br><span class="line"></span><br><span class="line">URL_1 = revertShortLink(<span class="string">&quot;your revertShortLink&quot;</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">global</span> url_path  </span><br><span class="line">url_path = [<span class="number">3</span>]  </span><br><span class="line">  </span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">verif_ip</span>(<span class="params">ip,port</span>):</span>    <span class="comment"># 验证ip有效性  </span></span><br><span class="line">	</span><br><span class="line">	test_url = URL_1</span><br><span class="line">	</span><br><span class="line">	browser = webdriver.Chrome()</span><br><span class="line"></span><br><span class="line">	browser.get(URL_1)</span><br><span class="line">	browser.quit()</span><br><span class="line">	time.sleep(random.randint(<span class="number">1</span>,<span class="number">20</span>))  </span><br><span class="line"></span><br><span class="line">file = open(<span class="string">&quot;ip.txt&quot;</span>)</span><br><span class="line"></span><br><span class="line">counter = <span class="number">0</span> </span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">while</span> <span class="number">1</span>:  </span><br><span class="line">	lines = file.readlines(<span class="number">100000</span>)  </span><br><span class="line">	<span class="keyword">if</span> <span class="keyword">not</span> lines:  </span><br><span class="line">		<span class="keyword">break</span>  </span><br><span class="line">	<span class="keyword">for</span> data <span class="keyword">in</span> lines:</span><br><span class="line">		counter += <span class="number">1</span>  </span><br><span class="line">		print((data.split(<span class="string">&quot;:&quot;</span>)[<span class="number">0</span>]))</span><br><span class="line">		print(<span class="string">&quot;cishu:&quot;</span>,counter)  </span><br><span class="line">	</span><br><span class="line">	   </span><br><span class="line"></span><br><span class="line">	 </span><br><span class="line">		verif_ip(data.split(<span class="string">&quot;:&quot;</span>)[<span class="number">0</span>],data.split(<span class="string">&quot;:&quot;</span>)[<span class="number">1</span>])</span><br></pre></td></tr></table></figure>
+<p>全部代码我已经打包放在我的Github上面了，直接下载即可。<a href="https://github.com/Vanlee0129/caoliaoscan">下载地址</a></p>
+<p>ip.txt文件就是用来存放代理ip的，相当于一个简陋的代理池，手动复制进去即可，我提供了一些，如果不够可以再自己去找一些。</p>
+<p>ip可以在66ip等网站去提取，用多少提多少。以后再也不担心刷二维码访客量啦！</p>
+]]></content>
+      <categories>
+        <category>Python</category>
+      </categories>
+      <tags>
+        <tag>小技巧</tag>
+      </tags>
+  </entry>
+</search>

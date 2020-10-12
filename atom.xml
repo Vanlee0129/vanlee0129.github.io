@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>vanlee0129</title>
+  
+  
+  <link href="https://vanlee0129.gitee.io/atom.xml" rel="self"/>
+  
+  <link href="https://vanlee0129.gitee.io/"/>
+  <updated>2020-10-12T01:24:08.661Z</updated>
+  <id>https://vanlee0129.gitee.io/</id>
+  
+  <author>
+    <name>vanlee</name>
+    
+  </author>
+  
+  <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title></title>
+    <link href="https://vanlee0129.gitee.io/dockerInstallJenkins/"/>
+    <id>https://vanlee0129.gitee.io/dockerInstallJenkins/</id>
+    <published>2020-10-10T08:17:07.415Z</published>
+    <updated>2020-10-12T01:24:08.661Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h2 id=&quot;安装环境&quot;&gt;&lt;a href=&quot;#安装环境&quot; class=&quot;headerlink&quot; title=&quot;安装环境&quot;&gt;&lt;/a&gt;安装环境&lt;/h2&gt;&lt;p&gt;CentOS Linux release 7.6.1810 (Core)&lt;br&gt;Docker version</summary>
+        
+      
+    
+    
+    
+    
+  </entry>
+  
+  <entry>
+    <title>const</title>
+    <link href="https://vanlee0129.gitee.io/const/"/>
+    <id>https://vanlee0129.gitee.io/const/</id>
+    <published>2020-09-09T05:34:44.000Z</published>
+    <updated>2020-09-09T05:58:34.154Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;首先来看看MDN的描述：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;const声明创建一个常量，其作用域可以是全局或本地声明的块。 与var变量不同，全局常量不会变为 window</summary>
+        
+      
+    
+    
+    
+    <category term="ES6" scheme="https://vanlee0129.gitee.io/categories/ES6/"/>
+    
+    
+    <category term="JavaScript" scheme="https://vanlee0129.gitee.io/tags/JavaScript/"/>
+    
+    <category term="const" scheme="https://vanlee0129.gitee.io/tags/const/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>深拷贝</title>
+    <link href="https://vanlee0129.gitee.io/deepCopy/"/>
+    <id>https://vanlee0129.gitee.io/deepCopy/</id>
+    <published>2020-09-07T10:23:36.000Z</published>
+    <updated>2020-09-07T11:03:27.289Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;由于JS中的数据类型分为值类型和引用类型，所以对于引用类型来说变量储存的其实是地址而不是这个对象本身。考虑如下例子：  &lt;/p&gt;
+&lt;figure class=&quot;highlight javascript&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td</summary>
+        
+      
+    
+    
+    
+    <category term="ES6" scheme="https://vanlee0129.gitee.io/categories/ES6/"/>
+    
+    
+    <category term="深拷贝" scheme="https://vanlee0129.gitee.io/tags/%E6%B7%B1%E6%8B%B7%E8%B4%9D/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>超好用的图片浏览器Irfanview</title>
+    <link href="https://vanlee0129.gitee.io/Irfanview/"/>
+    <id>https://vanlee0129.gitee.io/Irfanview/</id>
+    <published>2020-09-06T18:00:00.000Z</published>
+    <updated>2020-09-06T19:20:33.500Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;hr&gt;
+&lt;p&gt;再也不怕图片加载卡了。&lt;/p&gt;
+&lt;p&gt;系统自带的图片浏览器和国产的图片浏览器不是卡就是广告非常多，看着就烦。&lt;/p&gt;
+&lt;p&gt;所以，今天和大家推荐一款超好用的图片浏览器Irfanview，安装包仅3.37M。&lt;/p&gt;
+&lt;p&gt;非常的精致小巧，开图片基本是秒开，不快你砍</summary>
+        
+      
+    
+    
+    
+    <category term="实用工具" scheme="https://vanlee0129.gitee.io/categories/%E5%AE%9E%E7%94%A8%E5%B7%A5%E5%85%B7/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>Python草料二维码等计数二维码刷访客量</title>
+    <link href="https://vanlee0129.gitee.io/python/"/>
+    <id>https://vanlee0129.gitee.io/python/</id>
+    <published>2020-09-06T12:22:49.000Z</published>
+    <updated>2020-09-06T12:24:58.976Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;在生活中，很多时候被人邀请扫一扫二维码，刷一刷访客量。但是一个ip只能算作一个访问量，对此我们用Python来实现批量刷访客量。&lt;/p&gt;
+&lt;p&gt;Python版本3.6&lt;/p&gt;
+&lt;p&gt;首先上代码&lt;/p&gt;
+&lt;figure class=&quot;highlight</summary>
+        
+      
+    
+    
+    
+    <category term="Python" scheme="https://vanlee0129.gitee.io/categories/Python/"/>
+    
+    
+    <category term="小技巧" scheme="https://vanlee0129.gitee.io/tags/%E5%B0%8F%E6%8A%80%E5%B7%A7/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>ES6中的let</title>
+    <link href="https://vanlee0129.gitee.io/es6-let/"/>
+    <id>https://vanlee0129.gitee.io/es6-let/</id>
+    <published>2020-09-06T11:00:00.000Z</published>
+    <updated>2020-09-06T12:00:36.744Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;let是ES6定义的新关键词，用于声明变量，例如：&lt;/p&gt;
+&lt;figure class=&quot;highlight javascript&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span</summary>
+        
+      
+    
+    
+    
+    <category term="ES6" scheme="https://vanlee0129.gitee.io/categories/ES6/"/>
+    
+    
+    <category term="JavaScript" scheme="https://vanlee0129.gitee.io/tags/JavaScript/"/>
+    
+    <category term="let" scheme="https://vanlee0129.gitee.io/tags/let/"/>
+    
+  </entry>
+  
+</feed>
