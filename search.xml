@@ -24,6 +24,33 @@
       </categories>
   </entry>
   <entry>
+    <title>const</title>
+    <url>/const/</url>
+    <content><![CDATA[<p>首先来看看MDN的描述：</p>
+<blockquote>
+<p>const声明创建一个常量，其作用域可以是全局或本地声明的块。 与var变量不同，全局常量不会变为 window 对象的属性。需要一个常数的初始化器；也就是说，您必须在声明的同一语句中指定它的值（这是有道理的，因为以后不能更改）。<br />const声明创建一个值的只读引用。但这并不意味着它所持有的值是不可变的，只是变量标识符不能重新分配。例如，在引用内容是对象的情况下，这意味着可以改变对象的内容（例如，其参数）。<br />关于“暂存死区”的所有讨论都适用于let和const。一个常量不能和它所在作用域内的其他变量或函数拥有相同的名称。</p>
+</blockquote>
+<p>从MDN的描述中可以看出const如果用来声明一个值，那么这个值是不可变的，相当于常量。  </p>
+<p>如果声明一个对象，那么可以修改对象的内容，从某种意义上来说是可变的。</p>
+<p>考虑如下例子：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> a = <span class="number">1</span></span><br><span class="line"></span><br><span class="line">a = <span class="number">2</span> <span class="comment">//报错 </span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> b = &#123;</span><br><span class="line">    c: <span class="number">1</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">b = &#123;<span class="attr">c</span>: <span class="number">2</span>&#125; <span class="comment">//报错</span></span><br><span class="line"></span><br><span class="line">b.c = <span class="number">2</span> <span class="comment">//不报错  </span></span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(b) <span class="comment">// &#123;c: 2&#125;</span></span><br></pre></td></tr></table></figure>
+<p>当a初始化为1的时候，1是值类型Number，是直接存储在内存中的。而当b初始化为一个对象时，b所储存的其实这个对象的内存地址，这个地址是一个值类型。  </p>
+<p>此时b是对这个对象的引用。 </p>
+<p>所以将{c: 2}赋值给b时其实是相当于把一个新的对象的内存地址赋值给b了，改变了b原本存储的值。  </p>
+<p>当直接通过字面量修改c的值为2时，其实修改的是这个对象本身的内容，并没有改变这个对象的内存地址，所以是不报错的。  </p>
+<blockquote>
+<p>总结：const声明的变量是不可变的，但是如果这个变量是一个引用类型，可以修改这个引用类型本身的内容。  </p>
+</blockquote>
+]]></content>
+      <categories>
+        <category>ES6</category>
+      </categories>
+      <tags>
+        <tag>JavaScript</tag>
+        <tag>const</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>深拷贝</title>
     <url>/deepCopy/</url>
     <content><![CDATA[<p>由于JS中的数据类型分为值类型和引用类型，所以对于引用类型来说变量储存的其实是地址而不是这个对象本身。考虑如下例子：  </p>
@@ -83,33 +110,6 @@
       </tags>
   </entry>
   <entry>
-    <title>const</title>
-    <url>/const/</url>
-    <content><![CDATA[<p>首先来看看MDN的描述：</p>
-<blockquote>
-<p>const声明创建一个常量，其作用域可以是全局或本地声明的块。 与var变量不同，全局常量不会变为 window 对象的属性。需要一个常数的初始化器；也就是说，您必须在声明的同一语句中指定它的值（这是有道理的，因为以后不能更改）。<br />const声明创建一个值的只读引用。但这并不意味着它所持有的值是不可变的，只是变量标识符不能重新分配。例如，在引用内容是对象的情况下，这意味着可以改变对象的内容（例如，其参数）。<br />关于“暂存死区”的所有讨论都适用于let和const。一个常量不能和它所在作用域内的其他变量或函数拥有相同的名称。</p>
-</blockquote>
-<p>从MDN的描述中可以看出const如果用来声明一个值，那么这个值是不可变的，相当于常量。  </p>
-<p>如果声明一个对象，那么可以修改对象的内容，从某种意义上来说是可变的。</p>
-<p>考虑如下例子：</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> a = <span class="number">1</span></span><br><span class="line"></span><br><span class="line">a = <span class="number">2</span> <span class="comment">//报错 </span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> b = &#123;</span><br><span class="line">    c: <span class="number">1</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">b = &#123;<span class="attr">c</span>: <span class="number">2</span>&#125; <span class="comment">//报错</span></span><br><span class="line"></span><br><span class="line">b.c = <span class="number">2</span> <span class="comment">//不报错  </span></span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(b) <span class="comment">// &#123;c: 2&#125;</span></span><br></pre></td></tr></table></figure>
-<p>当a初始化为1的时候，1是值类型Number，是直接存储在内存中的。而当b初始化为一个对象时，b所储存的其实这个对象的内存地址，这个地址是一个值类型。  </p>
-<p>此时b是对这个对象的引用。 </p>
-<p>所以将{c: 2}赋值给b时其实是相当于把一个新的对象的内存地址赋值给b了，改变了b原本存储的值。  </p>
-<p>当直接通过字面量修改c的值为2时，其实修改的是这个对象本身的内容，并没有改变这个对象的内存地址，所以是不报错的。  </p>
-<blockquote>
-<p>总结：const声明的变量是不可变的，但是如果这个变量是一个引用类型，可以修改这个引用类型本身的内容。  </p>
-</blockquote>
-]]></content>
-      <categories>
-        <category>ES6</category>
-      </categories>
-      <tags>
-        <tag>JavaScript</tag>
-        <tag>const</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Python草料二维码等计数二维码刷访客量</title>
     <url>/python/</url>
     <content><![CDATA[<p>在生活中，很多时候被人邀请扫一扫二维码，刷一刷访客量。但是一个ip只能算作一个访问量，对此我们用Python来实现批量刷访客量。</p>
@@ -125,6 +125,30 @@
       </categories>
       <tags>
         <tag>小技巧</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>ES6中的let</title>
+    <url>/es6-let/</url>
+    <content><![CDATA[<p>let是ES6定义的新关键词，用于声明变量，例如：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">let</span> a = <span class="number">1</span></span><br><span class="line"><span class="built_in">console</span>.log(a) <span class="comment">//1</span></span><br></pre></td></tr></table></figure>
+<p>let声明的变量不能重复声明，例如： </p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">let</span> a = <span class="number">1</span> </span><br><span class="line"><span class="keyword">let</span> a = <span class="number">2</span> <span class="comment">//Identifier &#x27;a&#x27; has already been declared</span></span><br></pre></td></tr></table></figure>
+<p>let也可以不用初始化，例如：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">let</span> a;</span><br><span class="line"><span class="built_in">console</span>.log(a)<span class="comment">// undefined</span></span><br></pre></td></tr></table></figure>
+<p>let是块级作用域，可以解决for循环中变量泄露的问题，例如: </p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> arr = []</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; <span class="number">10</span>; i++) &#123;</span><br><span class="line">    arr.push(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;<span class="built_in">console</span>.log(i)&#125;)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">arr.forEach(<span class="function"><span class="keyword">function</span>(<span class="params">arr</span>)</span>&#123;</span><br><span class="line">    arr() <span class="comment">//打印10次10</span></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<p>上面为什么输出10次10呢？因为为变量 i 在循环的每次迭代中都被共享了，意味着循环内创建的那些函数都拥有对于同一 变量的引用。在循环结束后，变量 i 的值会是 10 ，因此当 console.log(i) 被调用时， 每次都打印出 10 。  </p>
+<p>现在用let改写这个例子： </p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> arr = []</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; <span class="number">10</span>; i++) &#123;</span><br><span class="line">    arr.push(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;<span class="built_in">console</span>.log(i)&#125;)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">arr.forEach(<span class="function"><span class="keyword">function</span>(<span class="params">arr</span>)</span>&#123;</span><br><span class="line">    arr() <span class="comment">//0-9</span></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<p>为什么let可以解决这个问题呢？因为在每次迭代中，let都会创建一个新的同名变量并对其进行初始化。在循环中 let 声明每次都创建了一个新的 i 变量，因此在循环内部创建的函数获得了各自的 i 副 本，而每个 i 副本的值都在每次循环迭代声明变量的时候被确定了。</p>
+]]></content>
+      <categories>
+        <category>ES6</category>
+      </categories>
+      <tags>
+        <tag>JavaScript</tag>
+        <tag>let</tag>
       </tags>
   </entry>
   <entry>
@@ -163,30 +187,6 @@
       <tags>
         <tag>commonJS</tag>
         <tag>webpack</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>ES6中的let</title>
-    <url>/es6-let/</url>
-    <content><![CDATA[<p>let是ES6定义的新关键词，用于声明变量，例如：</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">let</span> a = <span class="number">1</span></span><br><span class="line"><span class="built_in">console</span>.log(a) <span class="comment">//1</span></span><br></pre></td></tr></table></figure>
-<p>let声明的变量不能重复声明，例如： </p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">let</span> a = <span class="number">1</span> </span><br><span class="line"><span class="keyword">let</span> a = <span class="number">2</span> <span class="comment">//Identifier &#x27;a&#x27; has already been declared</span></span><br></pre></td></tr></table></figure>
-<p>let也可以不用初始化，例如：</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">let</span> a;</span><br><span class="line"><span class="built_in">console</span>.log(a)<span class="comment">// undefined</span></span><br></pre></td></tr></table></figure>
-<p>let是块级作用域，可以解决for循环中变量泄露的问题，例如: </p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> arr = []</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; <span class="number">10</span>; i++) &#123;</span><br><span class="line">    arr.push(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;<span class="built_in">console</span>.log(i)&#125;)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">arr.forEach(<span class="function"><span class="keyword">function</span>(<span class="params">arr</span>)</span>&#123;</span><br><span class="line">    arr() <span class="comment">//打印10次10</span></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
-<p>上面为什么输出10次10呢？因为为变量 i 在循环的每次迭代中都被共享了，意味着循环内创建的那些函数都拥有对于同一 变量的引用。在循环结束后，变量 i 的值会是 10 ，因此当 console.log(i) 被调用时， 每次都打印出 10 。  </p>
-<p>现在用let改写这个例子： </p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> arr = []</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; <span class="number">10</span>; i++) &#123;</span><br><span class="line">    arr.push(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;<span class="built_in">console</span>.log(i)&#125;)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">arr.forEach(<span class="function"><span class="keyword">function</span>(<span class="params">arr</span>)</span>&#123;</span><br><span class="line">    arr() <span class="comment">//0-9</span></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
-<p>为什么let可以解决这个问题呢？因为在每次迭代中，let都会创建一个新的同名变量并对其进行初始化。在循环中 let 声明每次都创建了一个新的 i 变量，因此在循环内部创建的函数获得了各自的 i 副 本，而每个 i 副本的值都在每次循环迭代声明变量的时候被确定了。</p>
-]]></content>
-      <categories>
-        <category>ES6</category>
-      </categories>
-      <tags>
-        <tag>JavaScript</tag>
-        <tag>let</tag>
       </tags>
   </entry>
 </search>
