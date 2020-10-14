@@ -78,7 +78,7 @@
         <span class="post-meta-item-icon">
             <i class="ri-quill-pen-line"></i>
             <span class="post-meta-item-text"> 字数统计:</span>
-            <span class="post-count">584</span>
+            <span class="post-count">586</span>
         </span>
     </span>
 
@@ -118,45 +118,15 @@
 </li>
 </ul>
 <p>webpack官网给出的例子是这样的:  </p>
-<pre><code class="JavaScript">require.context(&#39;./test&#39;, false, /.test.js$/)</code></pre>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">require</span>.context(<span class="string">&#x27;./test&#x27;</span>, <span class="literal">false</span>, <span class="regexp">/.test.js$/</span>)</span><br></pre></td></tr></table></figure>
+
 <h2 id="开始使用"><a href="#开始使用" class="headerlink" title="开始使用"></a>开始使用</h2><p>首先根据需要让<code>require.context</code>遍历<code>/src/api</code>目录。遍历的过程中肯定会把index.js也遍历进去，因为不想之后来处理遍历后的结果，所以先粗暴的用名称区分。  </p>
 <p>我将以前的模块名.js改成为了模块名.api.js。  </p>
 <p><img src="https://ftp.bmp.ovh/imgs/2020/10/f57afe8c22ddd303.png" alt="api文件列表"></p>
 <p>接着开始编写一个导入函数来处理<code>require.context</code>返回的结果。  </p>
-<pre><code class="JavaScript">// importAllModule.js
-
-/**
- * @description 批量导入API
- * @param &#123;Object&#125; context 上下文对象
- * @param &#123;RegExp&#125; reg 匹配规则
- * @returns &#123;Object&#125; 对象
- */
-function importAllModule(context, reg) &#123;
-    const map = &#123;&#125;
-    let tmp = &#123;&#125;
-    for (let key of context.keys()) &#123;
-        const keyArr = key.split(&#39;/&#39;)
-        keyArr.shift()
-        map[keyArr.join(&#39;.&#39;).replace(reg, &#39;&#39;)] = context(key).default
-    &#125;
-    for (let key in map) &#123;
-        tmp = &#123;
-            ...tmp,
-            ...map[key]
-        &#125;
-    &#125;
-    return tmp
-&#125;
-
-export default importAllModule  </code></pre>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// importAllModule.js</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@description </span>批量导入API</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param <span class="type">&#123;Object&#125;</span> </span>context 上下文对象</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param <span class="type">&#123;RegExp&#125;</span> </span>reg 匹配规则</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@returns <span class="type">&#123;Object&#125;</span> </span>对象</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">importAllModule</span>(<span class="params">context, reg</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">const</span> map = &#123;&#125;</span><br><span class="line">    <span class="keyword">let</span> tmp = &#123;&#125;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">let</span> key <span class="keyword">of</span> context.keys()) &#123;</span><br><span class="line">        <span class="keyword">const</span> keyArr = key.split(<span class="string">&#x27;/&#x27;</span>)</span><br><span class="line">        keyArr.shift()</span><br><span class="line">        map[keyArr.join(<span class="string">&#x27;.&#x27;</span>).replace(reg, <span class="string">&#x27;&#x27;</span>)] = context(key).default</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">let</span> key <span class="keyword">in</span> map) &#123;</span><br><span class="line">        tmp = &#123;</span><br><span class="line">            ...tmp,</span><br><span class="line">            ...map[key]</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> tmp</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> importAllModule </span><br></pre></td></tr></table></figure>
 <p>接着在<code>index.js</code>中导入<code>importAllModule.js</code>并调用导入函数。  </p>
-<pre><code class="JavaScript">// index.js  
-
-import importAllModule from &#39;../common/js/importAllModule&#39;
-
-const api = importAllModule(require.context(&#39;api&#39;, true, /\.api.js$/), /\.api.js$/g)
-
-export default api</code></pre>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// index.js  </span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> importAllModule <span class="keyword">from</span> <span class="string">&#x27;../common/js/importAllModule&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> api = importAllModule(<span class="built_in">require</span>.context(<span class="string">&#x27;api&#x27;</span>, <span class="literal">true</span>, <span class="regexp">/\.api.js$/</span>), <span class="regexp">/\.api.js$/g</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> api</span><br></pre></td></tr></table></figure>
 <h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>经过<code>require.context</code>的改造，大大解放了生产力。首先是index.js变得更加的简洁和可维护。其次，只要按格式编写API文件的文件名，就会被<code>require.context</code>遍历到并导入到<code>index.js</code>中。</p>
  
       <!-- reward -->
