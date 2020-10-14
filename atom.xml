@@ -6,7 +6,7 @@
   <link href="https://vanlee0129.gitee.io/atom.xml" rel="self"/>
   
   <link href="https://vanlee0129.gitee.io/"/>
-  <updated>2020-10-12T01:35:32.877Z</updated>
+  <updated>2020-10-14T05:49:09.735Z</updated>
   <id>https://vanlee0129.gitee.io/</id>
   
   <author>
@@ -15,6 +15,33 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>使用require.context导入多个模块</title>
+    <link href="https://vanlee0129.gitee.io/requireContext/"/>
+    <id>https://vanlee0129.gitee.io/requireContext/</id>
+    <published>2020-10-14T03:44:44.000Z</published>
+    <updated>2020-10-14T05:49:09.735Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h2 id=&quot;使用契机&quot;&gt;&lt;a href=&quot;#使用契机&quot; class=&quot;headerlink&quot;</summary>
+        
+      
+    
+    
+    
+    <category term="ES6" scheme="https://vanlee0129.gitee.io/categories/ES6/"/>
+    
+    
+    <category term="commonJS" scheme="https://vanlee0129.gitee.io/tags/commonJS/"/>
+    
+    <category term="webpack" scheme="https://vanlee0129.gitee.io/tags/webpack/"/>
+    
+  </entry>
   
   <entry>
     <title>使用Docker快速安装Jenkins</title>

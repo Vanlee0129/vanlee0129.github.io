@@ -151,4 +151,72 @@
         <tag>小技巧</tag>
       </tags>
   </entry>
+  <entry>
+    <title>使用require.context导入多个模块</title>
+    <url>/requireContext/</url>
+    <content><![CDATA[<h2 id="使用契机"><a href="#使用契机" class="headerlink" title="使用契机"></a>使用契机</h2><p>将API接口文件分模块存放后需要导入统一的入口文件再统一导出，然后在<code>main.js</code>中引用。看着分门别类的接口文件很舒服，但是文件一多，导入统一入口文件<code>index.js</code>就显得很繁琐。效果如下:  </p>
+<p><img src="https://ftp.bmp.ovh/imgs/2020/10/76da31964bce1579.png" alt="api文件列表"></p>
+<p><img src="https://ftp.bmp.ovh/imgs/2020/10/44989b9516d6df61.png" alt="导入列表">  </p>
+<p><img src="https://ftp.bmp.ovh/imgs/2020/10/e18f9f04cb0884cf.png" alt="导入列表"></p>
+<p>说实话，这个看着越看越反人类。所以决定用更简洁的<code>require.context</code>来处理这个问题。  </p>
+<h2 id="require-context"><a href="#require-context" class="headerlink" title="require.context"></a>require.context</h2><p><code>require.context</code>是一个<code>webpack</code>的<code>api</code>,通过执行<code>require.context函数</code>获取一个特定的上下文,主要用来实现自动化导入模块,在前端工程中,如果遇到从一个文件夹引入很多模块的情况,可以使用这个<code>api</code>,它会遍历文件夹中的指定文件,然后自动导入,使得不需要每次显式的调用<code>import</code>导入模块  </p>
+<p><code>require.context函数</code>接受三个参数</p>
+<ul>
+<li><p><code>directory &#123;String&#125;</code> -读取文件的路径</p>
+</li>
+<li><p><code>useSubdirectories &#123;Boolean&#125;</code> -是否遍历文件的子目录</p>
+</li>
+<li><p><code>regExp &#123;RegExp&#125;</code> -匹配文件的正则</p>
+</li>
+</ul>
+<p>webpack官网给出的例子是这样的:  </p>
+<pre><code class="JavaScript">require.context(&#39;./test&#39;, false, /.test.js$/)</code></pre>
+<h2 id="开始使用"><a href="#开始使用" class="headerlink" title="开始使用"></a>开始使用</h2><p>首先根据需要让<code>require.context</code>遍历<code>/src/api</code>目录。遍历的过程中肯定会把index.js也遍历进去，因为不想之后来处理遍历后的结果，所以先粗暴的用名称区分。  </p>
+<p>我将以前的模块名.js改成为了模块名.api.js。  </p>
+<p><img src="https://ftp.bmp.ovh/imgs/2020/10/f57afe8c22ddd303.png" alt="api文件列表"></p>
+<p>接着开始编写一个导入函数来处理<code>require.context</code>返回的结果。  </p>
+<pre><code class="JavaScript">// importAllModule.js
+
+/**
+ * @description 批量导入API
+ * @param &#123;Object&#125; context 上下文对象
+ * @param &#123;RegExp&#125; reg 匹配规则
+ * @returns &#123;Object&#125; 对象
+ */
+function importAllModule(context, reg) &#123;
+    const map = &#123;&#125;
+    let tmp = &#123;&#125;
+    for (let key of context.keys()) &#123;
+        const keyArr = key.split(&#39;/&#39;)
+        keyArr.shift()
+        map[keyArr.join(&#39;.&#39;).replace(reg, &#39;&#39;)] = context(key).default
+    &#125;
+    for (let key in map) &#123;
+        tmp = &#123;
+            ...tmp,
+            ...map[key]
+        &#125;
+    &#125;
+    return tmp
+&#125;
+
+export default importAllModule  </code></pre>
+<p>接着在<code>index.js</code>中导入<code>importAllModule.js</code>并调用导入函数。  </p>
+<pre><code class="JavaScript">// index.js  
+
+import importAllModule from &#39;../common/js/importAllModule&#39;
+
+const api = importAllModule(require.context(&#39;api&#39;, true, /\.api.js$/), /\.api.js$/g)
+
+export default api</code></pre>
+<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>经过<code>require.context</code>的改造，大大解放了生产力。首先是index.js变得更加的简洁和可维护。其次，只要按格式编写API文件的文件名，就会被<code>require.context</code>遍历到并导入到<code>index.js</code>中。</p>
+]]></content>
+      <categories>
+        <category>ES6</category>
+      </categories>
+      <tags>
+        <tag>commonJS</tag>
+        <tag>webpack</tag>
+      </tags>
+  </entry>
 </search>

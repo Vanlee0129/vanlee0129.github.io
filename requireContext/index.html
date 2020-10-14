@@ -9,7 +9,7 @@
     
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
   <title>
-    tags |  
+    使用require.context导入多个模块 |  
   </title>
   <meta name="generator" content="hexo-theme-ayer">
   
@@ -47,13 +47,253 @@
       
     <main class="content on">
       <section class="outer">
+  <article
+  id="post-requireContext"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  使用require.context导入多个模块
+</h1>
+ 
+
+    </header>
+     
+    <div class="article-meta">
+      <a href="/requireContext/" class="article-date">
+  <time datetime="2020-10-14T03:44:44.000Z" itemprop="datePublished">2020-10-14</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/ES6/">ES6</a>
+  </div>
   
-    <h1 class="page-type-title">标签</h1>
-    <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Docker/" rel="tag">Docker</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/JavaScript/" rel="tag">JavaScript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Jenkins/" rel="tag">Jenkins</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/commonJS/" rel="tag">commonJS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/const/" rel="tag">const</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/let/" rel="tag">let</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/webpack/" rel="tag">webpack</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%B0%8F%E6%8A%80%E5%B7%A7/" rel="tag">小技巧</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%B7%B1%E6%8B%B7%E8%B4%9D/" rel="tag">深拷贝</a></li></ul>
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> 字数统计:</span>
+            <span class="post-count">584</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> 阅读时长≈</span>
+            <span class="post-count">2 分钟</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
   
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h2 id="使用契机"><a href="#使用契机" class="headerlink" title="使用契机"></a>使用契机</h2><p>将API接口文件分模块存放后需要导入统一的入口文件再统一导出，然后在<code>main.js</code>中引用。看着分门别类的接口文件很舒服，但是文件一多，导入统一入口文件<code>index.js</code>就显得很繁琐。效果如下:  </p>
+<p><img src="https://ftp.bmp.ovh/imgs/2020/10/76da31964bce1579.png" alt="api文件列表"></p>
+<p><img src="https://ftp.bmp.ovh/imgs/2020/10/44989b9516d6df61.png" alt="导入列表">  </p>
+<p><img src="https://ftp.bmp.ovh/imgs/2020/10/e18f9f04cb0884cf.png" alt="导入列表"></p>
+<p>说实话，这个看着越看越反人类。所以决定用更简洁的<code>require.context</code>来处理这个问题。  </p>
+<h2 id="require-context"><a href="#require-context" class="headerlink" title="require.context"></a>require.context</h2><p><code>require.context</code>是一个<code>webpack</code>的<code>api</code>,通过执行<code>require.context函数</code>获取一个特定的上下文,主要用来实现自动化导入模块,在前端工程中,如果遇到从一个文件夹引入很多模块的情况,可以使用这个<code>api</code>,它会遍历文件夹中的指定文件,然后自动导入,使得不需要每次显式的调用<code>import</code>导入模块  </p>
+<p><code>require.context函数</code>接受三个参数</p>
+<ul>
+<li><p><code>directory &#123;String&#125;</code> -读取文件的路径</p>
+</li>
+<li><p><code>useSubdirectories &#123;Boolean&#125;</code> -是否遍历文件的子目录</p>
+</li>
+<li><p><code>regExp &#123;RegExp&#125;</code> -匹配文件的正则</p>
+</li>
+</ul>
+<p>webpack官网给出的例子是这样的:  </p>
+<pre><code class="JavaScript">require.context(&#39;./test&#39;, false, /.test.js$/)</code></pre>
+<h2 id="开始使用"><a href="#开始使用" class="headerlink" title="开始使用"></a>开始使用</h2><p>首先根据需要让<code>require.context</code>遍历<code>/src/api</code>目录。遍历的过程中肯定会把index.js也遍历进去，因为不想之后来处理遍历后的结果，所以先粗暴的用名称区分。  </p>
+<p>我将以前的模块名.js改成为了模块名.api.js。  </p>
+<p><img src="https://ftp.bmp.ovh/imgs/2020/10/f57afe8c22ddd303.png" alt="api文件列表"></p>
+<p>接着开始编写一个导入函数来处理<code>require.context</code>返回的结果。  </p>
+<pre><code class="JavaScript">// importAllModule.js
+
+/**
+ * @description 批量导入API
+ * @param &#123;Object&#125; context 上下文对象
+ * @param &#123;RegExp&#125; reg 匹配规则
+ * @returns &#123;Object&#125; 对象
+ */
+function importAllModule(context, reg) &#123;
+    const map = &#123;&#125;
+    let tmp = &#123;&#125;
+    for (let key of context.keys()) &#123;
+        const keyArr = key.split(&#39;/&#39;)
+        keyArr.shift()
+        map[keyArr.join(&#39;.&#39;).replace(reg, &#39;&#39;)] = context(key).default
+    &#125;
+    for (let key in map) &#123;
+        tmp = &#123;
+            ...tmp,
+            ...map[key]
+        &#125;
+    &#125;
+    return tmp
+&#125;
+
+export default importAllModule  </code></pre>
+<p>接着在<code>index.js</code>中导入<code>importAllModule.js</code>并调用导入函数。  </p>
+<pre><code class="JavaScript">// index.js  
+
+import importAllModule from &#39;../common/js/importAllModule&#39;
+
+const api = importAllModule(require.context(&#39;api&#39;, true, /\.api.js$/), /\.api.js$/g)
+
+export default api</code></pre>
+<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>经过<code>require.context</code>的改造，大大解放了生产力。首先是index.js变得更加的简洁和可维护。其次，只要按格式编写API文件的文件名，就会被<code>require.context</code>遍历到并导入到<code>index.js</code>中。</p>
+ 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <div class="declare">
+      <ul class="post-copyright">
+        <li>
+          <i class="ri-copyright-line"></i>
+          <strong>版权声明： </strong>
+          本博客所有文章除特别声明外，著作权归作者所有。转载请注明出处！
+        </li>
+      </ul>
+    </div>
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://vanlee0129.gitee.io/requireContext/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/commonJS/" rel="tag">commonJS</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/webpack/" rel="tag">webpack</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+    
+      <a href="/dockerInstallJenkins/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">使用Docker快速安装Jenkins</div>
+      </a>
+    
+  </nav>
+
+   
+<!-- valine评论 -->
+<div id="vcomments-box">
+  <div id="vcomments"></div>
+</div>
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/valine@1.4.14/dist/Valine.min.js"></script>
+<script>
+  new Valine({
+    el: "#vcomments",
+    app_id: "5QRnhhm2BjIijBQmN1AKmgVr-gzGzoHsz",
+    app_key: "kYX8gJTu4h5gCXCTvNpgA7kU",
+    path: window.location.pathname,
+    avatar: "monsterid",
+    placeholder: "给我的文章加点评论吧~",
+    recordIP: true,
+  });
+  const infoEle = document.querySelector("#vcomments .info");
+  if (infoEle && infoEle.childNodes && infoEle.childNodes.length > 0) {
+    infoEle.childNodes.forEach(function (item) {
+      item.parentNode.removeChild(item);
+    });
+  }
+</script>
+<style>
+  #vcomments-box {
+    padding: 5px 30px;
+  }
+
+  @media screen and (max-width: 800px) {
+    #vcomments-box {
+      padding: 5px 0px;
+    }
+  }
+
+  #vcomments-box #vcomments {
+    background-color: #fff;
+  }
+
+  .v .vlist .vcard .vh {
+    padding-right: 20px;
+  }
+
+  .v .vlist .vcard {
+    padding-left: 10px;
+  }
+</style>
+
+ 
+     
+</article>
+
 </section>
-
-
       <footer class="footer">
   <div class="outer">
     <ul>
@@ -194,6 +434,23 @@
 <script src="/js/lazyload.min.js"></script>
 
 <!-- Tocbot -->
+
+
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: '.tocbot',
+    contentSelector: '.article-entry',
+    headingSelector: 'h1, h2, h3, h4, h5, h6',
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: 'main',
+    positionFixedSelector: '.tocbot',
+    positionFixedClass: 'is-position-fixed',
+    fixedSidebarOffset: 'auto'
+  });
+</script>
 
 <script src="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.js"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.css">
