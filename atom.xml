@@ -100,6 +100,35 @@
   </entry>
   
   <entry>
+    <title>v-if失效时强制刷新</title>
+    <link href="https://vanlee0129.gitee.io/forceUpdate/"/>
+    <id>https://vanlee0129.gitee.io/forceUpdate/</id>
+    <published>2020-09-09T05:34:44.000Z</published>
+    <updated>2020-11-11T07:25:09.852Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;&lt;code&gt;v-if&lt;/code&gt;动态计算时，如果数据层级太深可能导致&lt;code&gt;render&lt;/code&gt;函数没有自动刷新，所以需要手动刷新。此时可以调用&lt;code&gt;this.$forceUpdate()&lt;/code&gt;强制刷新。&lt;/p&gt;
+&lt;p&gt;使用示例：&lt;/p&gt;
+&lt;fig</summary>
+        
+      
+    
+    
+    
+    <category term="Vue" scheme="https://vanlee0129.gitee.io/categories/Vue/"/>
+    
+    
+    <category term="JavaScript" scheme="https://vanlee0129.gitee.io/tags/JavaScript/"/>
+    
+    <category term="v-if" scheme="https://vanlee0129.gitee.io/tags/v-if/"/>
+    
+  </entry>
+  
+  <entry>
     <title>深拷贝</title>
     <link href="https://vanlee0129.gitee.io/deepCopy/"/>
     <id>https://vanlee0129.gitee.io/deepCopy/</id>
