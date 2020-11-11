@@ -1,6 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>超好用的图片浏览器Irfanview</title>
+    <url>/Irfanview/</url>
+    <content><![CDATA[<hr>
+<p>再也不怕图片加载卡了。</p>
+<p>系统自带的图片浏览器和国产的图片浏览器不是卡就是广告非常多，看着就烦。</p>
+<p>所以，今天和大家推荐一款超好用的图片浏览器Irfanview，安装包仅3.37M。</p>
+<p>非常的精致小巧，开图片基本是秒开，不快你砍我好伐。</p>
+<blockquote>
+<p><a href="https://www.irfanview.com/main_download_engl.htm">官网下载地址</a> </p>
+</blockquote>
+<p>安装教程如下：</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/9708361-4551655311d56e73.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="057a1dfd746f63d3150c5b0caaff550.png"></p>
+<p><img src="https://upload-images.jianshu.io/upload_images/9708361-94b83d114d54150c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="09d81ca29f65081146ebe778d691d7c.png"></p>
+<p><img src="https://upload-images.jianshu.io/upload_images/9708361-2f04932a5140b62b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="a3ee830de8dad48e10aead84e4b1c37.png"></p>
+<p><img src="https://upload-images.jianshu.io/upload_images/9708361-977e0000f6bb75ff.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="41bf980aef3cda64f5a3be62be31a35.png"></p>
+<p>其余全部狂点下一步就行了  </p>
+<p>我保证开图片再也不卡了</p>
+]]></content>
+      <categories>
+        <category>实用工具</category>
+      </categories>
+  </entry>
+  <entry>
     <title>const</title>
     <url>/const/</url>
     <content><![CDATA[<p>首先来看看MDN的描述：</p>
@@ -26,29 +49,6 @@
         <tag>JavaScript</tag>
         <tag>const</tag>
       </tags>
-  </entry>
-  <entry>
-    <title>超好用的图片浏览器Irfanview</title>
-    <url>/Irfanview/</url>
-    <content><![CDATA[<hr>
-<p>再也不怕图片加载卡了。</p>
-<p>系统自带的图片浏览器和国产的图片浏览器不是卡就是广告非常多，看着就烦。</p>
-<p>所以，今天和大家推荐一款超好用的图片浏览器Irfanview，安装包仅3.37M。</p>
-<p>非常的精致小巧，开图片基本是秒开，不快你砍我好伐。</p>
-<blockquote>
-<p><a href="https://www.irfanview.com/main_download_engl.htm">官网下载地址</a> </p>
-</blockquote>
-<p>安装教程如下：</p>
-<p><img src="https://upload-images.jianshu.io/upload_images/9708361-4551655311d56e73.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="057a1dfd746f63d3150c5b0caaff550.png"></p>
-<p><img src="https://upload-images.jianshu.io/upload_images/9708361-94b83d114d54150c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="09d81ca29f65081146ebe778d691d7c.png"></p>
-<p><img src="https://upload-images.jianshu.io/upload_images/9708361-2f04932a5140b62b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="a3ee830de8dad48e10aead84e4b1c37.png"></p>
-<p><img src="https://upload-images.jianshu.io/upload_images/9708361-977e0000f6bb75ff.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="41bf980aef3cda64f5a3be62be31a35.png"></p>
-<p>其余全部狂点下一步就行了  </p>
-<p>我保证开图片再也不卡了</p>
-]]></content>
-      <categories>
-        <category>实用工具</category>
-      </categories>
   </entry>
   <entry>
     <title>深拷贝</title>
@@ -140,7 +140,10 @@
 <p>使用时可以在单页面使用，也可以使用全局混入，一般来说我们都使用全局混入的方式去做。  </p>
 <p>注意，这个函数是一个页面钩子函数，需要与onLoad等函数同级。  </p>
 <p>使用示例：</p>
-<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">//share.mixin.js</span></span><br><span class="line"><span class="keyword">export</span>  <span class="keyword">default</span> &#123;</span><br><span class="line">    data() &#123;</span><br><span class="line">        <span class="keyword">return</span> &#123;</span><br><span class="line">            share: &#123;</span><br><span class="line">                title: <span class="string">&#x27;你的标题&#x27;</span>,</span><br><span class="line">                path: <span class="string">&#x27;/pages/index/index&#x27;</span>,</span><br><span class="line">                imageUrl: <span class="string">&#x27;&#x27;</span>,</span><br><span class="line">                desc: <span class="string">&#x27;&#x27;</span>,</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;,</span><br><span class="line">    onShareAppMessage(res) &#123;</span><br><span class="line">        <span class="keyword">return</span> &#123;</span><br><span class="line">            <span class="comment">//标题</span></span><br><span class="line">            title: <span class="built_in">this</span>.share.title,</span><br><span class="line">            <span class="comment">//页面路径</span></span><br><span class="line">            path: <span class="built_in">this</span>.share.path,</span><br><span class="line">            <span class="comment">//分享后显示的图片的地址，默认为当前页面的截图</span></span><br><span class="line">            imageUrl: <span class="built_in">this</span>.share.imageUrl,</span><br><span class="line">            <span class="comment">//描述</span></span><br><span class="line">            desc: <span class="built_in">this</span>.share.desc,</span><br><span class="line">            <span class="comment">//内容</span></span><br><span class="line">            content: <span class="built_in">this</span>.share.content,</span><br><span class="line">            success(res) &#123;</span><br><span class="line">                uni.showToast(&#123;</span><br><span class="line">                    title: <span class="string">&#x27;分享成功&#x27;</span></span><br><span class="line">                &#125;)</span><br><span class="line">            &#125;,</span><br><span class="line">            fail(res) &#123;</span><br><span class="line">                uni.showToast(&#123;</span><br><span class="line">                    title: <span class="string">&#x27;分享失败&#x27;</span>,</span><br><span class="line">                    icon: <span class="string">&#x27;none&#x27;</span></span><br><span class="line">                &#125;)</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"><span class="string">``</span><span class="string">`  </span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">在页面中使用：</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">`</span><span class="string">``</span>js</span><br><span class="line"><span class="comment">//example.vue</span></span><br><span class="line"><span class="keyword">async</span> onLoad(options) &#123;</span><br><span class="line">      <span class="built_in">console</span>.log(options);</span><br><span class="line">      <span class="keyword">if</span>(options.id) &#123; <span class="comment">//如果传过来是id则为分享页面进入的</span></span><br><span class="line">        <span class="built_in">this</span>.spu_id = options.id</span><br><span class="line">        <span class="built_in">this</span>.share.path = <span class="string">`/pages/index/goodsDetail?id=<span class="subst">$&#123;options.id&#125;</span>`</span></span><br><span class="line">        <span class="keyword">return</span></span><br><span class="line">      &#125;</span><br><span class="line">      <span class="built_in">this</span>.spu_id = options.spu_id;</span><br><span class="line">      <span class="built_in">this</span>.share.path = <span class="string">`/pages/index/goodsDetail?id=<span class="subst">$&#123;options.spu_id&#125;</span>`</span>;</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">//share.mixin.js</span></span><br><span class="line"><span class="keyword">export</span>  <span class="keyword">default</span> &#123;</span><br><span class="line">    data() &#123;</span><br><span class="line">        <span class="keyword">return</span> &#123;</span><br><span class="line">            share: &#123;</span><br><span class="line">                title: <span class="string">&#x27;你的标题&#x27;</span>,</span><br><span class="line">                path: <span class="string">&#x27;/pages/index/index&#x27;</span>,</span><br><span class="line">                imageUrl: <span class="string">&#x27;&#x27;</span>,</span><br><span class="line">                desc: <span class="string">&#x27;&#x27;</span>,</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;,</span><br><span class="line">    onShareAppMessage(res) &#123;</span><br><span class="line">        <span class="keyword">return</span> &#123;</span><br><span class="line">            <span class="comment">//标题</span></span><br><span class="line">            title: <span class="built_in">this</span>.share.title,</span><br><span class="line">            <span class="comment">//页面路径</span></span><br><span class="line">            path: <span class="built_in">this</span>.share.path,</span><br><span class="line">            <span class="comment">//分享后显示的图片的地址，默认为当前页面的截图</span></span><br><span class="line">            imageUrl: <span class="built_in">this</span>.share.imageUrl,</span><br><span class="line">            <span class="comment">//描述</span></span><br><span class="line">            desc: <span class="built_in">this</span>.share.desc,</span><br><span class="line">            <span class="comment">//内容</span></span><br><span class="line">            content: <span class="built_in">this</span>.share.content,</span><br><span class="line">            success(res) &#123;</span><br><span class="line">                uni.showToast(&#123;</span><br><span class="line">                    title: <span class="string">&#x27;分享成功&#x27;</span></span><br><span class="line">                &#125;)</span><br><span class="line">            &#125;,</span><br><span class="line">            fail(res) &#123;</span><br><span class="line">                uni.showToast(&#123;</span><br><span class="line">                    title: <span class="string">&#x27;分享失败&#x27;</span>,</span><br><span class="line">                    icon: <span class="string">&#x27;none&#x27;</span></span><br><span class="line">                &#125;)</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在页面中使用：</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">//example.vue</span></span><br><span class="line"><span class="keyword">async</span> onLoad(options) &#123;</span><br><span class="line">      <span class="built_in">console</span>.log(options);</span><br><span class="line">      <span class="keyword">if</span>(options.id) &#123; <span class="comment">//如果传过来是id则为分享页面进入的</span></span><br><span class="line">        <span class="built_in">this</span>.spu_id = options.id</span><br><span class="line">        <span class="built_in">this</span>.share.path = <span class="string">`/pages/index/goodsDetail?id=<span class="subst">$&#123;options.id&#125;</span>`</span></span><br><span class="line">        <span class="keyword">return</span></span><br><span class="line">      &#125;</span><br><span class="line">      <span class="built_in">this</span>.spu_id = options.spu_id;</span><br><span class="line">      <span class="built_in">this</span>.share.path = <span class="string">`/pages/index/goodsDetail?id=<span class="subst">$&#123;options.spu_id&#125;</span>`</span>;</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
 ]]></content>
       <categories>
         <category>uniapp</category>
