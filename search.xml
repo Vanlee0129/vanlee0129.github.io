@@ -111,21 +111,6 @@
       </tags>
   </entry>
   <entry>
-    <title>v-if失效时强制刷新</title>
-    <url>/forceUpdate/</url>
-    <content><![CDATA[<p><code>v-if</code>动态计算时，如果数据层级太深可能导致<code>render</code>函数没有自动刷新，所以需要手动刷新。此时可以调用<code>this.$forceUpdate()</code>强制刷新。</p>
-<p>使用示例：</p>
-<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="built_in">this</span>.couponList[index].isSelected = <span class="literal">true</span></span><br><span class="line"><span class="comment">//赋值后调用强制刷新</span></span><br><span class="line"><span class="built_in">this</span>.$forceUpdate()</span><br></pre></td></tr></table></figure>
-]]></content>
-      <categories>
-        <category>Vue</category>
-      </categories>
-      <tags>
-        <tag>JavaScript</tag>
-        <tag>v-if</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>ES6中的let</title>
     <url>/es6-let/</url>
     <content><![CDATA[<p>let是ES6定义的新关键词，用于声明变量，例如：</p>
@@ -204,9 +189,9 @@
 <figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">npm publish --access public</span><br></pre></td></tr></table></figure>
 
 <p>发布成功后可以看到如下信息：</p>
-<p><img src="https://imgchr.com/i/rH5uy6" alt="发布成功"></p>
+<p><a href="https://imgchr.com/i/rH5uy6"><img src="https://s3.ax1x.com/2020/12/29/rH5uy6.png" alt="发布成功"></a></p>
 <h2 id="查看发布的包"><a href="#查看发布的包" class="headerlink" title="查看发布的包"></a>查看发布的包</h2><p>发包成后可以在<a href="https://www.npmjs.com/">https://www.npmjs.com/</a>中搜索刚刚发布的包，结果如下：</p>
-<p><img src="https://imgchr.com/i/rH5QeO" alt="查看发布"></p>
+<p><a href="https://imgchr.com/i/rH5QeO"><img src="https://s3.ax1x.com/2020/12/29/rH5QeO.png" alt="查看发布"></a></p>
 <h2 id="使用发布的包"><a href="#使用发布的包" class="headerlink" title="使用发布的包"></a>使用发布的包</h2><p>首先在 Demo 中安装刚刚发布的包：</p>
 <figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">npm i node-des-cbc</span><br></pre></td></tr></table></figure>
 
@@ -214,7 +199,7 @@
 <figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> des = <span class="built_in">require</span>(<span class="string">&quot;node-des-cbc&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(des);</span><br></pre></td></tr></table></figure>
 
 <p>结果如下：</p>
-<p><img src="https://imgchr.com/i/rH5GYd" alt="发布结果"></p>
+<p><a href="https://imgchr.com/i/rH5GYd"><img src="https://s3.ax1x.com/2020/12/29/rH5GYd.png" alt="发布结果"></a></p>
 <p>发包所用代码地址： <a href="https://github.com/Vanlee0129/node-des-cbc">https://github.com/Vanlee0129/node-des-cbc</a></p>
 <p>npm 官网地址: <a href="https://www.npmjs.com/package/node-des-cbc">https://www.npmjs.com/package/node-des-cbc</a></p>
 ]]></content>
@@ -224,6 +209,21 @@
       <tags>
         <tag>npm</tag>
         <tag>发包</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>v-if失效时强制刷新</title>
+    <url>/forceUpdate/</url>
+    <content><![CDATA[<p><code>v-if</code>动态计算时，如果数据层级太深可能导致<code>render</code>函数没有自动刷新，所以需要手动刷新。此时可以调用<code>this.$forceUpdate()</code>强制刷新。</p>
+<p>使用示例：</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="built_in">this</span>.couponList[index].isSelected = <span class="literal">true</span></span><br><span class="line"><span class="comment">//赋值后调用强制刷新</span></span><br><span class="line"><span class="built_in">this</span>.$forceUpdate()</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>Vue</category>
+      </categories>
+      <tags>
+        <tag>JavaScript</tag>
+        <tag>v-if</tag>
       </tags>
   </entry>
   <entry>
@@ -244,24 +244,6 @@
       <tags>
         <tag>JavaScript</tag>
         <tag>微信小程序</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Python草料二维码等计数二维码刷访客量</title>
-    <url>/python/</url>
-    <content><![CDATA[<p>在生活中，很多时候被人邀请扫一扫二维码，刷一刷访客量。但是一个ip只能算作一个访问量，对此我们用Python来实现批量刷访客量。</p>
-<p>Python版本3.6</p>
-<p>首先上代码</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/python  </span></span><br><span class="line"><span class="comment"># -*- coding: UTF-8 -*-  </span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> urllib.parse  </span><br><span class="line"><span class="keyword">import</span> urllib.request  </span><br><span class="line"><span class="keyword">import</span> time  </span><br><span class="line"><span class="keyword">from</span> lxml <span class="keyword">import</span> etree</span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">from</span> selenium <span class="keyword">import</span> webdriver</span><br><span class="line"><span class="keyword">import</span> random</span><br><span class="line"></span><br><span class="line"><span class="comment"># 短网址还原 </span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">revertShortLink</span>(<span class="params">url</span>):</span></span><br><span class="line">	re = requests.head(url)</span><br><span class="line">	<span class="keyword">return</span> re.headers.get(<span class="string">&#x27;location&#x27;</span>)</span><br><span class="line"></span><br><span class="line">URL_1 = revertShortLink(<span class="string">&quot;your revertShortLink&quot;</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">global</span> url_path  </span><br><span class="line">url_path = [<span class="number">3</span>]  </span><br><span class="line">  </span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">verif_ip</span>(<span class="params">ip,port</span>):</span>    <span class="comment"># 验证ip有效性  </span></span><br><span class="line">	</span><br><span class="line">	test_url = URL_1</span><br><span class="line">	</span><br><span class="line">	browser = webdriver.Chrome()</span><br><span class="line"></span><br><span class="line">	browser.get(URL_1)</span><br><span class="line">	browser.quit()</span><br><span class="line">	time.sleep(random.randint(<span class="number">1</span>,<span class="number">20</span>))  </span><br><span class="line"></span><br><span class="line">file = open(<span class="string">&quot;ip.txt&quot;</span>)</span><br><span class="line"></span><br><span class="line">counter = <span class="number">0</span> </span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">while</span> <span class="number">1</span>:  </span><br><span class="line">	lines = file.readlines(<span class="number">100000</span>)  </span><br><span class="line">	<span class="keyword">if</span> <span class="keyword">not</span> lines:  </span><br><span class="line">		<span class="keyword">break</span>  </span><br><span class="line">	<span class="keyword">for</span> data <span class="keyword">in</span> lines:</span><br><span class="line">		counter += <span class="number">1</span>  </span><br><span class="line">		print((data.split(<span class="string">&quot;:&quot;</span>)[<span class="number">0</span>]))</span><br><span class="line">		print(<span class="string">&quot;cishu:&quot;</span>,counter)  </span><br><span class="line">	</span><br><span class="line">	   </span><br><span class="line"></span><br><span class="line">	 </span><br><span class="line">		verif_ip(data.split(<span class="string">&quot;:&quot;</span>)[<span class="number">0</span>],data.split(<span class="string">&quot;:&quot;</span>)[<span class="number">1</span>])</span><br></pre></td></tr></table></figure>
-<p>全部代码我已经打包放在我的Github上面了，直接下载即可。<a href="https://github.com/Vanlee0129/caoliaoscan">下载地址</a></p>
-<p>ip.txt文件就是用来存放代理ip的，相当于一个简陋的代理池，手动复制进去即可，我提供了一些，如果不够可以再自己去找一些。</p>
-<p>ip可以在66ip等网站去提取，用多少提多少。以后再也不担心刷二维码访客量啦！</p>
-]]></content>
-      <categories>
-        <category>Python</category>
-      </categories>
-      <tags>
-        <tag>小技巧</tag>
       </tags>
   </entry>
   <entry>
@@ -300,6 +282,24 @@
       <tags>
         <tag>commonJS</tag>
         <tag>webpack</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Python草料二维码等计数二维码刷访客量</title>
+    <url>/python/</url>
+    <content><![CDATA[<p>在生活中，很多时候被人邀请扫一扫二维码，刷一刷访客量。但是一个ip只能算作一个访问量，对此我们用Python来实现批量刷访客量。</p>
+<p>Python版本3.6</p>
+<p>首先上代码</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/python  </span></span><br><span class="line"><span class="comment"># -*- coding: UTF-8 -*-  </span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> urllib.parse  </span><br><span class="line"><span class="keyword">import</span> urllib.request  </span><br><span class="line"><span class="keyword">import</span> time  </span><br><span class="line"><span class="keyword">from</span> lxml <span class="keyword">import</span> etree</span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">from</span> selenium <span class="keyword">import</span> webdriver</span><br><span class="line"><span class="keyword">import</span> random</span><br><span class="line"></span><br><span class="line"><span class="comment"># 短网址还原 </span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">revertShortLink</span>(<span class="params">url</span>):</span></span><br><span class="line">	re = requests.head(url)</span><br><span class="line">	<span class="keyword">return</span> re.headers.get(<span class="string">&#x27;location&#x27;</span>)</span><br><span class="line"></span><br><span class="line">URL_1 = revertShortLink(<span class="string">&quot;your revertShortLink&quot;</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">global</span> url_path  </span><br><span class="line">url_path = [<span class="number">3</span>]  </span><br><span class="line">  </span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">verif_ip</span>(<span class="params">ip,port</span>):</span>    <span class="comment"># 验证ip有效性  </span></span><br><span class="line">	</span><br><span class="line">	test_url = URL_1</span><br><span class="line">	</span><br><span class="line">	browser = webdriver.Chrome()</span><br><span class="line"></span><br><span class="line">	browser.get(URL_1)</span><br><span class="line">	browser.quit()</span><br><span class="line">	time.sleep(random.randint(<span class="number">1</span>,<span class="number">20</span>))  </span><br><span class="line"></span><br><span class="line">file = open(<span class="string">&quot;ip.txt&quot;</span>)</span><br><span class="line"></span><br><span class="line">counter = <span class="number">0</span> </span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">while</span> <span class="number">1</span>:  </span><br><span class="line">	lines = file.readlines(<span class="number">100000</span>)  </span><br><span class="line">	<span class="keyword">if</span> <span class="keyword">not</span> lines:  </span><br><span class="line">		<span class="keyword">break</span>  </span><br><span class="line">	<span class="keyword">for</span> data <span class="keyword">in</span> lines:</span><br><span class="line">		counter += <span class="number">1</span>  </span><br><span class="line">		print((data.split(<span class="string">&quot;:&quot;</span>)[<span class="number">0</span>]))</span><br><span class="line">		print(<span class="string">&quot;cishu:&quot;</span>,counter)  </span><br><span class="line">	</span><br><span class="line">	   </span><br><span class="line"></span><br><span class="line">	 </span><br><span class="line">		verif_ip(data.split(<span class="string">&quot;:&quot;</span>)[<span class="number">0</span>],data.split(<span class="string">&quot;:&quot;</span>)[<span class="number">1</span>])</span><br></pre></td></tr></table></figure>
+<p>全部代码我已经打包放在我的Github上面了，直接下载即可。<a href="https://github.com/Vanlee0129/caoliaoscan">下载地址</a></p>
+<p>ip.txt文件就是用来存放代理ip的，相当于一个简陋的代理池，手动复制进去即可，我提供了一些，如果不够可以再自己去找一些。</p>
+<p>ip可以在66ip等网站去提取，用多少提多少。以后再也不担心刷二维码访客量啦！</p>
+]]></content>
+      <categories>
+        <category>Python</category>
+      </categories>
+      <tags>
+        <tag>小技巧</tag>
       </tags>
   </entry>
 </search>
