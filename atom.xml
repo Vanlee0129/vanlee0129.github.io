@@ -6,7 +6,7 @@
   <link href="https://vanlee0129.gitee.io/atom.xml" rel="self"/>
   
   <link href="https://vanlee0129.gitee.io/"/>
-  <updated>2020-11-16T05:47:31.354Z</updated>
+  <updated>2020-12-29T06:44:38.812Z</updated>
   <id>https://vanlee0129.gitee.io/</id>
   
   <author>
@@ -15,6 +15,33 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>npm发包记录</title>
+    <link href="https://vanlee0129.gitee.io/npm/"/>
+    <id>https://vanlee0129.gitee.io/npm/</id>
+    <published>2020-12-29T06:34:44.000Z</published>
+    <updated>2020-12-29T06:44:38.812Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h2 id=&quot;注册-NPM-账号&quot;&gt;&lt;a href=&quot;#注册-NPM-账号&quot; class=&quot;headerlink&quot; title=&quot;注册 NPM 账号&quot;&gt;&lt;/a&gt;注册 NPM 账号&lt;/h2&gt;&lt;p&gt;首先去 npm 官网注册账号，注册地址&lt;a</summary>
+        
+      
+    
+    
+    
+    <category term="开发相关" scheme="https://vanlee0129.gitee.io/categories/%E5%BC%80%E5%8F%91%E7%9B%B8%E5%85%B3/"/>
+    
+    
+    <category term="npm" scheme="https://vanlee0129.gitee.io/tags/npm/"/>
+    
+    <category term="发包" scheme="https://vanlee0129.gitee.io/tags/%E5%8F%91%E5%8C%85/"/>
+    
+  </entry>
   
   <entry>
     <title>使用node加解密DES-CBC</title>
@@ -161,16 +188,16 @@
     <link href="https://vanlee0129.gitee.io/const/"/>
     <id>https://vanlee0129.gitee.io/const/</id>
     <published>2020-09-09T05:34:44.000Z</published>
-    <updated>2020-11-11T07:36:44.766Z</updated>
+    <updated>2020-12-29T06:37:29.186Z</updated>
     
     
       
       
         
         
-    <summary type="html">&lt;p&gt;首先来看看MDN的描述：&lt;/p&gt;
+    <summary type="html">&lt;p&gt;首先来看看 MDN 的描述：&lt;/p&gt;
 &lt;blockquote&gt;
-&lt;p&gt;const声明创建一个常量，其作用域可以是全局或本地声明的块。 与var变量不同，全局常量不会变为 window</summary>
+&lt;p&gt;const 声明创建一个常量，其作用域可以是全局或本地声明的块。 与 var 变量不同，全局常量不会变为 window</summary>
         
       
     

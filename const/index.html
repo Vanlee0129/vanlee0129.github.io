@@ -78,7 +78,7 @@
         <span class="post-meta-item-icon">
             <i class="ri-quill-pen-line"></i>
             <span class="post-meta-item-text"> 字数统计:</span>
-            <span class="post-count">535</span>
+            <span class="post-count">541</span>
         </span>
     </span>
 
@@ -100,20 +100,21 @@
   
     <div class="article-entry" itemprop="articleBody">
        
-  <p>首先来看看MDN的描述：</p>
+  <p>首先来看看 MDN 的描述：</p>
 <blockquote>
-<p>const声明创建一个常量，其作用域可以是全局或本地声明的块。 与var变量不同，全局常量不会变为 window 对象的属性。需要一个常数的初始化器；也就是说，您必须在声明的同一语句中指定它的值（这是有道理的，因为以后不能更改）。<br />const声明创建一个值的只读引用。但这并不意味着它所持有的值是不可变的，只是变量标识符不能重新分配。例如，在引用内容是对象的情况下，这意味着可以改变对象的内容（例如，其参数）。<br />关于“暂存死区”的所有讨论都适用于let和const。一个常量不能和它所在作用域内的其他变量或函数拥有相同的名称。</p>
+<p>const 声明创建一个常量，其作用域可以是全局或本地声明的块。 与 var 变量不同，全局常量不会变为 window 对象的属性。需要一个常数的初始化器；也就是说，您必须在声明的同一语句中指定它的值（这是有道理的，因为以后不能更改）。<br />const 声明创建一个值的只读引用。但这并不意味着它所持有的值是不可变的，只是变量标识符不能重新分配。例如，在引用内容是对象的情况下，这意味着可以改变对象的内容（例如，其参数）。<br />关于“暂存死区”的所有讨论都适用于 let 和 const。一个常量不能和它所在作用域内的其他变量或函数拥有相同的名称。</p>
 </blockquote>
-<p>从MDN的描述中可以看出const如果用来声明一个值，那么这个值是不可变的，相当于常量。  </p>
+<p>从 MDN 的描述中可以看出 const 如果用来声明一个值，那么这个值是不可变的，相当于常量。</p>
 <p>如果声明一个对象，那么可以修改对象的内容，从某种意义上来说是可变的。</p>
 <p>考虑如下例子：</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> a = <span class="number">1</span></span><br><span class="line"></span><br><span class="line">a = <span class="number">2</span> <span class="comment">//报错 </span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> b = &#123;</span><br><span class="line">    c: <span class="number">1</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">b = &#123;<span class="attr">c</span>: <span class="number">2</span>&#125; <span class="comment">//报错</span></span><br><span class="line"></span><br><span class="line">b.c = <span class="number">2</span> <span class="comment">//不报错  </span></span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(b) <span class="comment">// &#123;c: 2&#125;</span></span><br></pre></td></tr></table></figure>
-<p>当a初始化为1的时候，1是值类型Number，是直接存储在内存中的。而当b初始化为一个对象时，b所储存的其实这个对象的内存地址，这个地址是一个值类型。  </p>
-<p>此时b是对这个对象的引用。 </p>
-<p>所以将{c: 2}赋值给b时其实是相当于把一个新的对象的内存地址赋值给b了，改变了b原本存储的值。  </p>
-<p>当直接通过字面量修改c的值为2时，其实修改的是这个对象本身的内容，并没有改变这个对象的内存地址，所以是不报错的。  </p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> a = <span class="number">1</span></span><br><span class="line"></span><br><span class="line">a = <span class="number">2</span> <span class="comment">//报错</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> b = &#123;</span><br><span class="line">    c: <span class="number">1</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">b = &#123;<span class="attr">c</span>: <span class="number">2</span>&#125; <span class="comment">//报错</span></span><br><span class="line"></span><br><span class="line">b.c = <span class="number">2</span> <span class="comment">//不报错</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(b) <span class="comment">// &#123;c: 2&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>当 a 初始化为 1 的时候，1 是值类型 Number，是直接存储在内存中的。而当 b 初始化为一个对象时，b 所储存的其实这个对象的内存地址，这个地址是一个值类型。</p>
+<p>此时 b 是对这个对象的引用。</p>
+<p>所以将{c: 2}赋值给 b 时其实是相当于把一个新的对象的内存地址赋值给 b 了，改变了 b 原本存储的值。</p>
+<p>当直接通过字面量修改 c 的值为 2 时，其实修改的是这个对象本身的内容，并没有改变这个对象的内存地址，所以是不报错的。</p>
 <blockquote>
-<p>总结：const声明的变量是不可变的，但是如果这个变量是一个引用类型，可以修改这个引用类型本身的内容。  </p>
+<p>总结：const 声明的变量是不可变的，但是如果这个变量是一个引用类型，可以修改这个引用类型本身的内容。</p>
 </blockquote>
  
       <!-- reward -->
