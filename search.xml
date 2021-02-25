@@ -83,6 +83,21 @@
       </tags>
   </entry>
   <entry>
+    <title>v-if失效时强制刷新</title>
+    <url>/forceUpdate/</url>
+    <content><![CDATA[<p><code>v-if</code>动态计算时，如果数据层级太深可能导致<code>render</code>函数没有自动刷新，所以需要手动刷新。此时可以调用<code>this.$forceUpdate()</code>强制刷新。</p>
+<p>使用示例：</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="built_in">this</span>.couponList[index].isSelected = <span class="literal">true</span></span><br><span class="line"><span class="comment">//赋值后调用强制刷新</span></span><br><span class="line"><span class="built_in">this</span>.$forceUpdate()</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>Vue</category>
+      </categories>
+      <tags>
+        <tag>JavaScript</tag>
+        <tag>v-if</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>使用Docker快速安装Jenkins</title>
     <url>/dockerInstallJenkins/</url>
     <content><![CDATA[<h2 id="安装环境"><a href="#安装环境" class="headerlink" title="安装环境"></a>安装环境</h2><p>CentOS Linux release 7.6.1810 (Core)<br>Docker version 19.03.12  </p>
@@ -135,18 +150,24 @@
       </tags>
   </entry>
   <entry>
-    <title>v-if失效时强制刷新</title>
-    <url>/forceUpdate/</url>
-    <content><![CDATA[<p><code>v-if</code>动态计算时，如果数据层级太深可能导致<code>render</code>函数没有自动刷新，所以需要手动刷新。此时可以调用<code>this.$forceUpdate()</code>强制刷新。</p>
-<p>使用示例：</p>
-<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="built_in">this</span>.couponList[index].isSelected = <span class="literal">true</span></span><br><span class="line"><span class="comment">//赋值后调用强制刷新</span></span><br><span class="line"><span class="built_in">this</span>.$forceUpdate()</span><br></pre></td></tr></table></figure>
+    <title>使用node加解密DES-CBC</title>
+    <url>/node-des/</url>
+    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>为了保护请求内容不被抓包软件暴露出来，很多产品都采用了请求加密的方式。DES-CBC就是一种对称加密方式。在网上查资料时发现node的资料不多，所以研究之后记录一下使用node加解密DES-CBC。  </p>
+<h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><p>首先是加密函数：  </p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@description </span>DES加密，以hex为例</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param <span class="type">&#123;String&#125;</span> </span>encodeTxt 待加密的字符串</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param <span class="type">&#123;String&#125;</span> </span>key 秘钥</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param <span class="type">&#123;String&#125;</span> </span>iv 偏移量</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">desEncode</span>(<span class="params">encodeTxt, key, iv</span>) </span>&#123;</span><br><span class="line">    key = key.length &gt;= <span class="number">8</span> ? key.slice(<span class="number">0</span>, <span class="number">8</span>) : key.concat(<span class="string">&#x27;0&#x27;</span>.repeat(<span class="number">8</span> - key.length))</span><br><span class="line">    iv = iv.length &gt;= <span class="number">8</span> ? iv.slice(<span class="number">0</span>, <span class="number">8</span>) : iv.concat(<span class="string">&#x27;0&#x27;</span>.repeat(<span class="number">8</span> - iv.length))</span><br><span class="line">    <span class="keyword">const</span> keyHex = Buffer.from(key)</span><br><span class="line">    <span class="keyword">const</span> ivHex = Buffer.from(iv)</span><br><span class="line">    <span class="keyword">const</span> encipher = crypto.createCipheriv(<span class="string">&#x27;des-cbc&#x27;</span>, keyHex, ivHex)</span><br><span class="line">    <span class="comment">//编码方式除了可以使用hex还可以使用base64。</span></span><br><span class="line">    <span class="keyword">let</span> encode = encipher.update(encodeTxt, <span class="string">&#x27;utf8&#x27;</span>, <span class="string">&#x27;hex&#x27;</span>)</span><br><span class="line">    encode += encipher.final(<span class="string">&#x27;hex&#x27;</span>)</span><br><span class="line">    <span class="keyword">return</span> encode</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>解密函数：</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@description </span>DES解密，要和加密方式对应起来</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param <span class="type">&#123;String&#125;</span> </span>decodeTxt 待解密的字符串</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param <span class="type">&#123;String&#125;</span> </span>key 秘钥</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param <span class="type">&#123;String&#125;</span> </span>iv 偏移量</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">desDecode</span>(<span class="params">decodeTxt, key, iv</span>) </span>&#123;</span><br><span class="line">    key = key.length &gt;= <span class="number">8</span> ? key.slice(<span class="number">0</span>, <span class="number">8</span>) : key.concat(<span class="string">&#x27;0&#x27;</span>.repeat(<span class="number">8</span> - key.length))</span><br><span class="line">    iv = iv.length &gt;= <span class="number">8</span> ? iv.slice(<span class="number">0</span>, <span class="number">8</span>) : iv.concat(<span class="string">&#x27;0&#x27;</span>.repeat(<span class="number">8</span> - iv.length))</span><br><span class="line">    <span class="keyword">const</span> keyHex = Buffer.from(key)</span><br><span class="line">    <span class="keyword">const</span> ivHex = Buffer.from(iv)</span><br><span class="line">    <span class="keyword">const</span> decipher = crypto.createDecipheriv(<span class="string">&#x27;des-cbc&#x27;</span>, keyHex, ivHex)</span><br><span class="line">    <span class="keyword">let</span> decode = decipher.update(decodeTxt, <span class="string">&#x27;hex&#x27;</span>, <span class="string">&#x27;utf8&#x27;</span>)</span><br><span class="line">    decode += decipher.final(<span class="string">&#x27;utf8&#x27;</span>)</span><br><span class="line">    <span class="keyword">return</span> decodes</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>在使用时要特别注意加密和解密的编码方式要对应起来，如果没有对应起来就会报错或者得不到结果。</p>
 ]]></content>
       <categories>
-        <category>Vue</category>
+        <category>node</category>
       </categories>
       <tags>
         <tag>JavaScript</tag>
-        <tag>v-if</tag>
+        <tag>des-cbc</tag>
+        <tag>node</tag>
       </tags>
   </entry>
   <entry>
@@ -206,27 +227,6 @@
       </tags>
   </entry>
   <entry>
-    <title>使用node加解密DES-CBC</title>
-    <url>/node-des/</url>
-    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>为了保护请求内容不被抓包软件暴露出来，很多产品都采用了请求加密的方式。DES-CBC就是一种对称加密方式。在网上查资料时发现node的资料不多，所以研究之后记录一下使用node加解密DES-CBC。  </p>
-<h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><p>首先是加密函数：  </p>
-<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@description </span>DES加密，以hex为例</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param <span class="type">&#123;String&#125;</span> </span>encodeTxt 待加密的字符串</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param <span class="type">&#123;String&#125;</span> </span>key 秘钥</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param <span class="type">&#123;String&#125;</span> </span>iv 偏移量</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">desEncode</span>(<span class="params">encodeTxt, key, iv</span>) </span>&#123;</span><br><span class="line">    key = key.length &gt;= <span class="number">8</span> ? key.slice(<span class="number">0</span>, <span class="number">8</span>) : key.concat(<span class="string">&#x27;0&#x27;</span>.repeat(<span class="number">8</span> - key.length))</span><br><span class="line">    iv = iv.length &gt;= <span class="number">8</span> ? iv.slice(<span class="number">0</span>, <span class="number">8</span>) : iv.concat(<span class="string">&#x27;0&#x27;</span>.repeat(<span class="number">8</span> - iv.length))</span><br><span class="line">    <span class="keyword">const</span> keyHex = Buffer.from(key)</span><br><span class="line">    <span class="keyword">const</span> ivHex = Buffer.from(iv)</span><br><span class="line">    <span class="keyword">const</span> encipher = crypto.createCipheriv(<span class="string">&#x27;des-cbc&#x27;</span>, keyHex, ivHex)</span><br><span class="line">    <span class="comment">//编码方式除了可以使用hex还可以使用base64。</span></span><br><span class="line">    <span class="keyword">let</span> encode = encipher.update(encodeTxt, <span class="string">&#x27;utf8&#x27;</span>, <span class="string">&#x27;hex&#x27;</span>)</span><br><span class="line">    encode += encipher.final(<span class="string">&#x27;hex&#x27;</span>)</span><br><span class="line">    <span class="keyword">return</span> encode</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>解密函数：</p>
-<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@description </span>DES解密，要和加密方式对应起来</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param <span class="type">&#123;String&#125;</span> </span>decodeTxt 待解密的字符串</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param <span class="type">&#123;String&#125;</span> </span>key 秘钥</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param <span class="type">&#123;String&#125;</span> </span>iv 偏移量</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">desDecode</span>(<span class="params">decodeTxt, key, iv</span>) </span>&#123;</span><br><span class="line">    key = key.length &gt;= <span class="number">8</span> ? key.slice(<span class="number">0</span>, <span class="number">8</span>) : key.concat(<span class="string">&#x27;0&#x27;</span>.repeat(<span class="number">8</span> - key.length))</span><br><span class="line">    iv = iv.length &gt;= <span class="number">8</span> ? iv.slice(<span class="number">0</span>, <span class="number">8</span>) : iv.concat(<span class="string">&#x27;0&#x27;</span>.repeat(<span class="number">8</span> - iv.length))</span><br><span class="line">    <span class="keyword">const</span> keyHex = Buffer.from(key)</span><br><span class="line">    <span class="keyword">const</span> ivHex = Buffer.from(iv)</span><br><span class="line">    <span class="keyword">const</span> decipher = crypto.createDecipheriv(<span class="string">&#x27;des-cbc&#x27;</span>, keyHex, ivHex)</span><br><span class="line">    <span class="keyword">let</span> decode = decipher.update(decodeTxt, <span class="string">&#x27;hex&#x27;</span>, <span class="string">&#x27;utf8&#x27;</span>)</span><br><span class="line">    decode += decipher.final(<span class="string">&#x27;utf8&#x27;</span>)</span><br><span class="line">    <span class="keyword">return</span> decodes</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>在使用时要特别注意加密和解密的编码方式要对应起来，如果没有对应起来就会报错或者得不到结果。</p>
-]]></content>
-      <categories>
-        <category>node</category>
-      </categories>
-      <tags>
-        <tag>JavaScript</tag>
-        <tag>des-cbc</tag>
-        <tag>node</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>微信小程序分享API踩坑</title>
     <url>/onShareAppMessage/</url>
     <content><![CDATA[<p>微信小程序分享API <code>onShareAppMessage</code> 带的参数只能叫<code>id</code>，不能叫其他的，不然拿不到。  </p>
@@ -265,9 +265,47 @@
       </tags>
   </entry>
   <entry>
+    <title>使用require.context导入多个模块</title>
+    <url>/requireContext/</url>
+    <content><![CDATA[<h2 id="使用契机"><a href="#使用契机" class="headerlink" title="使用契机"></a>使用契机</h2><p>将API接口文件分模块存放后需要导入统一的入口文件再统一导出，然后在<code>main.js</code>中引用。看着分门别类的接口文件很舒服，但是文件一多，导入统一入口文件<code>index.js</code>就显得很繁琐。效果如下:  </p>
+<p><img src="https://ftp.bmp.ovh/imgs/2020/10/76da31964bce1579.png" alt="api文件列表"></p>
+<p><img src="https://ftp.bmp.ovh/imgs/2020/10/44989b9516d6df61.png" alt="导入列表">  </p>
+<p><img src="https://ftp.bmp.ovh/imgs/2020/10/e18f9f04cb0884cf.png" alt="导入列表"></p>
+<p>说实话，这个看着越看越反人类。所以决定用更简洁的<code>require.context</code>来处理这个问题。  </p>
+<h2 id="require-context"><a href="#require-context" class="headerlink" title="require.context"></a>require.context</h2><p><code>require.context</code>是一个<code>webpack</code>的<code>api</code>,通过执行<code>require.context函数</code>获取一个特定的上下文,主要用来实现自动化导入模块,在前端工程中,如果遇到从一个文件夹引入很多模块的情况,可以使用这个<code>api</code>,它会遍历文件夹中的指定文件,然后自动导入,使得不需要每次显式的调用<code>import</code>导入模块  </p>
+<p><code>require.context函数</code>接受三个参数</p>
+<ul>
+<li><p><code>directory &#123;String&#125;</code> -读取文件的路径</p>
+</li>
+<li><p><code>useSubdirectories &#123;Boolean&#125;</code> -是否遍历文件的子目录</p>
+</li>
+<li><p><code>regExp &#123;RegExp&#125;</code> -匹配文件的正则</p>
+</li>
+</ul>
+<p>webpack官网给出的例子是这样的:  </p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="built_in">require</span>.context(<span class="string">&#x27;./test&#x27;</span>, <span class="literal">false</span>, <span class="regexp">/.test.js$/</span>)</span><br></pre></td></tr></table></figure>
+
+<h2 id="开始使用"><a href="#开始使用" class="headerlink" title="开始使用"></a>开始使用</h2><p>首先根据需要让<code>require.context</code>遍历<code>/src/api</code>目录。遍历的过程中肯定会把index.js也遍历进去，因为不想之后来处理遍历后的结果，所以先粗暴的用名称区分。  </p>
+<p>我将以前的模块名.js改成为了模块名.api.js。  </p>
+<p><img src="https://ftp.bmp.ovh/imgs/2020/10/f57afe8c22ddd303.png" alt="api文件列表"></p>
+<p>接着开始编写一个导入函数来处理<code>require.context</code>返回的结果。  </p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">// importAllModule.js</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@description </span>批量导入API</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param <span class="type">&#123;Object&#125;</span> </span>context 上下文对象</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param <span class="type">&#123;RegExp&#125;</span> </span>reg 匹配规则</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@returns <span class="type">&#123;Object&#125;</span> </span>对象</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">importAllModule</span>(<span class="params">context, reg</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">const</span> map = &#123;&#125;</span><br><span class="line">    <span class="keyword">let</span> tmp = &#123;&#125;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">let</span> key <span class="keyword">of</span> context.keys()) &#123;</span><br><span class="line">        <span class="keyword">const</span> keyArr = key.split(<span class="string">&#x27;/&#x27;</span>)</span><br><span class="line">        keyArr.shift()</span><br><span class="line">        map[keyArr.join(<span class="string">&#x27;.&#x27;</span>).replace(reg, <span class="string">&#x27;&#x27;</span>)] = context(key).default</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">let</span> key <span class="keyword">in</span> map) &#123;</span><br><span class="line">        tmp = &#123;</span><br><span class="line">            ...tmp,</span><br><span class="line">            ...map[key]</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> tmp</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> importAllModule </span><br></pre></td></tr></table></figure>
+<p>接着在<code>index.js</code>中导入<code>importAllModule.js</code>并调用导入函数。  </p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">// index.js  </span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> importAllModule <span class="keyword">from</span> <span class="string">&#x27;../common/js/importAllModule&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> api = importAllModule(<span class="built_in">require</span>.context(<span class="string">&#x27;api&#x27;</span>, <span class="literal">true</span>, <span class="regexp">/\.api.js$/</span>), <span class="regexp">/\.api.js$/g</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> api</span><br></pre></td></tr></table></figure>
+<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>经过<code>require.context</code>的改造，大大解放了生产力。首先是index.js变得更加的简洁和可维护。其次，只要按格式编写API文件的文件名，就会被<code>require.context</code>遍历到并导入到<code>index.js</code>中。</p>
+]]></content>
+      <categories>
+        <category>ES6</category>
+      </categories>
+      <tags>
+        <tag>commonJS</tag>
+        <tag>webpack</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>JS生成二维码</title>
     <url>/qrcode/</url>
-    <content><![CDATA[<h2 id="qrcode与qr-image"><a href="#qrcode与qr-image" class="headerlink" title="qrcode与qr-image"></a><code>qrcode</code>与<code>qr-image</code></h2><table>
+    <content><![CDATA[<h2 id="qrcode与qr-image"><a href="#qrcode与qr-image" class="headerlink" title="qrcode与qr-image"></a>qrcode与qr-image</h2><table>
 <thead>
 <tr>
 <th>库名称</th>
@@ -313,44 +351,6 @@
       <tags>
         <tag>JavaScript</tag>
         <tag>工具</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>使用require.context导入多个模块</title>
-    <url>/requireContext/</url>
-    <content><![CDATA[<h2 id="使用契机"><a href="#使用契机" class="headerlink" title="使用契机"></a>使用契机</h2><p>将API接口文件分模块存放后需要导入统一的入口文件再统一导出，然后在<code>main.js</code>中引用。看着分门别类的接口文件很舒服，但是文件一多，导入统一入口文件<code>index.js</code>就显得很繁琐。效果如下:  </p>
-<p><img src="https://ftp.bmp.ovh/imgs/2020/10/76da31964bce1579.png" alt="api文件列表"></p>
-<p><img src="https://ftp.bmp.ovh/imgs/2020/10/44989b9516d6df61.png" alt="导入列表">  </p>
-<p><img src="https://ftp.bmp.ovh/imgs/2020/10/e18f9f04cb0884cf.png" alt="导入列表"></p>
-<p>说实话，这个看着越看越反人类。所以决定用更简洁的<code>require.context</code>来处理这个问题。  </p>
-<h2 id="require-context"><a href="#require-context" class="headerlink" title="require.context"></a>require.context</h2><p><code>require.context</code>是一个<code>webpack</code>的<code>api</code>,通过执行<code>require.context函数</code>获取一个特定的上下文,主要用来实现自动化导入模块,在前端工程中,如果遇到从一个文件夹引入很多模块的情况,可以使用这个<code>api</code>,它会遍历文件夹中的指定文件,然后自动导入,使得不需要每次显式的调用<code>import</code>导入模块  </p>
-<p><code>require.context函数</code>接受三个参数</p>
-<ul>
-<li><p><code>directory &#123;String&#125;</code> -读取文件的路径</p>
-</li>
-<li><p><code>useSubdirectories &#123;Boolean&#125;</code> -是否遍历文件的子目录</p>
-</li>
-<li><p><code>regExp &#123;RegExp&#125;</code> -匹配文件的正则</p>
-</li>
-</ul>
-<p>webpack官网给出的例子是这样的:  </p>
-<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="built_in">require</span>.context(<span class="string">&#x27;./test&#x27;</span>, <span class="literal">false</span>, <span class="regexp">/.test.js$/</span>)</span><br></pre></td></tr></table></figure>
-
-<h2 id="开始使用"><a href="#开始使用" class="headerlink" title="开始使用"></a>开始使用</h2><p>首先根据需要让<code>require.context</code>遍历<code>/src/api</code>目录。遍历的过程中肯定会把index.js也遍历进去，因为不想之后来处理遍历后的结果，所以先粗暴的用名称区分。  </p>
-<p>我将以前的模块名.js改成为了模块名.api.js。  </p>
-<p><img src="https://ftp.bmp.ovh/imgs/2020/10/f57afe8c22ddd303.png" alt="api文件列表"></p>
-<p>接着开始编写一个导入函数来处理<code>require.context</code>返回的结果。  </p>
-<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">// importAllModule.js</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@description </span>批量导入API</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param <span class="type">&#123;Object&#125;</span> </span>context 上下文对象</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param <span class="type">&#123;RegExp&#125;</span> </span>reg 匹配规则</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@returns <span class="type">&#123;Object&#125;</span> </span>对象</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">importAllModule</span>(<span class="params">context, reg</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">const</span> map = &#123;&#125;</span><br><span class="line">    <span class="keyword">let</span> tmp = &#123;&#125;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">let</span> key <span class="keyword">of</span> context.keys()) &#123;</span><br><span class="line">        <span class="keyword">const</span> keyArr = key.split(<span class="string">&#x27;/&#x27;</span>)</span><br><span class="line">        keyArr.shift()</span><br><span class="line">        map[keyArr.join(<span class="string">&#x27;.&#x27;</span>).replace(reg, <span class="string">&#x27;&#x27;</span>)] = context(key).default</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">let</span> key <span class="keyword">in</span> map) &#123;</span><br><span class="line">        tmp = &#123;</span><br><span class="line">            ...tmp,</span><br><span class="line">            ...map[key]</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> tmp</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> importAllModule </span><br></pre></td></tr></table></figure>
-<p>接着在<code>index.js</code>中导入<code>importAllModule.js</code>并调用导入函数。  </p>
-<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">// index.js  </span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> importAllModule <span class="keyword">from</span> <span class="string">&#x27;../common/js/importAllModule&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> api = importAllModule(<span class="built_in">require</span>.context(<span class="string">&#x27;api&#x27;</span>, <span class="literal">true</span>, <span class="regexp">/\.api.js$/</span>), <span class="regexp">/\.api.js$/g</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> api</span><br></pre></td></tr></table></figure>
-<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>经过<code>require.context</code>的改造，大大解放了生产力。首先是index.js变得更加的简洁和可维护。其次，只要按格式编写API文件的文件名，就会被<code>require.context</code>遍历到并导入到<code>index.js</code>中。</p>
-]]></content>
-      <categories>
-        <category>ES6</category>
-      </categories>
-      <tags>
-        <tag>commonJS</tag>
-        <tag>webpack</tag>
       </tags>
   </entry>
 </search>
