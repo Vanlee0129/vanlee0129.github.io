@@ -9,7 +9,7 @@
     
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
   <title>
-    JS生成二维码 |  
+    简单的前端灰度发布方案 |  
   </title>
   <meta name="generator" content="hexo-theme-ayer">
   
@@ -48,7 +48,7 @@
     <main class="content on">
       <section class="outer">
   <article
-  id="post-qrcode"
+  id="post-grayDeploy"
   class="article article-type-post"
   itemscope
   itemprop="blogPost"
@@ -59,15 +59,15 @@
     <header class="article-header">
        
 <h1 class="article-title sea-center" style="border-left:0" itemprop="name">
-  JS生成二维码
+  简单的前端灰度发布方案
 </h1>
  
 
     </header>
      
     <div class="article-meta">
-      <a href="/qrcode/" class="article-date">
-  <time datetime="2021-02-25T05:34:44.000Z" itemprop="datePublished">2021-02-25</time>
+      <a href="/grayDeploy/" class="article-date">
+  <time datetime="2021-03-12T05:34:44.000Z" itemprop="datePublished">2021-03-12</time>
 </a> 
   <div class="article-category">
     <a class="article-category-link" href="/categories/JS/">JS</a>
@@ -78,7 +78,7 @@
         <span class="post-meta-item-icon">
             <i class="ri-quill-pen-line"></i>
             <span class="post-meta-item-text"> 字数统计:</span>
-            <span class="post-count">308</span>
+            <span class="post-count">582</span>
         </span>
     </span>
 
@@ -87,7 +87,7 @@
         <span class="post-meta-item-icon">
             <i class="ri-book-open-line"></i>
             <span class="post-meta-item-text"> 阅读时长≈</span>
-            <span class="post-count">1 分钟</span>
+            <span class="post-count">2 分钟</span>
         </span>
     </span>
 </div>
@@ -102,45 +102,15 @@
   
     <div class="article-entry" itemprop="articleBody">
        
-  <h2 id="qrcode与qr-image"><a href="#qrcode与qr-image" class="headerlink" title="qrcode与qr-image"></a>qrcode与qr-image</h2><table>
-<thead>
-<tr>
-<th>库名称</th>
-<th>库大小</th>
-<th>github start</th>
-<th>文档地址</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>qrcode</td>
-<td>573.35 KiB</td>
-<td>4.7k</td>
-<td><a target="_blank" rel="noopener" href="https://github.com/soldair/node-qrcode">https://github.com/soldair/node-qrcode</a></td>
-</tr>
-<tr>
-<td>qr-image</td>
-<td>10.67 KiB</td>
-<td>917</td>
-<td><a target="_blank" rel="noopener" href="https://github.com/alexeyten/qr-image">https://github.com/alexeyten/qr-image</a></td>
-</tr>
-</tbody></table>
-<h2 id="效果对比"><a href="#效果对比" class="headerlink" title="效果对比"></a>效果对比</h2><p><img src="https://www.hualigs.cn/image/6037038499fea.jpg" alt="效果"></p>
-<h2 id="限制说明"><a href="#限制说明" class="headerlink" title="限制说明"></a>限制说明</h2><ul>
-<li><code>qrcode</code>使用的url长度超过215可能报错  </li>
-<li><code>qrcode</code>和<code>qr-image</code>url越长生成的二维码越模糊  </li>
-</ul>
-<h2 id="易用性"><a href="#易用性" class="headerlink" title="易用性"></a>易用性</h2><p><code>qrcode</code>使用示例  </p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> QRCode <span class="keyword">from</span> <span class="string">&#x27;qrcode&#x27;</span></span><br><span class="line"> </span><br><span class="line"><span class="comment">// With promises</span></span><br><span class="line">QRCode.toDataURL(<span class="string">&#x27;I am a pony!&#x27;</span>)</span><br><span class="line">  .then(<span class="function"><span class="params">url</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(url) <span class="comment">//二维码url，base64形式</span></span><br><span class="line">  &#125;)</span><br><span class="line">  .catch(<span class="function"><span class="params">err</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="built_in">console</span>.error(err)</span><br><span class="line">  &#125;)</span><br><span class="line"> </span><br><span class="line"><span class="comment">// With async/await</span></span><br><span class="line"><span class="keyword">const</span> generateQR = <span class="keyword">async</span> text =&gt; &#123;</span><br><span class="line">  <span class="keyword">try</span> &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="keyword">await</span> QRCode.toDataURL(text))</span><br><span class="line">  &#125; <span class="keyword">catch</span> (err) &#123;</span><br><span class="line">    <span class="built_in">console</span>.error(err)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+  <h2 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h2><p>灰度发布（又名金丝雀发布）是指在黑与白之间，能够平滑过渡的一种发布方式。在其上可以进行A/B testing，即让一部分用户继续用产品特性A，一部分用户开始用产品特性B，如果用户对B没有什么反对意见，那么逐步扩大范围，把所有用户都迁移到B上面来。灰度发布可以保证整体系统的稳定，在初始灰度的时候就可以发现、调整问题，以保证其影响度。  </p>
+<h2 id="实现思路"><a href="#实现思路" class="headerlink" title="实现思路"></a>实现思路</h2><p>灰度发布的核心就是分流，一部分用户能看到，一部分用户看不到。所以主要实现的核心分流算法。在实现这个需求的时候，我想到了抽签。比如在1-100的数字中抽到1-30的用户进入beta版本，抽到31-100的用户进入stable版本。这样就相当于是30%的流量进入灰度版本。  </p>
+<h2 id="具体实现"><a href="#具体实现" class="headerlink" title="具体实现"></a>具体实现</h2><p>首先实现产生1-100的整数的随机函数。  </p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/***************************************</span></span><br><span class="line"><span class="comment"> * 生成从minNum到maxNum的随机数。</span></span><br><span class="line"><span class="comment"> * 如果指定decimalNum个数，则生成指定小数位数的随机数</span></span><br><span class="line"><span class="comment"> * 如果不指定任何参数，则生成0-1之间的随机数。</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@minNum</span>：[数据类型是Integer]生成的随机数的最小值（minNum和maxNum可以调换位置）</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@maxNum</span>：[数据类型是Integer]生成的随机数的最大值</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@decimalNum</span>：[数据类型是Integer]如果生成的是带有小数的随机数，则指定随机数的小数点后的位数</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> ****************************************/</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">randomNum</span>(<span class="params">maxNum, minNum, decimalNum</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> max = <span class="number">0</span>,</span><br><span class="line">        min = <span class="number">0</span>;</span><br><span class="line">    minNum &lt;= maxNum ? ((min = minNum), (max = maxNum)) : ((min = maxNum), (max = minNum));</span><br><span class="line">    <span class="keyword">switch</span> (<span class="built_in">arguments</span>.length) &#123;</span><br><span class="line">        <span class="keyword">case</span> <span class="number">1</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="built_in">Math</span>.floor(<span class="built_in">Math</span>.random() * (max + <span class="number">1</span>));</span><br><span class="line">        <span class="keyword">case</span> <span class="number">2</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="built_in">Math</span>.floor(<span class="built_in">Math</span>.random() * (max - min + <span class="number">1</span>) + min);</span><br><span class="line">        <span class="keyword">case</span> <span class="number">3</span>:</span><br><span class="line">            <span class="keyword">return</span> (<span class="built_in">Math</span>.random() * (max - min) + min).toFixed(decimalNum);</span><br><span class="line">        <span class="keyword">default</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="built_in">Math</span>.random();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p><code>qr-image</code>使用示例</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> qr = <span class="built_in">require</span>(<span class="string">&#x27;qr-image&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> qr_url = qr.imageSync(<span class="string">&#x27;I love QR!&#x27;</span>); <span class="comment">//qr_url为unit8Array，需要自己转为Base64</span></span><br></pre></td></tr></table></figure>
+<p>然后实现灰度流量的判断  </p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@description </span>灰度显示</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param <span class="type">&#123;Number&#125;</span> </span>defaultLucky 灰度值，取值范围[0,1]</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@returns <span class="type">&#123;Boolean&#125;</span> </span>ture/false</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">export</span> <span class="function"><span class="keyword">function</span> <span class="title">isShowGray</span>(<span class="params">defaultLucky</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (!lucky) lucky = defaultLucky;</span><br><span class="line">    <span class="keyword">var</span> num = randomNum(<span class="number">1</span>, <span class="number">100</span>);</span><br><span class="line">    <span class="keyword">if</span> (num &lt;= <span class="built_in">Number</span>(<span class="number">100</span> * lucky) &amp;&amp; num &gt;= <span class="number">1</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ul>
-<li>从包大小看，<code>qr-image</code>远小于<code>qrcode</code></li>
-<li>从生成二维的清晰度看，<code>qrcode</code>更加清晰。结合线上的二维使用的地方，二维码最小尺寸为<code>48px</code>，<code>qr-image</code>生成的<code>48px</code>的二维码在低分屏上扫描有一定的困难。  </li>
-<li>从易用性看，<code>qrcode</code>为ES Module的方式使用，支持<code>Promise</code>和<code>async/await</code>，更加符合现代前端的使用习惯。  </li>
-<li>从长期使用看，<code>qr-image</code>作者已经停止维护，<code>qrcode</code>作者还在继续维护且使用人数更多。  </li>
-</ul>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>至此，简单的灰度方案就做好了。在进入页面时先调用<code>isShowGray</code>函数判断进入哪个方案。这样就可以做到简单的用户分流。</p>
  
       <!-- reward -->
       
@@ -203,12 +173,12 @@
     <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://vanlee0129.gitee.io/qrcode/" alt="微信分享二维码">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://vanlee0129.gitee.io/grayDeploy/" alt="微信分享二维码">
     </div>
 </div>
 
 <div id="share-mask"></div>  
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JavaScript/" rel="tag">JavaScript</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%B7%A5%E5%85%B7/" rel="tag">工具</a></li></ul>
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JavaScript/" rel="tag">JavaScript</a></li></ul>
 
     </footer>
   </div>
@@ -216,19 +186,10 @@
    
   <nav class="article-nav">
     
-      <a href="/grayDeploy/" class="article-nav-link">
-        <strong class="article-nav-caption">上一篇</strong>
-        <div class="article-nav-title">
-          
-            简单的前端灰度发布方案
-          
-        </div>
-      </a>
     
-    
-      <a href="/npm/" class="article-nav-link">
+      <a href="/qrcode/" class="article-nav-link">
         <strong class="article-nav-caption">下一篇</strong>
-        <div class="article-nav-title">npm发包记录</div>
+        <div class="article-nav-title">JS生成二维码</div>
       </a>
     
   </nav>
