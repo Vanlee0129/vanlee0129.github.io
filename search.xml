@@ -83,30 +83,6 @@
       </tags>
   </entry>
   <entry>
-    <title>ES6中的let</title>
-    <url>/es6-let/</url>
-    <content><![CDATA[<p>let是ES6定义的新关键词，用于声明变量，例如：</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">let</span> a = <span class="number">1</span></span><br><span class="line"><span class="built_in">console</span>.log(a) <span class="comment">//1</span></span><br></pre></td></tr></table></figure>
-<p>let声明的变量不能重复声明，例如： </p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">let</span> a = <span class="number">1</span> </span><br><span class="line"><span class="keyword">let</span> a = <span class="number">2</span> <span class="comment">//Identifier &#x27;a&#x27; has already been declared</span></span><br></pre></td></tr></table></figure>
-<p>let也可以不用初始化，例如：</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">let</span> a;</span><br><span class="line"><span class="built_in">console</span>.log(a)<span class="comment">// undefined</span></span><br></pre></td></tr></table></figure>
-<p>let是块级作用域，可以解决for循环中变量泄露的问题，例如: </p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> arr = []</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; <span class="number">10</span>; i++) &#123;</span><br><span class="line">    arr.push(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;<span class="built_in">console</span>.log(i)&#125;)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">arr.forEach(<span class="function"><span class="keyword">function</span>(<span class="params">arr</span>)</span>&#123;</span><br><span class="line">    arr() <span class="comment">//打印10次10</span></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
-<p>上面为什么输出10次10呢？因为为变量 i 在循环的每次迭代中都被共享了，意味着循环内创建的那些函数都拥有对于同一 变量的引用。在循环结束后，变量 i 的值会是 10 ，因此当 console.log(i) 被调用时， 每次都打印出 10 。  </p>
-<p>现在用let改写这个例子： </p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> arr = []</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; <span class="number">10</span>; i++) &#123;</span><br><span class="line">    arr.push(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;<span class="built_in">console</span>.log(i)&#125;)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">arr.forEach(<span class="function"><span class="keyword">function</span>(<span class="params">arr</span>)</span>&#123;</span><br><span class="line">    arr() <span class="comment">//0-9</span></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
-<p>为什么let可以解决这个问题呢？因为在每次迭代中，let都会创建一个新的同名变量并对其进行初始化。在循环中 let 声明每次都创建了一个新的 i 变量，因此在循环内部创建的函数获得了各自的 i 副 本，而每个 i 副本的值都在每次循环迭代声明变量的时候被确定了。</p>
-]]></content>
-      <categories>
-        <category>ES6</category>
-      </categories>
-      <tags>
-        <tag>JavaScript</tag>
-        <tag>let</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>使用Docker快速安装Jenkins</title>
     <url>/dockerInstallJenkins/</url>
     <content><![CDATA[<h2 id="安装环境"><a href="#安装环境" class="headerlink" title="安装环境"></a>安装环境</h2><p>CentOS Linux release 7.6.1810 (Core)<br>Docker version 19.03.12  </p>
@@ -132,6 +108,30 @@
       <tags>
         <tag>Jenkins</tag>
         <tag>Docker</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>ES6中的let</title>
+    <url>/es6-let/</url>
+    <content><![CDATA[<p>let是ES6定义的新关键词，用于声明变量，例如：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">let</span> a = <span class="number">1</span></span><br><span class="line"><span class="built_in">console</span>.log(a) <span class="comment">//1</span></span><br></pre></td></tr></table></figure>
+<p>let声明的变量不能重复声明，例如： </p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">let</span> a = <span class="number">1</span> </span><br><span class="line"><span class="keyword">let</span> a = <span class="number">2</span> <span class="comment">//Identifier &#x27;a&#x27; has already been declared</span></span><br></pre></td></tr></table></figure>
+<p>let也可以不用初始化，例如：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">let</span> a;</span><br><span class="line"><span class="built_in">console</span>.log(a)<span class="comment">// undefined</span></span><br></pre></td></tr></table></figure>
+<p>let是块级作用域，可以解决for循环中变量泄露的问题，例如: </p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> arr = []</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; <span class="number">10</span>; i++) &#123;</span><br><span class="line">    arr.push(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;<span class="built_in">console</span>.log(i)&#125;)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">arr.forEach(<span class="function"><span class="keyword">function</span>(<span class="params">arr</span>)</span>&#123;</span><br><span class="line">    arr() <span class="comment">//打印10次10</span></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<p>上面为什么输出10次10呢？因为为变量 i 在循环的每次迭代中都被共享了，意味着循环内创建的那些函数都拥有对于同一 变量的引用。在循环结束后，变量 i 的值会是 10 ，因此当 console.log(i) 被调用时， 每次都打印出 10 。  </p>
+<p>现在用let改写这个例子： </p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> arr = []</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; <span class="number">10</span>; i++) &#123;</span><br><span class="line">    arr.push(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;<span class="built_in">console</span>.log(i)&#125;)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">arr.forEach(<span class="function"><span class="keyword">function</span>(<span class="params">arr</span>)</span>&#123;</span><br><span class="line">    arr() <span class="comment">//0-9</span></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<p>为什么let可以解决这个问题呢？因为在每次迭代中，let都会创建一个新的同名变量并对其进行初始化。在循环中 let 声明每次都创建了一个新的 i 变量，因此在循环内部创建的函数获得了各自的 i 副 本，而每个 i 副本的值都在每次循环迭代声明变量的时候被确定了。</p>
+]]></content>
+      <categories>
+        <category>ES6</category>
+      </categories>
+      <tags>
+        <tag>JavaScript</tag>
+        <tag>let</tag>
       </tags>
   </entry>
   <entry>
