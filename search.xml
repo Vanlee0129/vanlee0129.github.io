@@ -83,6 +83,34 @@
       </tags>
   </entry>
   <entry>
+    <title>使用Docker快速安装Jenkins</title>
+    <url>/dockerInstallJenkins/</url>
+    <content><![CDATA[<h2 id="安装环境"><a href="#安装环境" class="headerlink" title="安装环境"></a>安装环境</h2><p>CentOS Linux release 7.6.1810 (Core)<br>Docker version 19.03.12  </p>
+<h2 id="拉取镜像"><a href="#拉取镜像" class="headerlink" title="拉取镜像"></a>拉取镜像</h2><p>我这里安装的版本是<code>jenkinsci/blueocean</code>，可以去这里获取你需要的版本: <a href="https://hub.docker.com/_/jenkins?tab=tags">dockerHub</a>，注意版本之间的区别。  </p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> docker pull jenkinsci/blueocean</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="创建本地数据卷"><a href="#创建本地数据卷" class="headerlink" title="创建本地数据卷"></a>创建本地数据卷</h2><p>映射本地数据卷的路径为/data/jenkins_home/，想放别的地方可以自行修改</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> mkdir -p /data/jenkins_home/</span></span><br></pre></td></tr></table></figure>
+<p>需要修改下目录权限，因为当映射本地数据卷时，/data/jenkins_home/目录的拥有者为root用户，而容器中jenkins用户的 uid 为 1000。  </p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> chown -R 1000:1000 /data/jenkins_home/</span></span><br></pre></td></tr></table></figure>
+<h2 id="创建容器"><a href="#创建容器" class="headerlink" title="创建容器"></a>创建容器</h2><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> docker run -d --name jenkins -p 9021:8080 -p 50000:50000 -v /data/jenkins_home:/var/jenkins_home jenkins/jenkins:2.222.3-centos</span></span><br></pre></td></tr></table></figure>
+<p><code>-d</code> 标识是让 docker 容器在后台运行<br><code>--name</code> 定义一个容器的名字，如果没有指定，那么会自动生成一个随机数字符串当做UUID<br><code>-p</code> 9021:8080 端口映射，不被占用的合法端口都可以使用，我用的9021<br><code>-p</code> 50000:50000 端口映射<br><code>-v</code> /data/jenkins_home:/var/jenkins_home 绑定一个数据卷，/data/jenkins_home是刚才创建的本地数据卷</p>
+<h2 id="配置-Jenkins"><a href="#配置-Jenkins" class="headerlink" title="配置 Jenkins"></a>配置 Jenkins</h2><h3 id="打开-Jenkins"><a href="#打开-Jenkins" class="headerlink" title="打开 Jenkins"></a>打开 Jenkins</h3><p>通过浏览器访问 <code>http://xx.xx.xx.xx:9021/</code>（注意替换成你自己的IP和端口）进入初始页，如果 Jenkins 还没有启动完成，会显示如下内容<br><img src="https://ftp.bmp.ovh/imgs/2020/10/cd62632b22fa7dc1.png" alt="初始化界面"></p>
+<h3 id="输入管理员密码"><a href="#输入管理员密码" class="headerlink" title="输入管理员密码"></a>输入管理员密码</h3><p><img src="https://ftp.bmp.ovh/imgs/2020/10/305ce3669e4731d4.png" alt="输入管理员密码"><br>这里要求输入初始的管理员密码，根据提示密码在/var/jenkins_home/secrets/initialAdminPassword这个文件中，注意这个路径是 Docker 容器中的，所以我们通过如下命令获取  </p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> cat /data/jenkins_home/secrets/initialAdminPassword </span></span><br></pre></td></tr></table></figure>
+<p>输入密码后，点击<code>继续</code>    </p>
+<hr>
+<p>到此Jenkins就安装完毕，安装插件时可以先换源再安装，不然速度会很慢 </p>
+]]></content>
+      <categories>
+        <category>实用工具</category>
+      </categories>
+      <tags>
+        <tag>Jenkins</tag>
+        <tag>Docker</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>ES6中的let</title>
     <url>/es6-let/</url>
     <content><![CDATA[<p>let是ES6定义的新关键词，用于声明变量，例如：</p>
@@ -122,6 +150,26 @@
       </tags>
   </entry>
   <entry>
+    <title>简单的前端灰度发布方案</title>
+    <url>/grayDeploy/</url>
+    <content><![CDATA[<h2 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h2><p>灰度发布（又名金丝雀发布）是指在黑与白之间，能够平滑过渡的一种发布方式。在其上可以进行A/B testing，即让一部分用户继续用产品特性A，一部分用户开始用产品特性B，如果用户对B没有什么反对意见，那么逐步扩大范围，把所有用户都迁移到B上面来。灰度发布可以保证整体系统的稳定，在初始灰度的时候就可以发现、调整问题，以保证其影响度。  </p>
+<h2 id="实现思路"><a href="#实现思路" class="headerlink" title="实现思路"></a>实现思路</h2><p>灰度发布的核心就是分流，一部分用户能看到，一部分用户看不到。所以主要实现的核心分流算法。在实现这个需求的时候，我想到了抽签。比如在1-100的数字中抽到1-30的用户进入beta版本，抽到31-100的用户进入stable版本。这样就相当于是30%的流量进入灰度版本。  </p>
+<h2 id="具体实现"><a href="#具体实现" class="headerlink" title="具体实现"></a>具体实现</h2><p>首先实现产生1-100的整数的随机函数。  </p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">/***************************************</span></span><br><span class="line"><span class="comment"> * 生成从minNum到maxNum的随机数。</span></span><br><span class="line"><span class="comment"> * 如果指定decimalNum个数，则生成指定小数位数的随机数</span></span><br><span class="line"><span class="comment"> * 如果不指定任何参数，则生成0-1之间的随机数。</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@minNum</span>：[数据类型是Integer]生成的随机数的最小值（minNum和maxNum可以调换位置）</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@maxNum</span>：[数据类型是Integer]生成的随机数的最大值</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@decimalNum</span>：[数据类型是Integer]如果生成的是带有小数的随机数，则指定随机数的小数点后的位数</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> ****************************************/</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">randomNum</span>(<span class="params">maxNum, minNum, decimalNum</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> max = <span class="number">0</span>,</span><br><span class="line">        min = <span class="number">0</span>;</span><br><span class="line">    minNum &lt;= maxNum ? ((min = minNum), (max = maxNum)) : ((min = maxNum), (max = minNum));</span><br><span class="line">    <span class="keyword">switch</span> (<span class="built_in">arguments</span>.length) &#123;</span><br><span class="line">        <span class="keyword">case</span> <span class="number">1</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="built_in">Math</span>.floor(<span class="built_in">Math</span>.random() * (max + <span class="number">1</span>));</span><br><span class="line">        <span class="keyword">case</span> <span class="number">2</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="built_in">Math</span>.floor(<span class="built_in">Math</span>.random() * (max - min + <span class="number">1</span>) + min);</span><br><span class="line">        <span class="keyword">case</span> <span class="number">3</span>:</span><br><span class="line">            <span class="keyword">return</span> (<span class="built_in">Math</span>.random() * (max - min) + min).toFixed(decimalNum);</span><br><span class="line">        <span class="keyword">default</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="built_in">Math</span>.random();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>然后实现灰度流量的判断  </p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@description </span>灰度显示</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param <span class="type">&#123;Number&#125;</span> </span>defaultLucky 灰度值，取值范围[0,1]</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@returns <span class="type">&#123;Boolean&#125;</span> </span>ture/false</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">export</span> <span class="function"><span class="keyword">function</span> <span class="title">isShowGray</span>(<span class="params">defaultLucky</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (!lucky) lucky = defaultLucky;</span><br><span class="line">    <span class="keyword">var</span> num = randomNum(<span class="number">1</span>, <span class="number">100</span>);</span><br><span class="line">    <span class="keyword">if</span> (num &lt;= <span class="built_in">Number</span>(<span class="number">100</span> * lucky) &amp;&amp; num &gt;= <span class="number">1</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>至此，简单的灰度方案就做好了。在进入页面时先调用<code>isShowGray</code>函数判断进入哪个方案。这样就可以做到简单的用户分流。</p>
+]]></content>
+      <categories>
+        <category>JS</category>
+      </categories>
+      <tags>
+        <tag>JavaScript</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>使用node加解密DES-CBC</title>
     <url>/node-des/</url>
     <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>为了保护请求内容不被抓包软件暴露出来，很多产品都采用了请求加密的方式。DES-CBC就是一种对称加密方式。在网上查资料时发现node的资料不多，所以研究之后记录一下使用node加解密DES-CBC。  </p>
@@ -143,23 +191,41 @@
       </tags>
   </entry>
   <entry>
-    <title>简单的前端灰度发布方案</title>
-    <url>/grayDeploy/</url>
-    <content><![CDATA[<h2 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h2><p>灰度发布（又名金丝雀发布）是指在黑与白之间，能够平滑过渡的一种发布方式。在其上可以进行A/B testing，即让一部分用户继续用产品特性A，一部分用户开始用产品特性B，如果用户对B没有什么反对意见，那么逐步扩大范围，把所有用户都迁移到B上面来。灰度发布可以保证整体系统的稳定，在初始灰度的时候就可以发现、调整问题，以保证其影响度。  </p>
-<h2 id="实现思路"><a href="#实现思路" class="headerlink" title="实现思路"></a>实现思路</h2><p>灰度发布的核心就是分流，一部分用户能看到，一部分用户看不到。所以主要实现的核心分流算法。在实现这个需求的时候，我想到了抽签。比如在1-100的数字中抽到1-30的用户进入beta版本，抽到31-100的用户进入stable版本。这样就相当于是30%的流量进入灰度版本。  </p>
-<h2 id="具体实现"><a href="#具体实现" class="headerlink" title="具体实现"></a>具体实现</h2><p>首先实现产生1-100的整数的随机函数。  </p>
-<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">/***************************************</span></span><br><span class="line"><span class="comment"> * 生成从minNum到maxNum的随机数。</span></span><br><span class="line"><span class="comment"> * 如果指定decimalNum个数，则生成指定小数位数的随机数</span></span><br><span class="line"><span class="comment"> * 如果不指定任何参数，则生成0-1之间的随机数。</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@minNum</span>：[数据类型是Integer]生成的随机数的最小值（minNum和maxNum可以调换位置）</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@maxNum</span>：[数据类型是Integer]生成的随机数的最大值</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@decimalNum</span>：[数据类型是Integer]如果生成的是带有小数的随机数，则指定随机数的小数点后的位数</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> ****************************************/</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">randomNum</span>(<span class="params">maxNum, minNum, decimalNum</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> max = <span class="number">0</span>,</span><br><span class="line">        min = <span class="number">0</span>;</span><br><span class="line">    minNum &lt;= maxNum ? ((min = minNum), (max = maxNum)) : ((min = maxNum), (max = minNum));</span><br><span class="line">    <span class="keyword">switch</span> (<span class="built_in">arguments</span>.length) &#123;</span><br><span class="line">        <span class="keyword">case</span> <span class="number">1</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="built_in">Math</span>.floor(<span class="built_in">Math</span>.random() * (max + <span class="number">1</span>));</span><br><span class="line">        <span class="keyword">case</span> <span class="number">2</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="built_in">Math</span>.floor(<span class="built_in">Math</span>.random() * (max - min + <span class="number">1</span>) + min);</span><br><span class="line">        <span class="keyword">case</span> <span class="number">3</span>:</span><br><span class="line">            <span class="keyword">return</span> (<span class="built_in">Math</span>.random() * (max - min) + min).toFixed(decimalNum);</span><br><span class="line">        <span class="keyword">default</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="built_in">Math</span>.random();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+    <title>微信小程序分享API踩坑</title>
+    <url>/onShareAppMessage/</url>
+    <content><![CDATA[<p>微信小程序分享API <code>onShareAppMessage</code> 带的参数只能叫<code>id</code>，不能叫其他的，不然拿不到。  </p>
+<p>使用时可以在单页面使用，也可以使用全局混入，一般来说我们都使用全局混入的方式去做。  </p>
+<p>注意，这个函数是一个页面钩子函数，需要与onLoad等函数同级。  </p>
+<p>使用示例：</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">//share.mixin.js</span></span><br><span class="line"><span class="keyword">export</span>  <span class="keyword">default</span> &#123;</span><br><span class="line">    data() &#123;</span><br><span class="line">        <span class="keyword">return</span> &#123;</span><br><span class="line">            share: &#123;</span><br><span class="line">                title: <span class="string">&#x27;你的标题&#x27;</span>,</span><br><span class="line">                path: <span class="string">&#x27;/pages/index/index&#x27;</span>,</span><br><span class="line">                imageUrl: <span class="string">&#x27;&#x27;</span>,</span><br><span class="line">                desc: <span class="string">&#x27;&#x27;</span>,</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;,</span><br><span class="line">    onShareAppMessage(res) &#123;</span><br><span class="line">        <span class="keyword">return</span> &#123;</span><br><span class="line">            <span class="comment">//标题</span></span><br><span class="line">            title: <span class="built_in">this</span>.share.title,</span><br><span class="line">            <span class="comment">//页面路径</span></span><br><span class="line">            path: <span class="built_in">this</span>.share.path,</span><br><span class="line">            <span class="comment">//分享后显示的图片的地址，默认为当前页面的截图</span></span><br><span class="line">            imageUrl: <span class="built_in">this</span>.share.imageUrl,</span><br><span class="line">            <span class="comment">//描述</span></span><br><span class="line">            desc: <span class="built_in">this</span>.share.desc,</span><br><span class="line">            <span class="comment">//内容</span></span><br><span class="line">            content: <span class="built_in">this</span>.share.content,</span><br><span class="line">            success(res) &#123;</span><br><span class="line">                uni.showToast(&#123;</span><br><span class="line">                    title: <span class="string">&#x27;分享成功&#x27;</span></span><br><span class="line">                &#125;)</span><br><span class="line">            &#125;,</span><br><span class="line">            fail(res) &#123;</span><br><span class="line">                uni.showToast(&#123;</span><br><span class="line">                    title: <span class="string">&#x27;分享失败&#x27;</span>,</span><br><span class="line">                    icon: <span class="string">&#x27;none&#x27;</span></span><br><span class="line">                &#125;)</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>然后实现灰度流量的判断  </p>
-<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@description </span>灰度显示</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param <span class="type">&#123;Number&#125;</span> </span>defaultLucky 灰度值，取值范围[0,1]</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@returns <span class="type">&#123;Boolean&#125;</span> </span>ture/false</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">export</span> <span class="function"><span class="keyword">function</span> <span class="title">isShowGray</span>(<span class="params">defaultLucky</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (!lucky) lucky = defaultLucky;</span><br><span class="line">    <span class="keyword">var</span> num = randomNum(<span class="number">1</span>, <span class="number">100</span>);</span><br><span class="line">    <span class="keyword">if</span> (num &lt;= <span class="built_in">Number</span>(<span class="number">100</span> * lucky) &amp;&amp; num &gt;= <span class="number">1</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>至此，简单的灰度方案就做好了。在进入页面时先调用<code>isShowGray</code>函数判断进入哪个方案。这样就可以做到简单的用户分流。</p>
+<p>在页面中使用：</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">//example.vue</span></span><br><span class="line"><span class="keyword">async</span> onLoad(options) &#123;</span><br><span class="line">      <span class="built_in">console</span>.log(options);</span><br><span class="line">      <span class="keyword">if</span>(options.id) &#123; <span class="comment">//如果传过来是id则为分享页面进入的</span></span><br><span class="line">        <span class="built_in">this</span>.spu_id = options.id</span><br><span class="line">        <span class="built_in">this</span>.share.path = <span class="string">`/pages/index/goodsDetail?id=<span class="subst">$&#123;options.id&#125;</span>`</span></span><br><span class="line">        <span class="keyword">return</span></span><br><span class="line">      &#125;</span><br><span class="line">      <span class="built_in">this</span>.spu_id = options.spu_id;</span><br><span class="line">      <span class="built_in">this</span>.share.path = <span class="string">`/pages/index/goodsDetail?id=<span class="subst">$&#123;options.spu_id&#125;</span>`</span>;</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
 ]]></content>
       <categories>
-        <category>JS</category>
+        <category>uniapp</category>
       </categories>
       <tags>
         <tag>JavaScript</tag>
+        <tag>微信小程序</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Python草料二维码等计数二维码刷访客量</title>
+    <url>/python/</url>
+    <content><![CDATA[<p>在生活中，很多时候被人邀请扫一扫二维码，刷一刷访客量。但是一个ip只能算作一个访问量，对此我们用Python来实现批量刷访客量。</p>
+<p>Python版本3.6</p>
+<p>首先上代码</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/python  </span></span><br><span class="line"><span class="comment"># -*- coding: UTF-8 -*-  </span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> urllib.parse  </span><br><span class="line"><span class="keyword">import</span> urllib.request  </span><br><span class="line"><span class="keyword">import</span> time  </span><br><span class="line"><span class="keyword">from</span> lxml <span class="keyword">import</span> etree</span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">from</span> selenium <span class="keyword">import</span> webdriver</span><br><span class="line"><span class="keyword">import</span> random</span><br><span class="line"></span><br><span class="line"><span class="comment"># 短网址还原 </span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">revertShortLink</span>(<span class="params">url</span>):</span></span><br><span class="line">	re = requests.head(url)</span><br><span class="line">	<span class="keyword">return</span> re.headers.get(<span class="string">&#x27;location&#x27;</span>)</span><br><span class="line"></span><br><span class="line">URL_1 = revertShortLink(<span class="string">&quot;your revertShortLink&quot;</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">global</span> url_path  </span><br><span class="line">url_path = [<span class="number">3</span>]  </span><br><span class="line">  </span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">verif_ip</span>(<span class="params">ip,port</span>):</span>    <span class="comment"># 验证ip有效性  </span></span><br><span class="line">	</span><br><span class="line">	test_url = URL_1</span><br><span class="line">	</span><br><span class="line">	browser = webdriver.Chrome()</span><br><span class="line"></span><br><span class="line">	browser.get(URL_1)</span><br><span class="line">	browser.quit()</span><br><span class="line">	time.sleep(random.randint(<span class="number">1</span>,<span class="number">20</span>))  </span><br><span class="line"></span><br><span class="line">file = open(<span class="string">&quot;ip.txt&quot;</span>)</span><br><span class="line"></span><br><span class="line">counter = <span class="number">0</span> </span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">while</span> <span class="number">1</span>:  </span><br><span class="line">	lines = file.readlines(<span class="number">100000</span>)  </span><br><span class="line">	<span class="keyword">if</span> <span class="keyword">not</span> lines:  </span><br><span class="line">		<span class="keyword">break</span>  </span><br><span class="line">	<span class="keyword">for</span> data <span class="keyword">in</span> lines:</span><br><span class="line">		counter += <span class="number">1</span>  </span><br><span class="line">		print((data.split(<span class="string">&quot;:&quot;</span>)[<span class="number">0</span>]))</span><br><span class="line">		print(<span class="string">&quot;cishu:&quot;</span>,counter)  </span><br><span class="line">	</span><br><span class="line">	   </span><br><span class="line"></span><br><span class="line">	 </span><br><span class="line">		verif_ip(data.split(<span class="string">&quot;:&quot;</span>)[<span class="number">0</span>],data.split(<span class="string">&quot;:&quot;</span>)[<span class="number">1</span>])</span><br></pre></td></tr></table></figure>
+<p>全部代码我已经打包放在我的Github上面了，直接下载即可。<a href="https://github.com/Vanlee0129/caoliaoscan">下载地址</a></p>
+<p>ip.txt文件就是用来存放代理ip的，相当于一个简陋的代理池，手动复制进去即可，我提供了一些，如果不够可以再自己去找一些。</p>
+<p>ip可以在66ip等网站去提取，用多少提多少。以后再也不担心刷二维码访客量啦！</p>
+]]></content>
+      <categories>
+        <category>Python</category>
+      </categories>
+      <tags>
+        <tag>小技巧</tag>
       </tags>
   </entry>
   <entry>
@@ -219,110 +285,6 @@
       </tags>
   </entry>
   <entry>
-    <title>微信小程序分享API踩坑</title>
-    <url>/onShareAppMessage/</url>
-    <content><![CDATA[<p>微信小程序分享API <code>onShareAppMessage</code> 带的参数只能叫<code>id</code>，不能叫其他的，不然拿不到。  </p>
-<p>使用时可以在单页面使用，也可以使用全局混入，一般来说我们都使用全局混入的方式去做。  </p>
-<p>注意，这个函数是一个页面钩子函数，需要与onLoad等函数同级。  </p>
-<p>使用示例：</p>
-<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">//share.mixin.js</span></span><br><span class="line"><span class="keyword">export</span>  <span class="keyword">default</span> &#123;</span><br><span class="line">    data() &#123;</span><br><span class="line">        <span class="keyword">return</span> &#123;</span><br><span class="line">            share: &#123;</span><br><span class="line">                title: <span class="string">&#x27;你的标题&#x27;</span>,</span><br><span class="line">                path: <span class="string">&#x27;/pages/index/index&#x27;</span>,</span><br><span class="line">                imageUrl: <span class="string">&#x27;&#x27;</span>,</span><br><span class="line">                desc: <span class="string">&#x27;&#x27;</span>,</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;,</span><br><span class="line">    onShareAppMessage(res) &#123;</span><br><span class="line">        <span class="keyword">return</span> &#123;</span><br><span class="line">            <span class="comment">//标题</span></span><br><span class="line">            title: <span class="built_in">this</span>.share.title,</span><br><span class="line">            <span class="comment">//页面路径</span></span><br><span class="line">            path: <span class="built_in">this</span>.share.path,</span><br><span class="line">            <span class="comment">//分享后显示的图片的地址，默认为当前页面的截图</span></span><br><span class="line">            imageUrl: <span class="built_in">this</span>.share.imageUrl,</span><br><span class="line">            <span class="comment">//描述</span></span><br><span class="line">            desc: <span class="built_in">this</span>.share.desc,</span><br><span class="line">            <span class="comment">//内容</span></span><br><span class="line">            content: <span class="built_in">this</span>.share.content,</span><br><span class="line">            success(res) &#123;</span><br><span class="line">                uni.showToast(&#123;</span><br><span class="line">                    title: <span class="string">&#x27;分享成功&#x27;</span></span><br><span class="line">                &#125;)</span><br><span class="line">            &#125;,</span><br><span class="line">            fail(res) &#123;</span><br><span class="line">                uni.showToast(&#123;</span><br><span class="line">                    title: <span class="string">&#x27;分享失败&#x27;</span>,</span><br><span class="line">                    icon: <span class="string">&#x27;none&#x27;</span></span><br><span class="line">                &#125;)</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>在页面中使用：</p>
-<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">//example.vue</span></span><br><span class="line"><span class="keyword">async</span> onLoad(options) &#123;</span><br><span class="line">      <span class="built_in">console</span>.log(options);</span><br><span class="line">      <span class="keyword">if</span>(options.id) &#123; <span class="comment">//如果传过来是id则为分享页面进入的</span></span><br><span class="line">        <span class="built_in">this</span>.spu_id = options.id</span><br><span class="line">        <span class="built_in">this</span>.share.path = <span class="string">`/pages/index/goodsDetail?id=<span class="subst">$&#123;options.id&#125;</span>`</span></span><br><span class="line">        <span class="keyword">return</span></span><br><span class="line">      &#125;</span><br><span class="line">      <span class="built_in">this</span>.spu_id = options.spu_id;</span><br><span class="line">      <span class="built_in">this</span>.share.path = <span class="string">`/pages/index/goodsDetail?id=<span class="subst">$&#123;options.spu_id&#125;</span>`</span>;</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
-]]></content>
-      <categories>
-        <category>uniapp</category>
-      </categories>
-      <tags>
-        <tag>JavaScript</tag>
-        <tag>微信小程序</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>使用Docker快速安装Jenkins</title>
-    <url>/dockerInstallJenkins/</url>
-    <content><![CDATA[<h2 id="安装环境"><a href="#安装环境" class="headerlink" title="安装环境"></a>安装环境</h2><p>CentOS Linux release 7.6.1810 (Core)<br>Docker version 19.03.12  </p>
-<h2 id="拉取镜像"><a href="#拉取镜像" class="headerlink" title="拉取镜像"></a>拉取镜像</h2><p>我这里安装的版本是<code>jenkinsci/blueocean</code>，可以去这里获取你需要的版本: <a href="https://hub.docker.com/_/jenkins?tab=tags">dockerHub</a>，注意版本之间的区别。  </p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> docker pull jenkinsci/blueocean</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="创建本地数据卷"><a href="#创建本地数据卷" class="headerlink" title="创建本地数据卷"></a>创建本地数据卷</h2><p>映射本地数据卷的路径为/data/jenkins_home/，想放别的地方可以自行修改</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> mkdir -p /data/jenkins_home/</span></span><br></pre></td></tr></table></figure>
-<p>需要修改下目录权限，因为当映射本地数据卷时，/data/jenkins_home/目录的拥有者为root用户，而容器中jenkins用户的 uid 为 1000。  </p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> chown -R 1000:1000 /data/jenkins_home/</span></span><br></pre></td></tr></table></figure>
-<h2 id="创建容器"><a href="#创建容器" class="headerlink" title="创建容器"></a>创建容器</h2><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> docker run -d --name jenkins -p 9021:8080 -p 50000:50000 -v /data/jenkins_home:/var/jenkins_home jenkins/jenkins:2.222.3-centos</span></span><br></pre></td></tr></table></figure>
-<p><code>-d</code> 标识是让 docker 容器在后台运行<br><code>--name</code> 定义一个容器的名字，如果没有指定，那么会自动生成一个随机数字符串当做UUID<br><code>-p</code> 9021:8080 端口映射，不被占用的合法端口都可以使用，我用的9021<br><code>-p</code> 50000:50000 端口映射<br><code>-v</code> /data/jenkins_home:/var/jenkins_home 绑定一个数据卷，/data/jenkins_home是刚才创建的本地数据卷</p>
-<h2 id="配置-Jenkins"><a href="#配置-Jenkins" class="headerlink" title="配置 Jenkins"></a>配置 Jenkins</h2><h3 id="打开-Jenkins"><a href="#打开-Jenkins" class="headerlink" title="打开 Jenkins"></a>打开 Jenkins</h3><p>通过浏览器访问 <code>http://xx.xx.xx.xx:9021/</code>（注意替换成你自己的IP和端口）进入初始页，如果 Jenkins 还没有启动完成，会显示如下内容<br><img src="https://ftp.bmp.ovh/imgs/2020/10/cd62632b22fa7dc1.png" alt="初始化界面"></p>
-<h3 id="输入管理员密码"><a href="#输入管理员密码" class="headerlink" title="输入管理员密码"></a>输入管理员密码</h3><p><img src="https://ftp.bmp.ovh/imgs/2020/10/305ce3669e4731d4.png" alt="输入管理员密码"><br>这里要求输入初始的管理员密码，根据提示密码在/var/jenkins_home/secrets/initialAdminPassword这个文件中，注意这个路径是 Docker 容器中的，所以我们通过如下命令获取  </p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> cat /data/jenkins_home/secrets/initialAdminPassword </span></span><br></pre></td></tr></table></figure>
-<p>输入密码后，点击<code>继续</code>    </p>
-<hr>
-<p>到此Jenkins就安装完毕，安装插件时可以先换源再安装，不然速度会很慢 </p>
-]]></content>
-      <categories>
-        <category>实用工具</category>
-      </categories>
-      <tags>
-        <tag>Jenkins</tag>
-        <tag>Docker</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Python草料二维码等计数二维码刷访客量</title>
-    <url>/python/</url>
-    <content><![CDATA[<p>在生活中，很多时候被人邀请扫一扫二维码，刷一刷访客量。但是一个ip只能算作一个访问量，对此我们用Python来实现批量刷访客量。</p>
-<p>Python版本3.6</p>
-<p>首先上代码</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/python  </span></span><br><span class="line"><span class="comment"># -*- coding: UTF-8 -*-  </span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> urllib.parse  </span><br><span class="line"><span class="keyword">import</span> urllib.request  </span><br><span class="line"><span class="keyword">import</span> time  </span><br><span class="line"><span class="keyword">from</span> lxml <span class="keyword">import</span> etree</span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">from</span> selenium <span class="keyword">import</span> webdriver</span><br><span class="line"><span class="keyword">import</span> random</span><br><span class="line"></span><br><span class="line"><span class="comment"># 短网址还原 </span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">revertShortLink</span>(<span class="params">url</span>):</span></span><br><span class="line">	re = requests.head(url)</span><br><span class="line">	<span class="keyword">return</span> re.headers.get(<span class="string">&#x27;location&#x27;</span>)</span><br><span class="line"></span><br><span class="line">URL_1 = revertShortLink(<span class="string">&quot;your revertShortLink&quot;</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">global</span> url_path  </span><br><span class="line">url_path = [<span class="number">3</span>]  </span><br><span class="line">  </span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">verif_ip</span>(<span class="params">ip,port</span>):</span>    <span class="comment"># 验证ip有效性  </span></span><br><span class="line">	</span><br><span class="line">	test_url = URL_1</span><br><span class="line">	</span><br><span class="line">	browser = webdriver.Chrome()</span><br><span class="line"></span><br><span class="line">	browser.get(URL_1)</span><br><span class="line">	browser.quit()</span><br><span class="line">	time.sleep(random.randint(<span class="number">1</span>,<span class="number">20</span>))  </span><br><span class="line"></span><br><span class="line">file = open(<span class="string">&quot;ip.txt&quot;</span>)</span><br><span class="line"></span><br><span class="line">counter = <span class="number">0</span> </span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">while</span> <span class="number">1</span>:  </span><br><span class="line">	lines = file.readlines(<span class="number">100000</span>)  </span><br><span class="line">	<span class="keyword">if</span> <span class="keyword">not</span> lines:  </span><br><span class="line">		<span class="keyword">break</span>  </span><br><span class="line">	<span class="keyword">for</span> data <span class="keyword">in</span> lines:</span><br><span class="line">		counter += <span class="number">1</span>  </span><br><span class="line">		print((data.split(<span class="string">&quot;:&quot;</span>)[<span class="number">0</span>]))</span><br><span class="line">		print(<span class="string">&quot;cishu:&quot;</span>,counter)  </span><br><span class="line">	</span><br><span class="line">	   </span><br><span class="line"></span><br><span class="line">	 </span><br><span class="line">		verif_ip(data.split(<span class="string">&quot;:&quot;</span>)[<span class="number">0</span>],data.split(<span class="string">&quot;:&quot;</span>)[<span class="number">1</span>])</span><br></pre></td></tr></table></figure>
-<p>全部代码我已经打包放在我的Github上面了，直接下载即可。<a href="https://github.com/Vanlee0129/caoliaoscan">下载地址</a></p>
-<p>ip.txt文件就是用来存放代理ip的，相当于一个简陋的代理池，手动复制进去即可，我提供了一些，如果不够可以再自己去找一些。</p>
-<p>ip可以在66ip等网站去提取，用多少提多少。以后再也不担心刷二维码访客量啦！</p>
-]]></content>
-      <categories>
-        <category>Python</category>
-      </categories>
-      <tags>
-        <tag>小技巧</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>使用require.context导入多个模块</title>
-    <url>/requireContext/</url>
-    <content><![CDATA[<h2 id="使用契机"><a href="#使用契机" class="headerlink" title="使用契机"></a>使用契机</h2><p>将API接口文件分模块存放后需要导入统一的入口文件再统一导出，然后在<code>main.js</code>中引用。看着分门别类的接口文件很舒服，但是文件一多，导入统一入口文件<code>index.js</code>就显得很繁琐。效果如下:  </p>
-<p><img src="https://ftp.bmp.ovh/imgs/2020/10/76da31964bce1579.png" alt="api文件列表"></p>
-<p><img src="https://ftp.bmp.ovh/imgs/2020/10/44989b9516d6df61.png" alt="导入列表">  </p>
-<p><img src="https://ftp.bmp.ovh/imgs/2020/10/e18f9f04cb0884cf.png" alt="导入列表"></p>
-<p>说实话，这个看着越看越反人类。所以决定用更简洁的<code>require.context</code>来处理这个问题。  </p>
-<h2 id="require-context"><a href="#require-context" class="headerlink" title="require.context"></a>require.context</h2><p><code>require.context</code>是一个<code>webpack</code>的<code>api</code>,通过执行<code>require.context函数</code>获取一个特定的上下文,主要用来实现自动化导入模块,在前端工程中,如果遇到从一个文件夹引入很多模块的情况,可以使用这个<code>api</code>,它会遍历文件夹中的指定文件,然后自动导入,使得不需要每次显式的调用<code>import</code>导入模块  </p>
-<p><code>require.context函数</code>接受三个参数</p>
-<ul>
-<li><p><code>directory &#123;String&#125;</code> -读取文件的路径</p>
-</li>
-<li><p><code>useSubdirectories &#123;Boolean&#125;</code> -是否遍历文件的子目录</p>
-</li>
-<li><p><code>regExp &#123;RegExp&#125;</code> -匹配文件的正则</p>
-</li>
-</ul>
-<p>webpack官网给出的例子是这样的:  </p>
-<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="built_in">require</span>.context(<span class="string">&#x27;./test&#x27;</span>, <span class="literal">false</span>, <span class="regexp">/.test.js$/</span>)</span><br></pre></td></tr></table></figure>
-
-<h2 id="开始使用"><a href="#开始使用" class="headerlink" title="开始使用"></a>开始使用</h2><p>首先根据需要让<code>require.context</code>遍历<code>/src/api</code>目录。遍历的过程中肯定会把index.js也遍历进去，因为不想之后来处理遍历后的结果，所以先粗暴的用名称区分。  </p>
-<p>我将以前的模块名.js改成为了模块名.api.js。  </p>
-<p><img src="https://ftp.bmp.ovh/imgs/2020/10/f57afe8c22ddd303.png" alt="api文件列表"></p>
-<p>接着开始编写一个导入函数来处理<code>require.context</code>返回的结果。  </p>
-<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">// importAllModule.js</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@description </span>批量导入API</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param <span class="type">&#123;Object&#125;</span> </span>context 上下文对象</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param <span class="type">&#123;RegExp&#125;</span> </span>reg 匹配规则</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@returns <span class="type">&#123;Object&#125;</span> </span>对象</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">importAllModule</span>(<span class="params">context, reg</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">const</span> map = &#123;&#125;</span><br><span class="line">    <span class="keyword">let</span> tmp = &#123;&#125;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">let</span> key <span class="keyword">of</span> context.keys()) &#123;</span><br><span class="line">        <span class="keyword">const</span> keyArr = key.split(<span class="string">&#x27;/&#x27;</span>)</span><br><span class="line">        keyArr.shift()</span><br><span class="line">        map[keyArr.join(<span class="string">&#x27;.&#x27;</span>).replace(reg, <span class="string">&#x27;&#x27;</span>)] = context(key).default</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">let</span> key <span class="keyword">in</span> map) &#123;</span><br><span class="line">        tmp = &#123;</span><br><span class="line">            ...tmp,</span><br><span class="line">            ...map[key]</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> tmp</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> importAllModule </span><br></pre></td></tr></table></figure>
-<p>接着在<code>index.js</code>中导入<code>importAllModule.js</code>并调用导入函数。  </p>
-<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">// index.js  </span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> importAllModule <span class="keyword">from</span> <span class="string">&#x27;../common/js/importAllModule&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> api = importAllModule(<span class="built_in">require</span>.context(<span class="string">&#x27;api&#x27;</span>, <span class="literal">true</span>, <span class="regexp">/\.api.js$/</span>), <span class="regexp">/\.api.js$/g</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> api</span><br></pre></td></tr></table></figure>
-<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>经过<code>require.context</code>的改造，大大解放了生产力。首先是index.js变得更加的简洁和可维护。其次，只要按格式编写API文件的文件名，就会被<code>require.context</code>遍历到并导入到<code>index.js</code>中。</p>
-]]></content>
-      <categories>
-        <category>ES6</category>
-      </categories>
-      <tags>
-        <tag>commonJS</tag>
-        <tag>webpack</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>JS生成二维码</title>
     <url>/qrcode/</url>
     <content><![CDATA[<h2 id="qrcode与qr-image"><a href="#qrcode与qr-image" class="headerlink" title="qrcode与qr-image"></a>qrcode与qr-image</h2><table>
@@ -371,6 +333,44 @@
       <tags>
         <tag>JavaScript</tag>
         <tag>工具</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>使用require.context导入多个模块</title>
+    <url>/requireContext/</url>
+    <content><![CDATA[<h2 id="使用契机"><a href="#使用契机" class="headerlink" title="使用契机"></a>使用契机</h2><p>将API接口文件分模块存放后需要导入统一的入口文件再统一导出，然后在<code>main.js</code>中引用。看着分门别类的接口文件很舒服，但是文件一多，导入统一入口文件<code>index.js</code>就显得很繁琐。效果如下:  </p>
+<p><img src="https://ftp.bmp.ovh/imgs/2020/10/76da31964bce1579.png" alt="api文件列表"></p>
+<p><img src="https://ftp.bmp.ovh/imgs/2020/10/44989b9516d6df61.png" alt="导入列表">  </p>
+<p><img src="https://ftp.bmp.ovh/imgs/2020/10/e18f9f04cb0884cf.png" alt="导入列表"></p>
+<p>说实话，这个看着越看越反人类。所以决定用更简洁的<code>require.context</code>来处理这个问题。  </p>
+<h2 id="require-context"><a href="#require-context" class="headerlink" title="require.context"></a>require.context</h2><p><code>require.context</code>是一个<code>webpack</code>的<code>api</code>,通过执行<code>require.context函数</code>获取一个特定的上下文,主要用来实现自动化导入模块,在前端工程中,如果遇到从一个文件夹引入很多模块的情况,可以使用这个<code>api</code>,它会遍历文件夹中的指定文件,然后自动导入,使得不需要每次显式的调用<code>import</code>导入模块  </p>
+<p><code>require.context函数</code>接受三个参数</p>
+<ul>
+<li><p><code>directory &#123;String&#125;</code> -读取文件的路径</p>
+</li>
+<li><p><code>useSubdirectories &#123;Boolean&#125;</code> -是否遍历文件的子目录</p>
+</li>
+<li><p><code>regExp &#123;RegExp&#125;</code> -匹配文件的正则</p>
+</li>
+</ul>
+<p>webpack官网给出的例子是这样的:  </p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="built_in">require</span>.context(<span class="string">&#x27;./test&#x27;</span>, <span class="literal">false</span>, <span class="regexp">/.test.js$/</span>)</span><br></pre></td></tr></table></figure>
+
+<h2 id="开始使用"><a href="#开始使用" class="headerlink" title="开始使用"></a>开始使用</h2><p>首先根据需要让<code>require.context</code>遍历<code>/src/api</code>目录。遍历的过程中肯定会把index.js也遍历进去，因为不想之后来处理遍历后的结果，所以先粗暴的用名称区分。  </p>
+<p>我将以前的模块名.js改成为了模块名.api.js。  </p>
+<p><img src="https://ftp.bmp.ovh/imgs/2020/10/f57afe8c22ddd303.png" alt="api文件列表"></p>
+<p>接着开始编写一个导入函数来处理<code>require.context</code>返回的结果。  </p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">// importAllModule.js</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@description </span>批量导入API</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param <span class="type">&#123;Object&#125;</span> </span>context 上下文对象</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param <span class="type">&#123;RegExp&#125;</span> </span>reg 匹配规则</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@returns <span class="type">&#123;Object&#125;</span> </span>对象</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">importAllModule</span>(<span class="params">context, reg</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">const</span> map = &#123;&#125;</span><br><span class="line">    <span class="keyword">let</span> tmp = &#123;&#125;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">let</span> key <span class="keyword">of</span> context.keys()) &#123;</span><br><span class="line">        <span class="keyword">const</span> keyArr = key.split(<span class="string">&#x27;/&#x27;</span>)</span><br><span class="line">        keyArr.shift()</span><br><span class="line">        map[keyArr.join(<span class="string">&#x27;.&#x27;</span>).replace(reg, <span class="string">&#x27;&#x27;</span>)] = context(key).default</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">let</span> key <span class="keyword">in</span> map) &#123;</span><br><span class="line">        tmp = &#123;</span><br><span class="line">            ...tmp,</span><br><span class="line">            ...map[key]</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> tmp</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> importAllModule </span><br></pre></td></tr></table></figure>
+<p>接着在<code>index.js</code>中导入<code>importAllModule.js</code>并调用导入函数。  </p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">// index.js  </span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> importAllModule <span class="keyword">from</span> <span class="string">&#x27;../common/js/importAllModule&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> api = importAllModule(<span class="built_in">require</span>.context(<span class="string">&#x27;api&#x27;</span>, <span class="literal">true</span>, <span class="regexp">/\.api.js$/</span>), <span class="regexp">/\.api.js$/g</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> api</span><br></pre></td></tr></table></figure>
+<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>经过<code>require.context</code>的改造，大大解放了生产力。首先是index.js变得更加的简洁和可维护。其次，只要按格式编写API文件的文件名，就会被<code>require.context</code>遍历到并导入到<code>index.js</code>中。</p>
+]]></content>
+      <categories>
+        <category>ES6</category>
+      </categories>
+      <tags>
+        <tag>commonJS</tag>
+        <tag>webpack</tag>
       </tags>
   </entry>
 </search>
