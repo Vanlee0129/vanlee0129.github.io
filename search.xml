@@ -1,6 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>深拷贝</title>
+    <url>/deepCopy/</url>
+    <content><![CDATA[<p>由于JS中的数据类型分为值类型和引用类型，所以对于引用类型来说变量储存的其实是地址而不是这个对象本身。考虑如下例子：  </p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">let</span> a = &#123;</span><br><span class="line">    b: <span class="number">1</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> c = a</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(a, c) <span class="comment">// &#123;b: 1&#125; &#123;b: 1&#125;</span></span><br><span class="line"></span><br><span class="line">a.b = <span class="number">2</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(c) <span class="comment">// &#123;b: 2&#125;</span></span><br></pre></td></tr></table></figure>
+<p>从上面例子可以看出a变化后c也跟着变了，显然这不是我们想要的结果。出现以上的原因是直接将a赋值给c是一种浅拷贝。实际上是将a所对应的地址赋值给了c。  </p>
+<p>为了解决这个问题，我们需要深拷贝。对于以上例子我们可以采用以下办法：  </p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">let</span> c = <span class="built_in">JSON</span>.parse(<span class="built_in">JSON</span>.stringify(a))  </span><br></pre></td></tr></table></figure>
+
+<p>但是这个方法有以下局限性：  </p>
+<ul>
+<li><p>他无法实现对函数 、RegExp等特殊对象的克隆</p>
+</li>
+<li><p>会抛弃对象的constructor,所有的构造函数会指向Object</p>
+</li>
+<li><p>对象有循环引用,会报错  </p>
+</li>
+</ul>
+<p>在生产环境我们一般使用第三方库成熟的方法，但是核心原理其实是一样的。  </p>
+<p>现在们来实现一个简版的深拷贝：  </p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">let</span> deepCloneOne = <span class="function">(<span class="params">initalObj</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> obj = &#123;&#125;</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">typeof</span> initalObj !== <span class="string">&#x27;object&#x27;</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> initalObj</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">const</span> key <span class="keyword">in</span> initalObj) &#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">typeof</span> initalObj[key] === <span class="string">&#x27;object&#x27;</span>) &#123;</span><br><span class="line">            <span class="comment">//对数组特殊处理</span></span><br><span class="line">            <span class="keyword">if</span> (<span class="built_in">Array</span>.isArray(initalObj[key])) &#123;</span><br><span class="line">                <span class="comment">//用map方法返回新数组，将数组中的元素递归</span></span><br><span class="line">                obj[key] = initalObj[key].map(<span class="function"><span class="params">item</span> =&gt;</span> &#123;</span><br><span class="line">                    <span class="built_in">this</span>.deepCloneOne(item)</span><br><span class="line">                &#125;)</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="comment">//递归返回新对象</span></span><br><span class="line">                obj[key] = <span class="built_in">this</span>.deepCloneOne(initalObj[key])</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (<span class="keyword">typeof</span> initalObj[key] === <span class="string">&#x27;function&#x27;</span>) &#123;</span><br><span class="line">            <span class="comment">//返回新函数</span></span><br><span class="line">            obj[key] = initalObj[key].bind(obj)</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="comment">//基本类型直接返回</span></span><br><span class="line">            obj[key] = initalObj[key]</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> obj</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 深拷贝</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param <span class="type">&#123;Object&#125;</span></span>&#125; obj </span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">deepCloneTwo</span>(<span class="params">obj = &#123;&#125;</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">typeof</span> obj !== <span class="string">&#x27;object&#x27;</span> || obj == <span class="literal">null</span>) &#123;</span><br><span class="line">        <span class="comment">//obj是null或者不是对象</span></span><br><span class="line">        <span class="keyword">return</span> obj</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//初始化返回结果</span></span><br><span class="line">    <span class="keyword">let</span> result</span><br><span class="line">    <span class="keyword">if</span> (obj <span class="keyword">instanceof</span> <span class="built_in">Array</span>) &#123;</span><br><span class="line">        result = []</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        result = &#123;&#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">const</span> key <span class="keyword">in</span> obj) &#123;</span><br><span class="line">        <span class="keyword">if</span> (obj.hasOwnProperty(key)) &#123;</span><br><span class="line">            <span class="comment">//保证key不是原型的属性</span></span><br><span class="line">            <span class="keyword">if</span> (obj.hasOwnProperty(key)) &#123;</span><br><span class="line">                <span class="comment">//递归调用</span></span><br><span class="line">                result[key] = deepCloneTwo(obj[key])</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//返回结果</span></span><br><span class="line">    <span class="keyword">return</span> result</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>核心思路就先判断这个对象是哪种对象，然后根据这种对象的特点去构造一个新的对象，用递归的方法将这个对象的所有属性都挨个赋给新对象。  </p>
+<p>深拷贝产生的新对象和原来的对象没有一点关系，只是长得一样，但是是存储在一块新开辟的空间，两者之间不会互相影响。</p>
+]]></content>
+      <categories>
+        <category>ES6</category>
+      </categories>
+      <tags>
+        <tag>深拷贝</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>超好用的图片浏览器Irfanview</title>
     <url>/Irfanview/</url>
     <content><![CDATA[<hr>
@@ -49,37 +80,6 @@
       <tags>
         <tag>JavaScript</tag>
         <tag>const</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>深拷贝</title>
-    <url>/deepCopy/</url>
-    <content><![CDATA[<p>由于JS中的数据类型分为值类型和引用类型，所以对于引用类型来说变量储存的其实是地址而不是这个对象本身。考虑如下例子：  </p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">let</span> a = &#123;</span><br><span class="line">    b: <span class="number">1</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> c = a</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(a, c) <span class="comment">// &#123;b: 1&#125; &#123;b: 1&#125;</span></span><br><span class="line"></span><br><span class="line">a.b = <span class="number">2</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(c) <span class="comment">// &#123;b: 2&#125;</span></span><br></pre></td></tr></table></figure>
-<p>从上面例子可以看出a变化后c也跟着变了，显然这不是我们想要的结果。出现以上的原因是直接将a赋值给c是一种浅拷贝。实际上是将a所对应的地址赋值给了c。  </p>
-<p>为了解决这个问题，我们需要深拷贝。对于以上例子我们可以采用以下办法：  </p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">let</span> c = <span class="built_in">JSON</span>.parse(<span class="built_in">JSON</span>.stringify(a))  </span><br></pre></td></tr></table></figure>
-
-<p>但是这个方法有以下局限性：  </p>
-<ul>
-<li><p>他无法实现对函数 、RegExp等特殊对象的克隆</p>
-</li>
-<li><p>会抛弃对象的constructor,所有的构造函数会指向Object</p>
-</li>
-<li><p>对象有循环引用,会报错  </p>
-</li>
-</ul>
-<p>在生产环境我们一般使用第三方库成熟的方法，但是核心原理其实是一样的。  </p>
-<p>现在们来实现一个简版的深拷贝：  </p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">let</span> deepCloneOne = <span class="function">(<span class="params">initalObj</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> obj = &#123;&#125;</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">typeof</span> initalObj !== <span class="string">&#x27;object&#x27;</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> initalObj</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">const</span> key <span class="keyword">in</span> initalObj) &#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">typeof</span> initalObj[key] === <span class="string">&#x27;object&#x27;</span>) &#123;</span><br><span class="line">            <span class="comment">//对数组特殊处理</span></span><br><span class="line">            <span class="keyword">if</span> (<span class="built_in">Array</span>.isArray(initalObj[key])) &#123;</span><br><span class="line">                <span class="comment">//用map方法返回新数组，将数组中的元素递归</span></span><br><span class="line">                obj[key] = initalObj[key].map(<span class="function"><span class="params">item</span> =&gt;</span> &#123;</span><br><span class="line">                    <span class="built_in">this</span>.deepCloneOne(item)</span><br><span class="line">                &#125;)</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="comment">//递归返回新对象</span></span><br><span class="line">                obj[key] = <span class="built_in">this</span>.deepCloneOne(initalObj[key])</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (<span class="keyword">typeof</span> initalObj[key] === <span class="string">&#x27;function&#x27;</span>) &#123;</span><br><span class="line">            <span class="comment">//返回新函数</span></span><br><span class="line">            obj[key] = initalObj[key].bind(obj)</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="comment">//基本类型直接返回</span></span><br><span class="line">            obj[key] = initalObj[key]</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> obj</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 深拷贝</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param <span class="type">&#123;Object&#125;</span></span>&#125; obj </span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">deepCloneTwo</span>(<span class="params">obj = &#123;&#125;</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">typeof</span> obj !== <span class="string">&#x27;object&#x27;</span> || obj == <span class="literal">null</span>) &#123;</span><br><span class="line">        <span class="comment">//obj是null或者不是对象</span></span><br><span class="line">        <span class="keyword">return</span> obj</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//初始化返回结果</span></span><br><span class="line">    <span class="keyword">let</span> result</span><br><span class="line">    <span class="keyword">if</span> (obj <span class="keyword">instanceof</span> <span class="built_in">Array</span>) &#123;</span><br><span class="line">        result = []</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        result = &#123;&#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">const</span> key <span class="keyword">in</span> obj) &#123;</span><br><span class="line">        <span class="keyword">if</span> (obj.hasOwnProperty(key)) &#123;</span><br><span class="line">            <span class="comment">//保证key不是原型的属性</span></span><br><span class="line">            <span class="keyword">if</span> (obj.hasOwnProperty(key)) &#123;</span><br><span class="line">                <span class="comment">//递归调用</span></span><br><span class="line">                result[key] = deepCloneTwo(obj[key])</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//返回结果</span></span><br><span class="line">    <span class="keyword">return</span> result</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>核心思路就先判断这个对象是哪种对象，然后根据这种对象的特点去构造一个新的对象，用递归的方法将这个对象的所有属性都挨个赋给新对象。  </p>
-<p>深拷贝产生的新对象和原来的对象没有一点关系，只是长得一样，但是是存储在一块新开辟的空间，两者之间不会互相影响。</p>
-]]></content>
-      <categories>
-        <category>ES6</category>
-      </categories>
-      <tags>
-        <tag>深拷贝</tag>
       </tags>
   </entry>
   <entry>
@@ -135,6 +135,26 @@
       </tags>
   </entry>
   <entry>
+    <title>简单的前端灰度发布方案</title>
+    <url>/grayDeploy/</url>
+    <content><![CDATA[<h2 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h2><p>灰度发布（又名金丝雀发布）是指在黑与白之间，能够平滑过渡的一种发布方式。在其上可以进行A/B testing，即让一部分用户继续用产品特性A，一部分用户开始用产品特性B，如果用户对B没有什么反对意见，那么逐步扩大范围，把所有用户都迁移到B上面来。灰度发布可以保证整体系统的稳定，在初始灰度的时候就可以发现、调整问题，以保证其影响度。  </p>
+<h2 id="实现思路"><a href="#实现思路" class="headerlink" title="实现思路"></a>实现思路</h2><p>灰度发布的核心就是分流，一部分用户能看到，一部分用户看不到。所以主要实现的核心分流算法。在实现这个需求的时候，我想到了抽签。比如在1-100的数字中抽到1-30的用户进入beta版本，抽到31-100的用户进入stable版本。这样就相当于是30%的流量进入灰度版本。  </p>
+<h2 id="具体实现"><a href="#具体实现" class="headerlink" title="具体实现"></a>具体实现</h2><p>首先实现产生1-100的整数的随机函数。  </p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">/***************************************</span></span><br><span class="line"><span class="comment"> * 生成从minNum到maxNum的随机数。</span></span><br><span class="line"><span class="comment"> * 如果指定decimalNum个数，则生成指定小数位数的随机数</span></span><br><span class="line"><span class="comment"> * 如果不指定任何参数，则生成0-1之间的随机数。</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@minNum</span>：[数据类型是Integer]生成的随机数的最小值（minNum和maxNum可以调换位置）</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@maxNum</span>：[数据类型是Integer]生成的随机数的最大值</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@decimalNum</span>：[数据类型是Integer]如果生成的是带有小数的随机数，则指定随机数的小数点后的位数</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> ****************************************/</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">randomNum</span>(<span class="params">maxNum, minNum, decimalNum</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> max = <span class="number">0</span>,</span><br><span class="line">        min = <span class="number">0</span>;</span><br><span class="line">    minNum &lt;= maxNum ? ((min = minNum), (max = maxNum)) : ((min = maxNum), (max = minNum));</span><br><span class="line">    <span class="keyword">switch</span> (<span class="built_in">arguments</span>.length) &#123;</span><br><span class="line">        <span class="keyword">case</span> <span class="number">1</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="built_in">Math</span>.floor(<span class="built_in">Math</span>.random() * (max + <span class="number">1</span>));</span><br><span class="line">        <span class="keyword">case</span> <span class="number">2</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="built_in">Math</span>.floor(<span class="built_in">Math</span>.random() * (max - min + <span class="number">1</span>) + min);</span><br><span class="line">        <span class="keyword">case</span> <span class="number">3</span>:</span><br><span class="line">            <span class="keyword">return</span> (<span class="built_in">Math</span>.random() * (max - min) + min).toFixed(decimalNum);</span><br><span class="line">        <span class="keyword">default</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="built_in">Math</span>.random();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>然后实现灰度流量的判断  </p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@description </span>灰度显示</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param <span class="type">&#123;Number&#125;</span> </span>defaultLucky 灰度值，取值范围[0,1]</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@returns <span class="type">&#123;Boolean&#125;</span> </span>ture/false</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">export</span> <span class="function"><span class="keyword">function</span> <span class="title">isShowGray</span>(<span class="params">defaultLucky</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (!lucky) lucky = defaultLucky;</span><br><span class="line">    <span class="keyword">var</span> num = randomNum(<span class="number">1</span>, <span class="number">100</span>);</span><br><span class="line">    <span class="keyword">if</span> (num &lt;= <span class="built_in">Number</span>(<span class="number">100</span> * lucky) &amp;&amp; num &gt;= <span class="number">1</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>至此，简单的灰度方案就做好了。在进入页面时先调用<code>isShowGray</code>函数判断进入哪个方案。这样就可以做到简单的用户分流。</p>
+]]></content>
+      <categories>
+        <category>JS</category>
+      </categories>
+      <tags>
+        <tag>JavaScript</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>v-if失效时强制刷新</title>
     <url>/forceUpdate/</url>
     <content><![CDATA[<p><code>v-if</code>动态计算时，如果数据层级太深可能导致<code>render</code>函数没有自动刷新，所以需要手动刷新。此时可以调用<code>this.$forceUpdate()</code>强制刷新。</p>
@@ -168,26 +188,6 @@
         <tag>JavaScript</tag>
         <tag>des-cbc</tag>
         <tag>node</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>简单的前端灰度发布方案</title>
-    <url>/grayDeploy/</url>
-    <content><![CDATA[<h2 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h2><p>灰度发布（又名金丝雀发布）是指在黑与白之间，能够平滑过渡的一种发布方式。在其上可以进行A/B testing，即让一部分用户继续用产品特性A，一部分用户开始用产品特性B，如果用户对B没有什么反对意见，那么逐步扩大范围，把所有用户都迁移到B上面来。灰度发布可以保证整体系统的稳定，在初始灰度的时候就可以发现、调整问题，以保证其影响度。  </p>
-<h2 id="实现思路"><a href="#实现思路" class="headerlink" title="实现思路"></a>实现思路</h2><p>灰度发布的核心就是分流，一部分用户能看到，一部分用户看不到。所以主要实现的核心分流算法。在实现这个需求的时候，我想到了抽签。比如在1-100的数字中抽到1-30的用户进入beta版本，抽到31-100的用户进入stable版本。这样就相当于是30%的流量进入灰度版本。  </p>
-<h2 id="具体实现"><a href="#具体实现" class="headerlink" title="具体实现"></a>具体实现</h2><p>首先实现产生1-100的整数的随机函数。  </p>
-<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">/***************************************</span></span><br><span class="line"><span class="comment"> * 生成从minNum到maxNum的随机数。</span></span><br><span class="line"><span class="comment"> * 如果指定decimalNum个数，则生成指定小数位数的随机数</span></span><br><span class="line"><span class="comment"> * 如果不指定任何参数，则生成0-1之间的随机数。</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@minNum</span>：[数据类型是Integer]生成的随机数的最小值（minNum和maxNum可以调换位置）</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@maxNum</span>：[数据类型是Integer]生成的随机数的最大值</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@decimalNum</span>：[数据类型是Integer]如果生成的是带有小数的随机数，则指定随机数的小数点后的位数</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> ****************************************/</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">randomNum</span>(<span class="params">maxNum, minNum, decimalNum</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> max = <span class="number">0</span>,</span><br><span class="line">        min = <span class="number">0</span>;</span><br><span class="line">    minNum &lt;= maxNum ? ((min = minNum), (max = maxNum)) : ((min = maxNum), (max = minNum));</span><br><span class="line">    <span class="keyword">switch</span> (<span class="built_in">arguments</span>.length) &#123;</span><br><span class="line">        <span class="keyword">case</span> <span class="number">1</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="built_in">Math</span>.floor(<span class="built_in">Math</span>.random() * (max + <span class="number">1</span>));</span><br><span class="line">        <span class="keyword">case</span> <span class="number">2</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="built_in">Math</span>.floor(<span class="built_in">Math</span>.random() * (max - min + <span class="number">1</span>) + min);</span><br><span class="line">        <span class="keyword">case</span> <span class="number">3</span>:</span><br><span class="line">            <span class="keyword">return</span> (<span class="built_in">Math</span>.random() * (max - min) + min).toFixed(decimalNum);</span><br><span class="line">        <span class="keyword">default</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="built_in">Math</span>.random();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>然后实现灰度流量的判断  </p>
-<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@description </span>灰度显示</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param <span class="type">&#123;Number&#125;</span> </span>defaultLucky 灰度值，取值范围[0,1]</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@returns <span class="type">&#123;Boolean&#125;</span> </span>ture/false</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">export</span> <span class="function"><span class="keyword">function</span> <span class="title">isShowGray</span>(<span class="params">defaultLucky</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (!lucky) lucky = defaultLucky;</span><br><span class="line">    <span class="keyword">var</span> num = randomNum(<span class="number">1</span>, <span class="number">100</span>);</span><br><span class="line">    <span class="keyword">if</span> (num &lt;= <span class="built_in">Number</span>(<span class="number">100</span> * lucky) &amp;&amp; num &gt;= <span class="number">1</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>至此，简单的灰度方案就做好了。在进入页面时先调用<code>isShowGray</code>函数判断进入哪个方案。这样就可以做到简单的用户分流。</p>
-]]></content>
-      <categories>
-        <category>JS</category>
-      </categories>
-      <tags>
-        <tag>JavaScript</tag>
       </tags>
   </entry>
   <entry>
@@ -237,7 +237,7 @@
 <p>RTO：英文全称是 Retransmission TimeOut，即重传超时时间； RTO 是一个动态值，会根据网络的改变而改变。RTO 是根据给定连接的往返时间 RTT 计算出来的。 接收方返回的 ack 是希望收到的下一组包的序列号。</p>
 <h3 id="多路复用导致服务器压力上升"><a href="#多路复用导致服务器压力上升" class="headerlink" title="多路复用导致服务器压力上升"></a>多路复用导致服务器压力上升</h3><p>多路复用没有限制同时请求数。请求的平均数量与往常相同，但实际会有许多请求的短暂爆发，导致瞬时 QPS 暴增。</p>
 <h3 id="多路复用容易-Timeout"><a href="#多路复用容易-Timeout" class="headerlink" title="多路复用容易 Timeout"></a>多路复用容易 Timeout</h3><p>大批量的请求同时发送，由于 HTTP2 连接内存在多个并行的流，而网络带宽和服务器资源有限，每个流的资源会被稀释，虽然它们开始时间相差更短，但却都可能超时。</p>
-<p>即使是使用 Nginx 这样的负载均衡器，想正确进行节流也可能很棘手。 其次，就算你向应用程序引入或调整排队机制，但一次能处理的连接也是有限的。如果对请求进行排队，还要注意在响应超时后丢弃请求，以避免浪费不必要的资源。引用</p>
+<p>即使是使用 Nginx 这样的负载均衡器，想正确进行节流也可能很棘手。 其次，就算你向应用程序引入或调整排队机制，但一次能处理的连接也是有限的。如果对请求进行排队，还要注意在响应超时后丢弃请求，以避免浪费不必要的资源。</p>
 <h2 id="QUIC"><a href="#QUIC" class="headerlink" title="QUIC"></a>QUIC</h2><h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p>Google<br>在推 SPDY 的时候就已经意识到了这些问题，于是就另起炉灶搞了一个基于 UDP 协议的 QUIC 协议。而这个就是 HTTP3。它真正“完美”地解决了“队头阻塞”问题。</p>
 <p><a href="https://imgtu.com/i/6BeCad"><img src="https://s3.ax1x.com/2021/03/14/6BeCad.jpg" alt="6BeCad.jpg"></a></p>
 <h3 id="主要特点"><a href="#主要特点" class="headerlink" title="主要特点"></a>主要特点</h3><p>改进的拥塞控制、可靠传输<br>快速握手<br>集成了 TLS 1.3 加密<br>多路复用<br>连接迁移<br>改进的拥塞控制、可靠传输<br>从拥塞算法和可靠传输本身来看，QUIC 只是按照 TCP 协议重新实现了一遍，那么 QUIC 协议到底改进在哪些方面呢？主要有如下几点：</p>
@@ -276,7 +276,7 @@
 <h4 id="全局握手缓存"><a href="#全局握手缓存" class="headerlink" title="全局握手缓存"></a>全局握手缓存</h4><p>为所有 QUIC 服务器实例建立一个全局握手缓存。当用户网络发生切换时，下一次的业务请求无论是落到哪一个机房或哪一台实例上，握手建连都会是 0-RTT。</p>
 <p>历代 HTTP 速度测试</p>
 <p><a href="https://imgtu.com/i/6BZjxK"><img src="https://s3.ax1x.com/2021/03/14/6BZjxK.jpg" alt="6BZjxK.jpg"></a></p>
-<h2 id="结尾"><a href="#结尾" class="headerlink" title="结尾"></a>结尾</h2><p>从古至今实时数据传输（音频、视频、游戏等）都面临卡顿、延迟等问题，而 QUIC 基于 UDP 的架构和改进的重传等特性，能够有效的提升用户体验。目前<br>B 站 也已经接入 QUIC。</p>
+<h2 id="结尾"><a href="#结尾" class="headerlink" title="结尾"></a>结尾</h2><p>从古至今实时数据传输（音频、视频、游戏等）都面临卡顿、延迟等问题，而 QUIC 基于 UDP 的架构和改进的重传等特性，能够有效的提升用户体验。目前B站 也已经接入 QUIC。</p>
 <p>如果想要自己体验 QUIC，可以使用 Libquic、Caddy 等。另外 github 上面也有 C++版本的 QUIC 实现，利用 Nodejs 的 C++ 模块，前端工程师也可以快速实现一个 node-quic。</p>
 ]]></content>
       <categories>
