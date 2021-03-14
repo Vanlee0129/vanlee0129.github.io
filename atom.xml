@@ -6,7 +6,7 @@
   <link href="https://vanlee0129.gitee.io/atom.xml" rel="self"/>
   
   <link href="https://vanlee0129.gitee.io/"/>
-  <updated>2021-03-14T15:05:57.930Z</updated>
+  <updated>2021-03-14T15:07:44.034Z</updated>
   <id>https://vanlee0129.gitee.io/</id>
   
   <author>
@@ -21,7 +21,7 @@
     <link href="https://vanlee0129.gitee.io/http/"/>
     <id>https://vanlee0129.gitee.io/http/</id>
     <published>2021-03-14T05:34:44.000Z</published>
-    <updated>2021-03-14T15:05:57.930Z</updated>
+    <updated>2021-03-14T15:07:44.034Z</updated>
     
     
       
@@ -34,10 +34,10 @@
     
     
     
-    <category term="JS" scheme="https://vanlee0129.gitee.io/categories/JS/"/>
+    <category term="计算机网络" scheme="https://vanlee0129.gitee.io/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/"/>
     
     
-    <category term="JavaScript" scheme="https://vanlee0129.gitee.io/tags/JavaScript/"/>
+    <category term="http" scheme="https://vanlee0129.gitee.io/tags/http/"/>
     
   </entry>
   

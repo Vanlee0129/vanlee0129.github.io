@@ -52,34 +52,6 @@
       </tags>
   </entry>
   <entry>
-    <title>使用Docker快速安装Jenkins</title>
-    <url>/dockerInstallJenkins/</url>
-    <content><![CDATA[<h2 id="安装环境"><a href="#安装环境" class="headerlink" title="安装环境"></a>安装环境</h2><p>CentOS Linux release 7.6.1810 (Core)<br>Docker version 19.03.12  </p>
-<h2 id="拉取镜像"><a href="#拉取镜像" class="headerlink" title="拉取镜像"></a>拉取镜像</h2><p>我这里安装的版本是<code>jenkinsci/blueocean</code>，可以去这里获取你需要的版本: <a href="https://hub.docker.com/_/jenkins?tab=tags">dockerHub</a>，注意版本之间的区别。  </p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> docker pull jenkinsci/blueocean</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="创建本地数据卷"><a href="#创建本地数据卷" class="headerlink" title="创建本地数据卷"></a>创建本地数据卷</h2><p>映射本地数据卷的路径为/data/jenkins_home/，想放别的地方可以自行修改</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> mkdir -p /data/jenkins_home/</span></span><br></pre></td></tr></table></figure>
-<p>需要修改下目录权限，因为当映射本地数据卷时，/data/jenkins_home/目录的拥有者为root用户，而容器中jenkins用户的 uid 为 1000。  </p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> chown -R 1000:1000 /data/jenkins_home/</span></span><br></pre></td></tr></table></figure>
-<h2 id="创建容器"><a href="#创建容器" class="headerlink" title="创建容器"></a>创建容器</h2><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> docker run -d --name jenkins -p 9021:8080 -p 50000:50000 -v /data/jenkins_home:/var/jenkins_home jenkins/jenkins:2.222.3-centos</span></span><br></pre></td></tr></table></figure>
-<p><code>-d</code> 标识是让 docker 容器在后台运行<br><code>--name</code> 定义一个容器的名字，如果没有指定，那么会自动生成一个随机数字符串当做UUID<br><code>-p</code> 9021:8080 端口映射，不被占用的合法端口都可以使用，我用的9021<br><code>-p</code> 50000:50000 端口映射<br><code>-v</code> /data/jenkins_home:/var/jenkins_home 绑定一个数据卷，/data/jenkins_home是刚才创建的本地数据卷</p>
-<h2 id="配置-Jenkins"><a href="#配置-Jenkins" class="headerlink" title="配置 Jenkins"></a>配置 Jenkins</h2><h3 id="打开-Jenkins"><a href="#打开-Jenkins" class="headerlink" title="打开 Jenkins"></a>打开 Jenkins</h3><p>通过浏览器访问 <code>http://xx.xx.xx.xx:9021/</code>（注意替换成你自己的IP和端口）进入初始页，如果 Jenkins 还没有启动完成，会显示如下内容<br><img src="https://ftp.bmp.ovh/imgs/2020/10/cd62632b22fa7dc1.png" alt="初始化界面"></p>
-<h3 id="输入管理员密码"><a href="#输入管理员密码" class="headerlink" title="输入管理员密码"></a>输入管理员密码</h3><p><img src="https://ftp.bmp.ovh/imgs/2020/10/305ce3669e4731d4.png" alt="输入管理员密码"><br>这里要求输入初始的管理员密码，根据提示密码在/var/jenkins_home/secrets/initialAdminPassword这个文件中，注意这个路径是 Docker 容器中的，所以我们通过如下命令获取  </p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> cat /data/jenkins_home/secrets/initialAdminPassword </span></span><br></pre></td></tr></table></figure>
-<p>输入密码后，点击<code>继续</code>    </p>
-<hr>
-<p>到此Jenkins就安装完毕，安装插件时可以先换源再安装，不然速度会很慢 </p>
-]]></content>
-      <categories>
-        <category>实用工具</category>
-      </categories>
-      <tags>
-        <tag>Jenkins</tag>
-        <tag>Docker</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>深拷贝</title>
     <url>/deepCopy/</url>
     <content><![CDATA[<p>由于JS中的数据类型分为值类型和引用类型，所以对于引用类型来说变量储存的其实是地址而不是这个对象本身。考虑如下例子：  </p>
@@ -108,6 +80,34 @@
       </categories>
       <tags>
         <tag>深拷贝</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>使用Docker快速安装Jenkins</title>
+    <url>/dockerInstallJenkins/</url>
+    <content><![CDATA[<h2 id="安装环境"><a href="#安装环境" class="headerlink" title="安装环境"></a>安装环境</h2><p>CentOS Linux release 7.6.1810 (Core)<br>Docker version 19.03.12  </p>
+<h2 id="拉取镜像"><a href="#拉取镜像" class="headerlink" title="拉取镜像"></a>拉取镜像</h2><p>我这里安装的版本是<code>jenkinsci/blueocean</code>，可以去这里获取你需要的版本: <a href="https://hub.docker.com/_/jenkins?tab=tags">dockerHub</a>，注意版本之间的区别。  </p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> docker pull jenkinsci/blueocean</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="创建本地数据卷"><a href="#创建本地数据卷" class="headerlink" title="创建本地数据卷"></a>创建本地数据卷</h2><p>映射本地数据卷的路径为/data/jenkins_home/，想放别的地方可以自行修改</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> mkdir -p /data/jenkins_home/</span></span><br></pre></td></tr></table></figure>
+<p>需要修改下目录权限，因为当映射本地数据卷时，/data/jenkins_home/目录的拥有者为root用户，而容器中jenkins用户的 uid 为 1000。  </p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> chown -R 1000:1000 /data/jenkins_home/</span></span><br></pre></td></tr></table></figure>
+<h2 id="创建容器"><a href="#创建容器" class="headerlink" title="创建容器"></a>创建容器</h2><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> docker run -d --name jenkins -p 9021:8080 -p 50000:50000 -v /data/jenkins_home:/var/jenkins_home jenkins/jenkins:2.222.3-centos</span></span><br></pre></td></tr></table></figure>
+<p><code>-d</code> 标识是让 docker 容器在后台运行<br><code>--name</code> 定义一个容器的名字，如果没有指定，那么会自动生成一个随机数字符串当做UUID<br><code>-p</code> 9021:8080 端口映射，不被占用的合法端口都可以使用，我用的9021<br><code>-p</code> 50000:50000 端口映射<br><code>-v</code> /data/jenkins_home:/var/jenkins_home 绑定一个数据卷，/data/jenkins_home是刚才创建的本地数据卷</p>
+<h2 id="配置-Jenkins"><a href="#配置-Jenkins" class="headerlink" title="配置 Jenkins"></a>配置 Jenkins</h2><h3 id="打开-Jenkins"><a href="#打开-Jenkins" class="headerlink" title="打开 Jenkins"></a>打开 Jenkins</h3><p>通过浏览器访问 <code>http://xx.xx.xx.xx:9021/</code>（注意替换成你自己的IP和端口）进入初始页，如果 Jenkins 还没有启动完成，会显示如下内容<br><img src="https://ftp.bmp.ovh/imgs/2020/10/cd62632b22fa7dc1.png" alt="初始化界面"></p>
+<h3 id="输入管理员密码"><a href="#输入管理员密码" class="headerlink" title="输入管理员密码"></a>输入管理员密码</h3><p><img src="https://ftp.bmp.ovh/imgs/2020/10/305ce3669e4731d4.png" alt="输入管理员密码"><br>这里要求输入初始的管理员密码，根据提示密码在/var/jenkins_home/secrets/initialAdminPassword这个文件中，注意这个路径是 Docker 容器中的，所以我们通过如下命令获取  </p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> cat /data/jenkins_home/secrets/initialAdminPassword </span></span><br></pre></td></tr></table></figure>
+<p>输入密码后，点击<code>继续</code>    </p>
+<hr>
+<p>到此Jenkins就安装完毕，安装插件时可以先换源再安装，不然速度会很慢 </p>
+]]></content>
+      <categories>
+        <category>实用工具</category>
+      </categories>
+      <tags>
+        <tag>Jenkins</tag>
+        <tag>Docker</tag>
       </tags>
   </entry>
   <entry>
@@ -167,83 +167,6 @@
       </categories>
       <tags>
         <tag>JavaScript</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>使用node加解密DES-CBC</title>
-    <url>/node-des/</url>
-    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>为了保护请求内容不被抓包软件暴露出来，很多产品都采用了请求加密的方式。DES-CBC就是一种对称加密方式。在网上查资料时发现node的资料不多，所以研究之后记录一下使用node加解密DES-CBC。  </p>
-<h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><p>首先是加密函数：  </p>
-<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@description </span>DES加密，以hex为例</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param <span class="type">&#123;String&#125;</span> </span>encodeTxt 待加密的字符串</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param <span class="type">&#123;String&#125;</span> </span>key 秘钥</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param <span class="type">&#123;String&#125;</span> </span>iv 偏移量</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">desEncode</span>(<span class="params">encodeTxt, key, iv</span>) </span>&#123;</span><br><span class="line">    key = key.length &gt;= <span class="number">8</span> ? key.slice(<span class="number">0</span>, <span class="number">8</span>) : key.concat(<span class="string">&#x27;0&#x27;</span>.repeat(<span class="number">8</span> - key.length))</span><br><span class="line">    iv = iv.length &gt;= <span class="number">8</span> ? iv.slice(<span class="number">0</span>, <span class="number">8</span>) : iv.concat(<span class="string">&#x27;0&#x27;</span>.repeat(<span class="number">8</span> - iv.length))</span><br><span class="line">    <span class="keyword">const</span> keyHex = Buffer.from(key)</span><br><span class="line">    <span class="keyword">const</span> ivHex = Buffer.from(iv)</span><br><span class="line">    <span class="keyword">const</span> encipher = crypto.createCipheriv(<span class="string">&#x27;des-cbc&#x27;</span>, keyHex, ivHex)</span><br><span class="line">    <span class="comment">//编码方式除了可以使用hex还可以使用base64。</span></span><br><span class="line">    <span class="keyword">let</span> encode = encipher.update(encodeTxt, <span class="string">&#x27;utf8&#x27;</span>, <span class="string">&#x27;hex&#x27;</span>)</span><br><span class="line">    encode += encipher.final(<span class="string">&#x27;hex&#x27;</span>)</span><br><span class="line">    <span class="keyword">return</span> encode</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>解密函数：</p>
-<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@description </span>DES解密，要和加密方式对应起来</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param <span class="type">&#123;String&#125;</span> </span>decodeTxt 待解密的字符串</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param <span class="type">&#123;String&#125;</span> </span>key 秘钥</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param <span class="type">&#123;String&#125;</span> </span>iv 偏移量</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">desDecode</span>(<span class="params">decodeTxt, key, iv</span>) </span>&#123;</span><br><span class="line">    key = key.length &gt;= <span class="number">8</span> ? key.slice(<span class="number">0</span>, <span class="number">8</span>) : key.concat(<span class="string">&#x27;0&#x27;</span>.repeat(<span class="number">8</span> - key.length))</span><br><span class="line">    iv = iv.length &gt;= <span class="number">8</span> ? iv.slice(<span class="number">0</span>, <span class="number">8</span>) : iv.concat(<span class="string">&#x27;0&#x27;</span>.repeat(<span class="number">8</span> - iv.length))</span><br><span class="line">    <span class="keyword">const</span> keyHex = Buffer.from(key)</span><br><span class="line">    <span class="keyword">const</span> ivHex = Buffer.from(iv)</span><br><span class="line">    <span class="keyword">const</span> decipher = crypto.createDecipheriv(<span class="string">&#x27;des-cbc&#x27;</span>, keyHex, ivHex)</span><br><span class="line">    <span class="keyword">let</span> decode = decipher.update(decodeTxt, <span class="string">&#x27;hex&#x27;</span>, <span class="string">&#x27;utf8&#x27;</span>)</span><br><span class="line">    decode += decipher.final(<span class="string">&#x27;utf8&#x27;</span>)</span><br><span class="line">    <span class="keyword">return</span> decodes</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>在使用时要特别注意加密和解密的编码方式要对应起来，如果没有对应起来就会报错或者得不到结果。</p>
-]]></content>
-      <categories>
-        <category>node</category>
-      </categories>
-      <tags>
-        <tag>JavaScript</tag>
-        <tag>des-cbc</tag>
-        <tag>node</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>npm发包记录</title>
-    <url>/npm/</url>
-    <content><![CDATA[<h2 id="注册-NPM-账号"><a href="#注册-NPM-账号" class="headerlink" title="注册 NPM 账号"></a>注册 NPM 账号</h2><p>首先去 npm 官网注册账号，注册地址<a href="https://www.npmjs.com/">https://www.npmjs.com/</a>。然后验证邮箱即注册完成。</p>
-<h2 id="准备要发布的包"><a href="#准备要发布的包" class="headerlink" title="准备要发布的包"></a>准备要发布的包</h2><p>准备发布的包在开发好后要注意 package.json 中的如下信息：</p>
-<ul>
-<li>name 包名</li>
-<li>version  版本号，更新版本时需要修改版本号</li>
-<li>dependencies  包依赖</li>
-</ul>
-<h2 id="相关目录规范"><a href="#相关目录规范" class="headerlink" title="相关目录规范"></a>相关目录规范</h2><ul>
-<li><code>src</code>：源码源文件。</li>
-<li><code>lib</code>：依赖文件（没通过 npm，直接下载源码的那种）。</li>
-<li><code>node_modules</code>：npm 依赖文件。</li>
-<li><code>bin</code>：二进制可执行文件。</li>
-<li><code>tests</code>：单元测试或集成测试文件。</li>
-<li><code>docs</code>：文档、开发手册。</li>
-<li><code>examples</code>：示例代码或项目。</li>
-<li><code>build</code>：构建时所需文件。</li>
-<li><code>dist</code>：打包后的输出目录。</li>
-</ul>
-<h2 id="查看-npm-源"><a href="#查看-npm-源" class="headerlink" title="查看 npm 源"></a>查看 npm 源</h2><p>一定要确保 npm 源为官方源<a href="https://registry.npmjs.org/">https://registry.npmjs.org</a>。如果要查看自己当前的源则使用：</p>
-<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">npm config get registry</span><br></pre></td></tr></table></figure>
-
-<p>如果是非官方源则使用如下命令调整：</p>
-<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">npm config <span class="built_in">set</span> registry https://registry.npmjs.org</span><br></pre></td></tr></table></figure>
-
-<h2 id="开始发包"><a href="#开始发包" class="headerlink" title="开始发包"></a>开始发包</h2><p>首先在终端中登录 npm，使用命令：</p>
-<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">npm adduse</span><br></pre></td></tr></table></figure>
-
-<p>登录完成后发布我们需要发布的包：</p>
-<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">npm publish --access public</span><br></pre></td></tr></table></figure>
-
-<p>发布成功后可以看到如下信息：</p>
-<p><a href="https://imgchr.com/i/rH5uy6"><img src="https://s3.ax1x.com/2020/12/29/rH5uy6.png" alt="发布成功"></a></p>
-<h2 id="查看发布的包"><a href="#查看发布的包" class="headerlink" title="查看发布的包"></a>查看发布的包</h2><p>发包成后可以在<a href="https://www.npmjs.com/">https://www.npmjs.com/</a>中搜索刚刚发布的包，结果如下：</p>
-<p><a href="https://imgchr.com/i/rH5QeO"><img src="https://s3.ax1x.com/2020/12/29/rH5QeO.png" alt="查看发布"></a></p>
-<h2 id="使用发布的包"><a href="#使用发布的包" class="headerlink" title="使用发布的包"></a>使用发布的包</h2><p>首先在 Demo 中安装刚刚发布的包：</p>
-<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">npm i node-des-cbc</span><br></pre></td></tr></table></figure>
-
-<p>然后验证包是否可用：</p>
-<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> des = <span class="built_in">require</span>(<span class="string">&quot;node-des-cbc&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(des);</span><br></pre></td></tr></table></figure>
-
-<p>结果如下：</p>
-<p><a href="https://imgchr.com/i/rH5GYd"><img src="https://s3.ax1x.com/2020/12/29/rH5GYd.png" alt="发布结果"></a></p>
-<p>发包所用代码地址： <a href="https://github.com/Vanlee0129/node-des-cbc">https://github.com/Vanlee0129/node-des-cbc</a></p>
-<p>npm 官网地址: <a href="https://www.npmjs.com/package/node-des-cbc">https://www.npmjs.com/package/node-des-cbc</a></p>
-]]></content>
-      <categories>
-        <category>开发相关</category>
-      </categories>
-      <tags>
-        <tag>npm</tag>
-        <tag>发包</tag>
       </tags>
   </entry>
   <entry>
@@ -342,28 +265,87 @@
 <p>如果想要自己体验 QUIC，可以使用 Libquic、Caddy 等。另外 github 上面也有 C++版本的 QUIC 实现，利用 Nodejs 的 C++ 模块，前端工程师也可以快速实现一个 node-quic。</p>
 ]]></content>
       <categories>
-        <category>JS</category>
+        <category>计算机网络</category>
       </categories>
       <tags>
-        <tag>JavaScript</tag>
+        <tag>http</tag>
       </tags>
   </entry>
   <entry>
-    <title>Python草料二维码等计数二维码刷访客量</title>
-    <url>/python/</url>
-    <content><![CDATA[<p>在生活中，很多时候被人邀请扫一扫二维码，刷一刷访客量。但是一个ip只能算作一个访问量，对此我们用Python来实现批量刷访客量。</p>
-<p>Python版本3.6</p>
-<p>首先上代码</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/python  </span></span><br><span class="line"><span class="comment"># -*- coding: UTF-8 -*-  </span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> urllib.parse  </span><br><span class="line"><span class="keyword">import</span> urllib.request  </span><br><span class="line"><span class="keyword">import</span> time  </span><br><span class="line"><span class="keyword">from</span> lxml <span class="keyword">import</span> etree</span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">from</span> selenium <span class="keyword">import</span> webdriver</span><br><span class="line"><span class="keyword">import</span> random</span><br><span class="line"></span><br><span class="line"><span class="comment"># 短网址还原 </span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">revertShortLink</span>(<span class="params">url</span>):</span></span><br><span class="line">	re = requests.head(url)</span><br><span class="line">	<span class="keyword">return</span> re.headers.get(<span class="string">&#x27;location&#x27;</span>)</span><br><span class="line"></span><br><span class="line">URL_1 = revertShortLink(<span class="string">&quot;your revertShortLink&quot;</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">global</span> url_path  </span><br><span class="line">url_path = [<span class="number">3</span>]  </span><br><span class="line">  </span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">verif_ip</span>(<span class="params">ip,port</span>):</span>    <span class="comment"># 验证ip有效性  </span></span><br><span class="line">	</span><br><span class="line">	test_url = URL_1</span><br><span class="line">	</span><br><span class="line">	browser = webdriver.Chrome()</span><br><span class="line"></span><br><span class="line">	browser.get(URL_1)</span><br><span class="line">	browser.quit()</span><br><span class="line">	time.sleep(random.randint(<span class="number">1</span>,<span class="number">20</span>))  </span><br><span class="line"></span><br><span class="line">file = open(<span class="string">&quot;ip.txt&quot;</span>)</span><br><span class="line"></span><br><span class="line">counter = <span class="number">0</span> </span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">while</span> <span class="number">1</span>:  </span><br><span class="line">	lines = file.readlines(<span class="number">100000</span>)  </span><br><span class="line">	<span class="keyword">if</span> <span class="keyword">not</span> lines:  </span><br><span class="line">		<span class="keyword">break</span>  </span><br><span class="line">	<span class="keyword">for</span> data <span class="keyword">in</span> lines:</span><br><span class="line">		counter += <span class="number">1</span>  </span><br><span class="line">		print((data.split(<span class="string">&quot;:&quot;</span>)[<span class="number">0</span>]))</span><br><span class="line">		print(<span class="string">&quot;cishu:&quot;</span>,counter)  </span><br><span class="line">	</span><br><span class="line">	   </span><br><span class="line"></span><br><span class="line">	 </span><br><span class="line">		verif_ip(data.split(<span class="string">&quot;:&quot;</span>)[<span class="number">0</span>],data.split(<span class="string">&quot;:&quot;</span>)[<span class="number">1</span>])</span><br></pre></td></tr></table></figure>
-<p>全部代码我已经打包放在我的Github上面了，直接下载即可。<a href="https://github.com/Vanlee0129/caoliaoscan">下载地址</a></p>
-<p>ip.txt文件就是用来存放代理ip的，相当于一个简陋的代理池，手动复制进去即可，我提供了一些，如果不够可以再自己去找一些。</p>
-<p>ip可以在66ip等网站去提取，用多少提多少。以后再也不担心刷二维码访客量啦！</p>
+    <title>使用node加解密DES-CBC</title>
+    <url>/node-des/</url>
+    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>为了保护请求内容不被抓包软件暴露出来，很多产品都采用了请求加密的方式。DES-CBC就是一种对称加密方式。在网上查资料时发现node的资料不多，所以研究之后记录一下使用node加解密DES-CBC。  </p>
+<h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><p>首先是加密函数：  </p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@description </span>DES加密，以hex为例</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param <span class="type">&#123;String&#125;</span> </span>encodeTxt 待加密的字符串</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param <span class="type">&#123;String&#125;</span> </span>key 秘钥</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param <span class="type">&#123;String&#125;</span> </span>iv 偏移量</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">desEncode</span>(<span class="params">encodeTxt, key, iv</span>) </span>&#123;</span><br><span class="line">    key = key.length &gt;= <span class="number">8</span> ? key.slice(<span class="number">0</span>, <span class="number">8</span>) : key.concat(<span class="string">&#x27;0&#x27;</span>.repeat(<span class="number">8</span> - key.length))</span><br><span class="line">    iv = iv.length &gt;= <span class="number">8</span> ? iv.slice(<span class="number">0</span>, <span class="number">8</span>) : iv.concat(<span class="string">&#x27;0&#x27;</span>.repeat(<span class="number">8</span> - iv.length))</span><br><span class="line">    <span class="keyword">const</span> keyHex = Buffer.from(key)</span><br><span class="line">    <span class="keyword">const</span> ivHex = Buffer.from(iv)</span><br><span class="line">    <span class="keyword">const</span> encipher = crypto.createCipheriv(<span class="string">&#x27;des-cbc&#x27;</span>, keyHex, ivHex)</span><br><span class="line">    <span class="comment">//编码方式除了可以使用hex还可以使用base64。</span></span><br><span class="line">    <span class="keyword">let</span> encode = encipher.update(encodeTxt, <span class="string">&#x27;utf8&#x27;</span>, <span class="string">&#x27;hex&#x27;</span>)</span><br><span class="line">    encode += encipher.final(<span class="string">&#x27;hex&#x27;</span>)</span><br><span class="line">    <span class="keyword">return</span> encode</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>解密函数：</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@description </span>DES解密，要和加密方式对应起来</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param <span class="type">&#123;String&#125;</span> </span>decodeTxt 待解密的字符串</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param <span class="type">&#123;String&#125;</span> </span>key 秘钥</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param <span class="type">&#123;String&#125;</span> </span>iv 偏移量</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">desDecode</span>(<span class="params">decodeTxt, key, iv</span>) </span>&#123;</span><br><span class="line">    key = key.length &gt;= <span class="number">8</span> ? key.slice(<span class="number">0</span>, <span class="number">8</span>) : key.concat(<span class="string">&#x27;0&#x27;</span>.repeat(<span class="number">8</span> - key.length))</span><br><span class="line">    iv = iv.length &gt;= <span class="number">8</span> ? iv.slice(<span class="number">0</span>, <span class="number">8</span>) : iv.concat(<span class="string">&#x27;0&#x27;</span>.repeat(<span class="number">8</span> - iv.length))</span><br><span class="line">    <span class="keyword">const</span> keyHex = Buffer.from(key)</span><br><span class="line">    <span class="keyword">const</span> ivHex = Buffer.from(iv)</span><br><span class="line">    <span class="keyword">const</span> decipher = crypto.createDecipheriv(<span class="string">&#x27;des-cbc&#x27;</span>, keyHex, ivHex)</span><br><span class="line">    <span class="keyword">let</span> decode = decipher.update(decodeTxt, <span class="string">&#x27;hex&#x27;</span>, <span class="string">&#x27;utf8&#x27;</span>)</span><br><span class="line">    decode += decipher.final(<span class="string">&#x27;utf8&#x27;</span>)</span><br><span class="line">    <span class="keyword">return</span> decodes</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>在使用时要特别注意加密和解密的编码方式要对应起来，如果没有对应起来就会报错或者得不到结果。</p>
 ]]></content>
       <categories>
-        <category>Python</category>
+        <category>node</category>
       </categories>
       <tags>
-        <tag>小技巧</tag>
+        <tag>JavaScript</tag>
+        <tag>des-cbc</tag>
+        <tag>node</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>npm发包记录</title>
+    <url>/npm/</url>
+    <content><![CDATA[<h2 id="注册-NPM-账号"><a href="#注册-NPM-账号" class="headerlink" title="注册 NPM 账号"></a>注册 NPM 账号</h2><p>首先去 npm 官网注册账号，注册地址<a href="https://www.npmjs.com/">https://www.npmjs.com/</a>。然后验证邮箱即注册完成。</p>
+<h2 id="准备要发布的包"><a href="#准备要发布的包" class="headerlink" title="准备要发布的包"></a>准备要发布的包</h2><p>准备发布的包在开发好后要注意 package.json 中的如下信息：</p>
+<ul>
+<li>name 包名</li>
+<li>version  版本号，更新版本时需要修改版本号</li>
+<li>dependencies  包依赖</li>
+</ul>
+<h2 id="相关目录规范"><a href="#相关目录规范" class="headerlink" title="相关目录规范"></a>相关目录规范</h2><ul>
+<li><code>src</code>：源码源文件。</li>
+<li><code>lib</code>：依赖文件（没通过 npm，直接下载源码的那种）。</li>
+<li><code>node_modules</code>：npm 依赖文件。</li>
+<li><code>bin</code>：二进制可执行文件。</li>
+<li><code>tests</code>：单元测试或集成测试文件。</li>
+<li><code>docs</code>：文档、开发手册。</li>
+<li><code>examples</code>：示例代码或项目。</li>
+<li><code>build</code>：构建时所需文件。</li>
+<li><code>dist</code>：打包后的输出目录。</li>
+</ul>
+<h2 id="查看-npm-源"><a href="#查看-npm-源" class="headerlink" title="查看 npm 源"></a>查看 npm 源</h2><p>一定要确保 npm 源为官方源<a href="https://registry.npmjs.org/">https://registry.npmjs.org</a>。如果要查看自己当前的源则使用：</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">npm config get registry</span><br></pre></td></tr></table></figure>
+
+<p>如果是非官方源则使用如下命令调整：</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">npm config <span class="built_in">set</span> registry https://registry.npmjs.org</span><br></pre></td></tr></table></figure>
+
+<h2 id="开始发包"><a href="#开始发包" class="headerlink" title="开始发包"></a>开始发包</h2><p>首先在终端中登录 npm，使用命令：</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">npm adduse</span><br></pre></td></tr></table></figure>
+
+<p>登录完成后发布我们需要发布的包：</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">npm publish --access public</span><br></pre></td></tr></table></figure>
+
+<p>发布成功后可以看到如下信息：</p>
+<p><a href="https://imgchr.com/i/rH5uy6"><img src="https://s3.ax1x.com/2020/12/29/rH5uy6.png" alt="发布成功"></a></p>
+<h2 id="查看发布的包"><a href="#查看发布的包" class="headerlink" title="查看发布的包"></a>查看发布的包</h2><p>发包成后可以在<a href="https://www.npmjs.com/">https://www.npmjs.com/</a>中搜索刚刚发布的包，结果如下：</p>
+<p><a href="https://imgchr.com/i/rH5QeO"><img src="https://s3.ax1x.com/2020/12/29/rH5QeO.png" alt="查看发布"></a></p>
+<h2 id="使用发布的包"><a href="#使用发布的包" class="headerlink" title="使用发布的包"></a>使用发布的包</h2><p>首先在 Demo 中安装刚刚发布的包：</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">npm i node-des-cbc</span><br></pre></td></tr></table></figure>
+
+<p>然后验证包是否可用：</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> des = <span class="built_in">require</span>(<span class="string">&quot;node-des-cbc&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(des);</span><br></pre></td></tr></table></figure>
+
+<p>结果如下：</p>
+<p><a href="https://imgchr.com/i/rH5GYd"><img src="https://s3.ax1x.com/2020/12/29/rH5GYd.png" alt="发布结果"></a></p>
+<p>发包所用代码地址： <a href="https://github.com/Vanlee0129/node-des-cbc">https://github.com/Vanlee0129/node-des-cbc</a></p>
+<p>npm 官网地址: <a href="https://www.npmjs.com/package/node-des-cbc">https://www.npmjs.com/package/node-des-cbc</a></p>
+]]></content>
+      <categories>
+        <category>开发相关</category>
+      </categories>
+      <tags>
+        <tag>npm</tag>
+        <tag>发包</tag>
       </tags>
   </entry>
   <entry>
@@ -384,6 +366,24 @@
       <tags>
         <tag>JavaScript</tag>
         <tag>微信小程序</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Python草料二维码等计数二维码刷访客量</title>
+    <url>/python/</url>
+    <content><![CDATA[<p>在生活中，很多时候被人邀请扫一扫二维码，刷一刷访客量。但是一个ip只能算作一个访问量，对此我们用Python来实现批量刷访客量。</p>
+<p>Python版本3.6</p>
+<p>首先上代码</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/python  </span></span><br><span class="line"><span class="comment"># -*- coding: UTF-8 -*-  </span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> urllib.parse  </span><br><span class="line"><span class="keyword">import</span> urllib.request  </span><br><span class="line"><span class="keyword">import</span> time  </span><br><span class="line"><span class="keyword">from</span> lxml <span class="keyword">import</span> etree</span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">from</span> selenium <span class="keyword">import</span> webdriver</span><br><span class="line"><span class="keyword">import</span> random</span><br><span class="line"></span><br><span class="line"><span class="comment"># 短网址还原 </span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">revertShortLink</span>(<span class="params">url</span>):</span></span><br><span class="line">	re = requests.head(url)</span><br><span class="line">	<span class="keyword">return</span> re.headers.get(<span class="string">&#x27;location&#x27;</span>)</span><br><span class="line"></span><br><span class="line">URL_1 = revertShortLink(<span class="string">&quot;your revertShortLink&quot;</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">global</span> url_path  </span><br><span class="line">url_path = [<span class="number">3</span>]  </span><br><span class="line">  </span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">verif_ip</span>(<span class="params">ip,port</span>):</span>    <span class="comment"># 验证ip有效性  </span></span><br><span class="line">	</span><br><span class="line">	test_url = URL_1</span><br><span class="line">	</span><br><span class="line">	browser = webdriver.Chrome()</span><br><span class="line"></span><br><span class="line">	browser.get(URL_1)</span><br><span class="line">	browser.quit()</span><br><span class="line">	time.sleep(random.randint(<span class="number">1</span>,<span class="number">20</span>))  </span><br><span class="line"></span><br><span class="line">file = open(<span class="string">&quot;ip.txt&quot;</span>)</span><br><span class="line"></span><br><span class="line">counter = <span class="number">0</span> </span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">while</span> <span class="number">1</span>:  </span><br><span class="line">	lines = file.readlines(<span class="number">100000</span>)  </span><br><span class="line">	<span class="keyword">if</span> <span class="keyword">not</span> lines:  </span><br><span class="line">		<span class="keyword">break</span>  </span><br><span class="line">	<span class="keyword">for</span> data <span class="keyword">in</span> lines:</span><br><span class="line">		counter += <span class="number">1</span>  </span><br><span class="line">		print((data.split(<span class="string">&quot;:&quot;</span>)[<span class="number">0</span>]))</span><br><span class="line">		print(<span class="string">&quot;cishu:&quot;</span>,counter)  </span><br><span class="line">	</span><br><span class="line">	   </span><br><span class="line"></span><br><span class="line">	 </span><br><span class="line">		verif_ip(data.split(<span class="string">&quot;:&quot;</span>)[<span class="number">0</span>],data.split(<span class="string">&quot;:&quot;</span>)[<span class="number">1</span>])</span><br></pre></td></tr></table></figure>
+<p>全部代码我已经打包放在我的Github上面了，直接下载即可。<a href="https://github.com/Vanlee0129/caoliaoscan">下载地址</a></p>
+<p>ip.txt文件就是用来存放代理ip的，相当于一个简陋的代理池，手动复制进去即可，我提供了一些，如果不够可以再自己去找一些。</p>
+<p>ip可以在66ip等网站去提取，用多少提多少。以后再也不担心刷二维码访客量啦！</p>
+]]></content>
+      <categories>
+        <category>Python</category>
+      </categories>
+      <tags>
+        <tag>小技巧</tag>
       </tags>
   </entry>
   <entry>
