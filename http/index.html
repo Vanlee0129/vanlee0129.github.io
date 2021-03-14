@@ -103,16 +103,10 @@
     <div class="article-entry" itemprop="articleBody">
        
   <h2 id="HTTP1-1-与-HTTP2"><a href="#HTTP1-1-与-HTTP2" class="headerlink" title="HTTP1.1 与 HTTP2"></a>HTTP1.1 与 HTTP2</h2><h3 id="HTTP1-1-的缺陷"><a href="#HTTP1-1-的缺陷" class="headerlink" title="HTTP1.1 的缺陷"></a>HTTP1.1 的缺陷</h3><p>高延迟 — 队头阻塞(Head-Of-Line Blocking)<br>无状态特性 — 阻碍交互<br>明文传输 — 不安全性<br>不支持服务端推送<br>队头阻塞<br>队头阻塞是指当顺序发送的请求序列中的一个请求因为某种原因被阻塞时，在后面排队的所有请求也一并被阻塞，会导致客户端迟迟收不到数据。</p>
-<h3 id="针对队头阻塞"><a href="#针对队头阻塞" class="headerlink" title="针对队头阻塞"></a>针对队头阻塞</h3><ol>
-<li><p>将同一页面的资源分散到不同域名下，提升连接上限。虽然能公用一个 TCP 管道，但是在一个管道中同一时刻只能处理一个请求，在当前的请求没有结束之前，其他的请求只能处于阻塞状态。</p>
-</li>
-<li><p>减少请求数量</p>
-</li>
-<li><p>内联一些资源：css、base64 图片等</p>
-</li>
-<li><p>合并小文件减少资源数</p>
-</li>
-</ol>
+<h3 id="针对队头阻塞"><a href="#针对队头阻塞" class="headerlink" title="针对队头阻塞"></a>针对队头阻塞</h3><p>1.将同一页面的资源分散到不同域名下，提升连接上限。虽然能公用一个 TCP 管道，但是在一个管道中同一时刻只能处理一个请求，在当前的请求没有结束之前，其他的请求只能处于阻塞状态。</p>
+<p>2.减少请求数量</p>
+<p>3.内联一些资源：css、base64 图片等</p>
+<p>4.合并小文件减少资源数</p>
 <h3 id="无状态特性"><a href="#无状态特性" class="headerlink" title="无状态特性"></a>无状态特性</h3><p>无状态是指协议对于连接状态没有记忆能力。纯净的 HTTP 是没有 cookie 等机制的，每一个连接都是一个新的连接。上一次请求验证了用户名密码，而下一次请求服务器并不知道它与上一条请求有何关联，换句话说就是掉登录态。</p>
 <h3 id="不安全性"><a href="#不安全性" class="headerlink" title="不安全性"></a>不安全性</h3><p>传输内容没有加密，中途可能被篡改和劫持。</p>
 <h3 id="SPDY-协议"><a href="#SPDY-协议" class="headerlink" title="SPDY 协议"></a>SPDY 协议</h3><p>SPDY 是由 google 推行的改进版本的 HTTP1.1 （那时候还没有 HTTP2）。</p>
