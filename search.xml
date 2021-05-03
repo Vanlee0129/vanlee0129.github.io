@@ -1,37 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>深拷贝</title>
-    <url>/deepCopy/</url>
-    <content><![CDATA[<p>由于JS中的数据类型分为值类型和引用类型，所以对于引用类型来说变量储存的其实是地址而不是这个对象本身。考虑如下例子：  </p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">let</span> a = &#123;</span><br><span class="line">    b: <span class="number">1</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> c = a</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(a, c) <span class="comment">// &#123;b: 1&#125; &#123;b: 1&#125;</span></span><br><span class="line"></span><br><span class="line">a.b = <span class="number">2</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(c) <span class="comment">// &#123;b: 2&#125;</span></span><br></pre></td></tr></table></figure>
-<p>从上面例子可以看出a变化后c也跟着变了，显然这不是我们想要的结果。出现以上的原因是直接将a赋值给c是一种浅拷贝。实际上是将a所对应的地址赋值给了c。  </p>
-<p>为了解决这个问题，我们需要深拷贝。对于以上例子我们可以采用以下办法：  </p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">let</span> c = <span class="built_in">JSON</span>.parse(<span class="built_in">JSON</span>.stringify(a))  </span><br></pre></td></tr></table></figure>
-
-<p>但是这个方法有以下局限性：  </p>
-<ul>
-<li><p>他无法实现对函数 、RegExp等特殊对象的克隆</p>
-</li>
-<li><p>会抛弃对象的constructor,所有的构造函数会指向Object</p>
-</li>
-<li><p>对象有循环引用,会报错  </p>
-</li>
-</ul>
-<p>在生产环境我们一般使用第三方库成熟的方法，但是核心原理其实是一样的。  </p>
-<p>现在们来实现一个简版的深拷贝：  </p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">let</span> deepCloneOne = <span class="function">(<span class="params">initalObj</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> obj = &#123;&#125;</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">typeof</span> initalObj !== <span class="string">&#x27;object&#x27;</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> initalObj</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">const</span> key <span class="keyword">in</span> initalObj) &#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">typeof</span> initalObj[key] === <span class="string">&#x27;object&#x27;</span>) &#123;</span><br><span class="line">            <span class="comment">//对数组特殊处理</span></span><br><span class="line">            <span class="keyword">if</span> (<span class="built_in">Array</span>.isArray(initalObj[key])) &#123;</span><br><span class="line">                <span class="comment">//用map方法返回新数组，将数组中的元素递归</span></span><br><span class="line">                obj[key] = initalObj[key].map(<span class="function"><span class="params">item</span> =&gt;</span> &#123;</span><br><span class="line">                    <span class="built_in">this</span>.deepCloneOne(item)</span><br><span class="line">                &#125;)</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="comment">//递归返回新对象</span></span><br><span class="line">                obj[key] = <span class="built_in">this</span>.deepCloneOne(initalObj[key])</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (<span class="keyword">typeof</span> initalObj[key] === <span class="string">&#x27;function&#x27;</span>) &#123;</span><br><span class="line">            <span class="comment">//返回新函数</span></span><br><span class="line">            obj[key] = initalObj[key].bind(obj)</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="comment">//基本类型直接返回</span></span><br><span class="line">            obj[key] = initalObj[key]</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> obj</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 深拷贝</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param <span class="type">&#123;Object&#125;</span></span>&#125; obj </span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">deepCloneTwo</span>(<span class="params">obj = &#123;&#125;</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">typeof</span> obj !== <span class="string">&#x27;object&#x27;</span> || obj == <span class="literal">null</span>) &#123;</span><br><span class="line">        <span class="comment">//obj是null或者不是对象</span></span><br><span class="line">        <span class="keyword">return</span> obj</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//初始化返回结果</span></span><br><span class="line">    <span class="keyword">let</span> result</span><br><span class="line">    <span class="keyword">if</span> (obj <span class="keyword">instanceof</span> <span class="built_in">Array</span>) &#123;</span><br><span class="line">        result = []</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        result = &#123;&#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">const</span> key <span class="keyword">in</span> obj) &#123;</span><br><span class="line">        <span class="keyword">if</span> (obj.hasOwnProperty(key)) &#123;</span><br><span class="line">            <span class="comment">//保证key不是原型的属性</span></span><br><span class="line">            <span class="keyword">if</span> (obj.hasOwnProperty(key)) &#123;</span><br><span class="line">                <span class="comment">//递归调用</span></span><br><span class="line">                result[key] = deepCloneTwo(obj[key])</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//返回结果</span></span><br><span class="line">    <span class="keyword">return</span> result</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>核心思路就先判断这个对象是哪种对象，然后根据这种对象的特点去构造一个新的对象，用递归的方法将这个对象的所有属性都挨个赋给新对象。  </p>
-<p>深拷贝产生的新对象和原来的对象没有一点关系，只是长得一样，但是是存储在一块新开辟的空间，两者之间不会互相影响。</p>
-]]></content>
-      <categories>
-        <category>ES6</category>
-      </categories>
-      <tags>
-        <tag>深拷贝</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>超好用的图片浏览器Irfanview</title>
     <url>/Irfanview/</url>
     <content><![CDATA[<hr>
@@ -111,6 +80,37 @@
       </tags>
   </entry>
   <entry>
+    <title>深拷贝</title>
+    <url>/deepCopy/</url>
+    <content><![CDATA[<p>由于JS中的数据类型分为值类型和引用类型，所以对于引用类型来说变量储存的其实是地址而不是这个对象本身。考虑如下例子：  </p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">let</span> a = &#123;</span><br><span class="line">    b: <span class="number">1</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> c = a</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(a, c) <span class="comment">// &#123;b: 1&#125; &#123;b: 1&#125;</span></span><br><span class="line"></span><br><span class="line">a.b = <span class="number">2</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(c) <span class="comment">// &#123;b: 2&#125;</span></span><br></pre></td></tr></table></figure>
+<p>从上面例子可以看出a变化后c也跟着变了，显然这不是我们想要的结果。出现以上的原因是直接将a赋值给c是一种浅拷贝。实际上是将a所对应的地址赋值给了c。  </p>
+<p>为了解决这个问题，我们需要深拷贝。对于以上例子我们可以采用以下办法：  </p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">let</span> c = <span class="built_in">JSON</span>.parse(<span class="built_in">JSON</span>.stringify(a))  </span><br></pre></td></tr></table></figure>
+
+<p>但是这个方法有以下局限性：  </p>
+<ul>
+<li><p>他无法实现对函数 、RegExp等特殊对象的克隆</p>
+</li>
+<li><p>会抛弃对象的constructor,所有的构造函数会指向Object</p>
+</li>
+<li><p>对象有循环引用,会报错  </p>
+</li>
+</ul>
+<p>在生产环境我们一般使用第三方库成熟的方法，但是核心原理其实是一样的。  </p>
+<p>现在们来实现一个简版的深拷贝：  </p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">let</span> deepCloneOne = <span class="function">(<span class="params">initalObj</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> obj = &#123;&#125;</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">typeof</span> initalObj !== <span class="string">&#x27;object&#x27;</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> initalObj</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">const</span> key <span class="keyword">in</span> initalObj) &#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">typeof</span> initalObj[key] === <span class="string">&#x27;object&#x27;</span>) &#123;</span><br><span class="line">            <span class="comment">//对数组特殊处理</span></span><br><span class="line">            <span class="keyword">if</span> (<span class="built_in">Array</span>.isArray(initalObj[key])) &#123;</span><br><span class="line">                <span class="comment">//用map方法返回新数组，将数组中的元素递归</span></span><br><span class="line">                obj[key] = initalObj[key].map(<span class="function"><span class="params">item</span> =&gt;</span> &#123;</span><br><span class="line">                    <span class="built_in">this</span>.deepCloneOne(item)</span><br><span class="line">                &#125;)</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="comment">//递归返回新对象</span></span><br><span class="line">                obj[key] = <span class="built_in">this</span>.deepCloneOne(initalObj[key])</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (<span class="keyword">typeof</span> initalObj[key] === <span class="string">&#x27;function&#x27;</span>) &#123;</span><br><span class="line">            <span class="comment">//返回新函数</span></span><br><span class="line">            obj[key] = initalObj[key].bind(obj)</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="comment">//基本类型直接返回</span></span><br><span class="line">            obj[key] = initalObj[key]</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> obj</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 深拷贝</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param <span class="type">&#123;Object&#125;</span></span>&#125; obj </span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">deepCloneTwo</span>(<span class="params">obj = &#123;&#125;</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">typeof</span> obj !== <span class="string">&#x27;object&#x27;</span> || obj == <span class="literal">null</span>) &#123;</span><br><span class="line">        <span class="comment">//obj是null或者不是对象</span></span><br><span class="line">        <span class="keyword">return</span> obj</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//初始化返回结果</span></span><br><span class="line">    <span class="keyword">let</span> result</span><br><span class="line">    <span class="keyword">if</span> (obj <span class="keyword">instanceof</span> <span class="built_in">Array</span>) &#123;</span><br><span class="line">        result = []</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        result = &#123;&#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">const</span> key <span class="keyword">in</span> obj) &#123;</span><br><span class="line">        <span class="keyword">if</span> (obj.hasOwnProperty(key)) &#123;</span><br><span class="line">            <span class="comment">//保证key不是原型的属性</span></span><br><span class="line">            <span class="keyword">if</span> (obj.hasOwnProperty(key)) &#123;</span><br><span class="line">                <span class="comment">//递归调用</span></span><br><span class="line">                result[key] = deepCloneTwo(obj[key])</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//返回结果</span></span><br><span class="line">    <span class="keyword">return</span> result</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>核心思路就先判断这个对象是哪种对象，然后根据这种对象的特点去构造一个新的对象，用递归的方法将这个对象的所有属性都挨个赋给新对象。  </p>
+<p>深拷贝产生的新对象和原来的对象没有一点关系，只是长得一样，但是是存储在一块新开辟的空间，两者之间不会互相影响。</p>
+]]></content>
+      <categories>
+        <category>ES6</category>
+      </categories>
+      <tags>
+        <tag>深拷贝</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>ES6中的let</title>
     <url>/es6-let/</url>
     <content><![CDATA[<p>let是ES6定义的新关键词，用于声明变量，例如：</p>
@@ -152,42 +152,6 @@
       </categories>
       <tags>
         <tag>JavaScript</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>v-if失效时强制刷新</title>
-    <url>/forceUpdate/</url>
-    <content><![CDATA[<p><code>v-if</code>动态计算时，如果数据层级太深可能导致<code>render</code>函数没有自动刷新，所以需要手动刷新。此时可以调用<code>this.$forceUpdate()</code>强制刷新。</p>
-<p>使用示例：</p>
-<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="built_in">this</span>.couponList[index].isSelected = <span class="literal">true</span></span><br><span class="line"><span class="comment">//赋值后调用强制刷新</span></span><br><span class="line"><span class="built_in">this</span>.$forceUpdate()</span><br></pre></td></tr></table></figure>
-]]></content>
-      <categories>
-        <category>Vue</category>
-      </categories>
-      <tags>
-        <tag>JavaScript</tag>
-        <tag>v-if</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>使用node加解密DES-CBC</title>
-    <url>/node-des/</url>
-    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>为了保护请求内容不被抓包软件暴露出来，很多产品都采用了请求加密的方式。DES-CBC就是一种对称加密方式。在网上查资料时发现node的资料不多，所以研究之后记录一下使用node加解密DES-CBC。  </p>
-<h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><p>首先是加密函数：  </p>
-<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@description </span>DES加密，以hex为例</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param <span class="type">&#123;String&#125;</span> </span>encodeTxt 待加密的字符串</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param <span class="type">&#123;String&#125;</span> </span>key 秘钥</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param <span class="type">&#123;String&#125;</span> </span>iv 偏移量</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">desEncode</span>(<span class="params">encodeTxt, key, iv</span>) </span>&#123;</span><br><span class="line">    key = key.length &gt;= <span class="number">8</span> ? key.slice(<span class="number">0</span>, <span class="number">8</span>) : key.concat(<span class="string">&#x27;0&#x27;</span>.repeat(<span class="number">8</span> - key.length))</span><br><span class="line">    iv = iv.length &gt;= <span class="number">8</span> ? iv.slice(<span class="number">0</span>, <span class="number">8</span>) : iv.concat(<span class="string">&#x27;0&#x27;</span>.repeat(<span class="number">8</span> - iv.length))</span><br><span class="line">    <span class="keyword">const</span> keyHex = Buffer.from(key)</span><br><span class="line">    <span class="keyword">const</span> ivHex = Buffer.from(iv)</span><br><span class="line">    <span class="keyword">const</span> encipher = crypto.createCipheriv(<span class="string">&#x27;des-cbc&#x27;</span>, keyHex, ivHex)</span><br><span class="line">    <span class="comment">//编码方式除了可以使用hex还可以使用base64。</span></span><br><span class="line">    <span class="keyword">let</span> encode = encipher.update(encodeTxt, <span class="string">&#x27;utf8&#x27;</span>, <span class="string">&#x27;hex&#x27;</span>)</span><br><span class="line">    encode += encipher.final(<span class="string">&#x27;hex&#x27;</span>)</span><br><span class="line">    <span class="keyword">return</span> encode</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>解密函数：</p>
-<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@description </span>DES解密，要和加密方式对应起来</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param <span class="type">&#123;String&#125;</span> </span>decodeTxt 待解密的字符串</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param <span class="type">&#123;String&#125;</span> </span>key 秘钥</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param <span class="type">&#123;String&#125;</span> </span>iv 偏移量</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">desDecode</span>(<span class="params">decodeTxt, key, iv</span>) </span>&#123;</span><br><span class="line">    key = key.length &gt;= <span class="number">8</span> ? key.slice(<span class="number">0</span>, <span class="number">8</span>) : key.concat(<span class="string">&#x27;0&#x27;</span>.repeat(<span class="number">8</span> - key.length))</span><br><span class="line">    iv = iv.length &gt;= <span class="number">8</span> ? iv.slice(<span class="number">0</span>, <span class="number">8</span>) : iv.concat(<span class="string">&#x27;0&#x27;</span>.repeat(<span class="number">8</span> - iv.length))</span><br><span class="line">    <span class="keyword">const</span> keyHex = Buffer.from(key)</span><br><span class="line">    <span class="keyword">const</span> ivHex = Buffer.from(iv)</span><br><span class="line">    <span class="keyword">const</span> decipher = crypto.createDecipheriv(<span class="string">&#x27;des-cbc&#x27;</span>, keyHex, ivHex)</span><br><span class="line">    <span class="keyword">let</span> decode = decipher.update(decodeTxt, <span class="string">&#x27;hex&#x27;</span>, <span class="string">&#x27;utf8&#x27;</span>)</span><br><span class="line">    decode += decipher.final(<span class="string">&#x27;utf8&#x27;</span>)</span><br><span class="line">    <span class="keyword">return</span> decodes</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>在使用时要特别注意加密和解密的编码方式要对应起来，如果没有对应起来就会报错或者得不到结果。</p>
-]]></content>
-      <categories>
-        <category>node</category>
-      </categories>
-      <tags>
-        <tag>JavaScript</tag>
-        <tag>des-cbc</tag>
-        <tag>node</tag>
       </tags>
   </entry>
   <entry>
@@ -287,6 +251,62 @@
       </tags>
   </entry>
   <entry>
+    <title>v-if失效时强制刷新</title>
+    <url>/forceUpdate/</url>
+    <content><![CDATA[<p><code>v-if</code>动态计算时，如果数据层级太深可能导致<code>render</code>函数没有自动刷新，所以需要手动刷新。此时可以调用<code>this.$forceUpdate()</code>强制刷新。</p>
+<p>使用示例：</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="built_in">this</span>.couponList[index].isSelected = <span class="literal">true</span></span><br><span class="line"><span class="comment">//赋值后调用强制刷新</span></span><br><span class="line"><span class="built_in">this</span>.$forceUpdate()</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>Vue</category>
+      </categories>
+      <tags>
+        <tag>JavaScript</tag>
+        <tag>v-if</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>使用node加解密DES-CBC</title>
+    <url>/node-des/</url>
+    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>为了保护请求内容不被抓包软件暴露出来，很多产品都采用了请求加密的方式。DES-CBC就是一种对称加密方式。在网上查资料时发现node的资料不多，所以研究之后记录一下使用node加解密DES-CBC。  </p>
+<h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><p>首先是加密函数：  </p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@description </span>DES加密，以hex为例</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param <span class="type">&#123;String&#125;</span> </span>encodeTxt 待加密的字符串</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param <span class="type">&#123;String&#125;</span> </span>key 秘钥</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param <span class="type">&#123;String&#125;</span> </span>iv 偏移量</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">desEncode</span>(<span class="params">encodeTxt, key, iv</span>) </span>&#123;</span><br><span class="line">    key = key.length &gt;= <span class="number">8</span> ? key.slice(<span class="number">0</span>, <span class="number">8</span>) : key.concat(<span class="string">&#x27;0&#x27;</span>.repeat(<span class="number">8</span> - key.length))</span><br><span class="line">    iv = iv.length &gt;= <span class="number">8</span> ? iv.slice(<span class="number">0</span>, <span class="number">8</span>) : iv.concat(<span class="string">&#x27;0&#x27;</span>.repeat(<span class="number">8</span> - iv.length))</span><br><span class="line">    <span class="keyword">const</span> keyHex = Buffer.from(key)</span><br><span class="line">    <span class="keyword">const</span> ivHex = Buffer.from(iv)</span><br><span class="line">    <span class="keyword">const</span> encipher = crypto.createCipheriv(<span class="string">&#x27;des-cbc&#x27;</span>, keyHex, ivHex)</span><br><span class="line">    <span class="comment">//编码方式除了可以使用hex还可以使用base64。</span></span><br><span class="line">    <span class="keyword">let</span> encode = encipher.update(encodeTxt, <span class="string">&#x27;utf8&#x27;</span>, <span class="string">&#x27;hex&#x27;</span>)</span><br><span class="line">    encode += encipher.final(<span class="string">&#x27;hex&#x27;</span>)</span><br><span class="line">    <span class="keyword">return</span> encode</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>解密函数：</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@description </span>DES解密，要和加密方式对应起来</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param <span class="type">&#123;String&#125;</span> </span>decodeTxt 待解密的字符串</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param <span class="type">&#123;String&#125;</span> </span>key 秘钥</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param <span class="type">&#123;String&#125;</span> </span>iv 偏移量</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">desDecode</span>(<span class="params">decodeTxt, key, iv</span>) </span>&#123;</span><br><span class="line">    key = key.length &gt;= <span class="number">8</span> ? key.slice(<span class="number">0</span>, <span class="number">8</span>) : key.concat(<span class="string">&#x27;0&#x27;</span>.repeat(<span class="number">8</span> - key.length))</span><br><span class="line">    iv = iv.length &gt;= <span class="number">8</span> ? iv.slice(<span class="number">0</span>, <span class="number">8</span>) : iv.concat(<span class="string">&#x27;0&#x27;</span>.repeat(<span class="number">8</span> - iv.length))</span><br><span class="line">    <span class="keyword">const</span> keyHex = Buffer.from(key)</span><br><span class="line">    <span class="keyword">const</span> ivHex = Buffer.from(iv)</span><br><span class="line">    <span class="keyword">const</span> decipher = crypto.createDecipheriv(<span class="string">&#x27;des-cbc&#x27;</span>, keyHex, ivHex)</span><br><span class="line">    <span class="keyword">let</span> decode = decipher.update(decodeTxt, <span class="string">&#x27;hex&#x27;</span>, <span class="string">&#x27;utf8&#x27;</span>)</span><br><span class="line">    decode += decipher.final(<span class="string">&#x27;utf8&#x27;</span>)</span><br><span class="line">    <span class="keyword">return</span> decodes</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>在使用时要特别注意加密和解密的编码方式要对应起来，如果没有对应起来就会报错或者得不到结果。</p>
+]]></content>
+      <categories>
+        <category>node</category>
+      </categories>
+      <tags>
+        <tag>JavaScript</tag>
+        <tag>des-cbc</tag>
+        <tag>node</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>微信小程序分享API踩坑</title>
+    <url>/onShareAppMessage/</url>
+    <content><![CDATA[<p>微信小程序分享API <code>onShareAppMessage</code> 带的参数只能叫<code>id</code>，不能叫其他的，不然拿不到。  </p>
+<p>使用时可以在单页面使用，也可以使用全局混入，一般来说我们都使用全局混入的方式去做。  </p>
+<p>注意，这个函数是一个页面钩子函数，需要与onLoad等函数同级。  </p>
+<p>使用示例：</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">//share.mixin.js</span></span><br><span class="line"><span class="keyword">export</span>  <span class="keyword">default</span> &#123;</span><br><span class="line">    data() &#123;</span><br><span class="line">        <span class="keyword">return</span> &#123;</span><br><span class="line">            share: &#123;</span><br><span class="line">                title: <span class="string">&#x27;你的标题&#x27;</span>,</span><br><span class="line">                path: <span class="string">&#x27;/pages/index/index&#x27;</span>,</span><br><span class="line">                imageUrl: <span class="string">&#x27;&#x27;</span>,</span><br><span class="line">                desc: <span class="string">&#x27;&#x27;</span>,</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;,</span><br><span class="line">    onShareAppMessage(res) &#123;</span><br><span class="line">        <span class="keyword">return</span> &#123;</span><br><span class="line">            <span class="comment">//标题</span></span><br><span class="line">            title: <span class="built_in">this</span>.share.title,</span><br><span class="line">            <span class="comment">//页面路径</span></span><br><span class="line">            path: <span class="built_in">this</span>.share.path,</span><br><span class="line">            <span class="comment">//分享后显示的图片的地址，默认为当前页面的截图</span></span><br><span class="line">            imageUrl: <span class="built_in">this</span>.share.imageUrl,</span><br><span class="line">            <span class="comment">//描述</span></span><br><span class="line">            desc: <span class="built_in">this</span>.share.desc,</span><br><span class="line">            <span class="comment">//内容</span></span><br><span class="line">            content: <span class="built_in">this</span>.share.content,</span><br><span class="line">            success(res) &#123;</span><br><span class="line">                uni.showToast(&#123;</span><br><span class="line">                    title: <span class="string">&#x27;分享成功&#x27;</span></span><br><span class="line">                &#125;)</span><br><span class="line">            &#125;,</span><br><span class="line">            fail(res) &#123;</span><br><span class="line">                uni.showToast(&#123;</span><br><span class="line">                    title: <span class="string">&#x27;分享失败&#x27;</span>,</span><br><span class="line">                    icon: <span class="string">&#x27;none&#x27;</span></span><br><span class="line">                &#125;)</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在页面中使用：</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">//example.vue</span></span><br><span class="line"><span class="keyword">async</span> onLoad(options) &#123;</span><br><span class="line">      <span class="built_in">console</span>.log(options);</span><br><span class="line">      <span class="keyword">if</span>(options.id) &#123; <span class="comment">//如果传过来是id则为分享页面进入的</span></span><br><span class="line">        <span class="built_in">this</span>.spu_id = options.id</span><br><span class="line">        <span class="built_in">this</span>.share.path = <span class="string">`/pages/index/goodsDetail?id=<span class="subst">$&#123;options.id&#125;</span>`</span></span><br><span class="line">        <span class="keyword">return</span></span><br><span class="line">      &#125;</span><br><span class="line">      <span class="built_in">this</span>.spu_id = options.spu_id;</span><br><span class="line">      <span class="built_in">this</span>.share.path = <span class="string">`/pages/index/goodsDetail?id=<span class="subst">$&#123;options.spu_id&#125;</span>`</span>;</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>uniapp</category>
+      </categories>
+      <tags>
+        <tag>JavaScript</tag>
+        <tag>微信小程序</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>npm发包记录</title>
     <url>/npm/</url>
     <content><![CDATA[<h2 id="注册-NPM-账号"><a href="#注册-NPM-账号" class="headerlink" title="注册 NPM 账号"></a>注册 NPM 账号</h2><p>首先去 npm 官网注册账号，注册地址<a href="https://www.npmjs.com/">https://www.npmjs.com/</a>。然后验证邮箱即注册完成。</p>
@@ -343,41 +363,41 @@
       </tags>
   </entry>
   <entry>
-    <title>微信小程序分享API踩坑</title>
-    <url>/onShareAppMessage/</url>
-    <content><![CDATA[<p>微信小程序分享API <code>onShareAppMessage</code> 带的参数只能叫<code>id</code>，不能叫其他的，不然拿不到。  </p>
-<p>使用时可以在单页面使用，也可以使用全局混入，一般来说我们都使用全局混入的方式去做。  </p>
-<p>注意，这个函数是一个页面钩子函数，需要与onLoad等函数同级。  </p>
-<p>使用示例：</p>
-<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">//share.mixin.js</span></span><br><span class="line"><span class="keyword">export</span>  <span class="keyword">default</span> &#123;</span><br><span class="line">    data() &#123;</span><br><span class="line">        <span class="keyword">return</span> &#123;</span><br><span class="line">            share: &#123;</span><br><span class="line">                title: <span class="string">&#x27;你的标题&#x27;</span>,</span><br><span class="line">                path: <span class="string">&#x27;/pages/index/index&#x27;</span>,</span><br><span class="line">                imageUrl: <span class="string">&#x27;&#x27;</span>,</span><br><span class="line">                desc: <span class="string">&#x27;&#x27;</span>,</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;,</span><br><span class="line">    onShareAppMessage(res) &#123;</span><br><span class="line">        <span class="keyword">return</span> &#123;</span><br><span class="line">            <span class="comment">//标题</span></span><br><span class="line">            title: <span class="built_in">this</span>.share.title,</span><br><span class="line">            <span class="comment">//页面路径</span></span><br><span class="line">            path: <span class="built_in">this</span>.share.path,</span><br><span class="line">            <span class="comment">//分享后显示的图片的地址，默认为当前页面的截图</span></span><br><span class="line">            imageUrl: <span class="built_in">this</span>.share.imageUrl,</span><br><span class="line">            <span class="comment">//描述</span></span><br><span class="line">            desc: <span class="built_in">this</span>.share.desc,</span><br><span class="line">            <span class="comment">//内容</span></span><br><span class="line">            content: <span class="built_in">this</span>.share.content,</span><br><span class="line">            success(res) &#123;</span><br><span class="line">                uni.showToast(&#123;</span><br><span class="line">                    title: <span class="string">&#x27;分享成功&#x27;</span></span><br><span class="line">                &#125;)</span><br><span class="line">            &#125;,</span><br><span class="line">            fail(res) &#123;</span><br><span class="line">                uni.showToast(&#123;</span><br><span class="line">                    title: <span class="string">&#x27;分享失败&#x27;</span>,</span><br><span class="line">                    icon: <span class="string">&#x27;none&#x27;</span></span><br><span class="line">                &#125;)</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+    <title>使用require.context导入多个模块</title>
+    <url>/requireContext/</url>
+    <content><![CDATA[<h2 id="使用契机"><a href="#使用契机" class="headerlink" title="使用契机"></a>使用契机</h2><p>将API接口文件分模块存放后需要导入统一的入口文件再统一导出，然后在<code>main.js</code>中引用。看着分门别类的接口文件很舒服，但是文件一多，导入统一入口文件<code>index.js</code>就显得很繁琐。效果如下:  </p>
+<p><img src="https://ftp.bmp.ovh/imgs/2020/10/76da31964bce1579.png" alt="api文件列表"></p>
+<p><img src="https://ftp.bmp.ovh/imgs/2020/10/44989b9516d6df61.png" alt="导入列表">  </p>
+<p><img src="https://ftp.bmp.ovh/imgs/2020/10/e18f9f04cb0884cf.png" alt="导入列表"></p>
+<p>说实话，这个看着越看越反人类。所以决定用更简洁的<code>require.context</code>来处理这个问题。  </p>
+<h2 id="require-context"><a href="#require-context" class="headerlink" title="require.context"></a>require.context</h2><p><code>require.context</code>是一个<code>webpack</code>的<code>api</code>,通过执行<code>require.context函数</code>获取一个特定的上下文,主要用来实现自动化导入模块,在前端工程中,如果遇到从一个文件夹引入很多模块的情况,可以使用这个<code>api</code>,它会遍历文件夹中的指定文件,然后自动导入,使得不需要每次显式的调用<code>import</code>导入模块  </p>
+<p><code>require.context函数</code>接受三个参数</p>
+<ul>
+<li><p><code>directory &#123;String&#125;</code> -读取文件的路径</p>
+</li>
+<li><p><code>useSubdirectories &#123;Boolean&#125;</code> -是否遍历文件的子目录</p>
+</li>
+<li><p><code>regExp &#123;RegExp&#125;</code> -匹配文件的正则</p>
+</li>
+</ul>
+<p>webpack官网给出的例子是这样的:  </p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="built_in">require</span>.context(<span class="string">&#x27;./test&#x27;</span>, <span class="literal">false</span>, <span class="regexp">/.test.js$/</span>)</span><br></pre></td></tr></table></figure>
 
-<p>在页面中使用：</p>
-<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">//example.vue</span></span><br><span class="line"><span class="keyword">async</span> onLoad(options) &#123;</span><br><span class="line">      <span class="built_in">console</span>.log(options);</span><br><span class="line">      <span class="keyword">if</span>(options.id) &#123; <span class="comment">//如果传过来是id则为分享页面进入的</span></span><br><span class="line">        <span class="built_in">this</span>.spu_id = options.id</span><br><span class="line">        <span class="built_in">this</span>.share.path = <span class="string">`/pages/index/goodsDetail?id=<span class="subst">$&#123;options.id&#125;</span>`</span></span><br><span class="line">        <span class="keyword">return</span></span><br><span class="line">      &#125;</span><br><span class="line">      <span class="built_in">this</span>.spu_id = options.spu_id;</span><br><span class="line">      <span class="built_in">this</span>.share.path = <span class="string">`/pages/index/goodsDetail?id=<span class="subst">$&#123;options.spu_id&#125;</span>`</span>;</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+<h2 id="开始使用"><a href="#开始使用" class="headerlink" title="开始使用"></a>开始使用</h2><p>首先根据需要让<code>require.context</code>遍历<code>/src/api</code>目录。遍历的过程中肯定会把index.js也遍历进去，因为不想之后来处理遍历后的结果，所以先粗暴的用名称区分。  </p>
+<p>我将以前的模块名.js改成为了模块名.api.js。  </p>
+<p><img src="https://ftp.bmp.ovh/imgs/2020/10/f57afe8c22ddd303.png" alt="api文件列表"></p>
+<p>接着开始编写一个导入函数来处理<code>require.context</code>返回的结果。  </p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">// importAllModule.js</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@description </span>批量导入API</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param <span class="type">&#123;Object&#125;</span> </span>context 上下文对象</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param <span class="type">&#123;RegExp&#125;</span> </span>reg 匹配规则</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@returns <span class="type">&#123;Object&#125;</span> </span>对象</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">importAllModule</span>(<span class="params">context, reg</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">const</span> map = &#123;&#125;</span><br><span class="line">    <span class="keyword">let</span> tmp = &#123;&#125;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">let</span> key <span class="keyword">of</span> context.keys()) &#123;</span><br><span class="line">        <span class="keyword">const</span> keyArr = key.split(<span class="string">&#x27;/&#x27;</span>)</span><br><span class="line">        keyArr.shift()</span><br><span class="line">        map[keyArr.join(<span class="string">&#x27;.&#x27;</span>).replace(reg, <span class="string">&#x27;&#x27;</span>)] = context(key).default</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">let</span> key <span class="keyword">in</span> map) &#123;</span><br><span class="line">        tmp = &#123;</span><br><span class="line">            ...tmp,</span><br><span class="line">            ...map[key]</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> tmp</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> importAllModule </span><br></pre></td></tr></table></figure>
+<p>接着在<code>index.js</code>中导入<code>importAllModule.js</code>并调用导入函数。  </p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">// index.js  </span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> importAllModule <span class="keyword">from</span> <span class="string">&#x27;../common/js/importAllModule&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> api = importAllModule(<span class="built_in">require</span>.context(<span class="string">&#x27;api&#x27;</span>, <span class="literal">true</span>, <span class="regexp">/\.api.js$/</span>), <span class="regexp">/\.api.js$/g</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> api</span><br></pre></td></tr></table></figure>
+<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>经过<code>require.context</code>的改造，大大解放了生产力。首先是index.js变得更加的简洁和可维护。其次，只要按格式编写API文件的文件名，就会被<code>require.context</code>遍历到并导入到<code>index.js</code>中。</p>
 ]]></content>
       <categories>
-        <category>uniapp</category>
+        <category>ES6</category>
       </categories>
       <tags>
-        <tag>JavaScript</tag>
-        <tag>微信小程序</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Python草料二维码等计数二维码刷访客量</title>
-    <url>/python/</url>
-    <content><![CDATA[<p>在生活中，很多时候被人邀请扫一扫二维码，刷一刷访客量。但是一个ip只能算作一个访问量，对此我们用Python来实现批量刷访客量。</p>
-<p>Python版本3.6</p>
-<p>首先上代码</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/python  </span></span><br><span class="line"><span class="comment"># -*- coding: UTF-8 -*-  </span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> urllib.parse  </span><br><span class="line"><span class="keyword">import</span> urllib.request  </span><br><span class="line"><span class="keyword">import</span> time  </span><br><span class="line"><span class="keyword">from</span> lxml <span class="keyword">import</span> etree</span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">from</span> selenium <span class="keyword">import</span> webdriver</span><br><span class="line"><span class="keyword">import</span> random</span><br><span class="line"></span><br><span class="line"><span class="comment"># 短网址还原 </span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">revertShortLink</span>(<span class="params">url</span>):</span></span><br><span class="line">	re = requests.head(url)</span><br><span class="line">	<span class="keyword">return</span> re.headers.get(<span class="string">&#x27;location&#x27;</span>)</span><br><span class="line"></span><br><span class="line">URL_1 = revertShortLink(<span class="string">&quot;your revertShortLink&quot;</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">global</span> url_path  </span><br><span class="line">url_path = [<span class="number">3</span>]  </span><br><span class="line">  </span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">verif_ip</span>(<span class="params">ip,port</span>):</span>    <span class="comment"># 验证ip有效性  </span></span><br><span class="line">	</span><br><span class="line">	test_url = URL_1</span><br><span class="line">	</span><br><span class="line">	browser = webdriver.Chrome()</span><br><span class="line"></span><br><span class="line">	browser.get(URL_1)</span><br><span class="line">	browser.quit()</span><br><span class="line">	time.sleep(random.randint(<span class="number">1</span>,<span class="number">20</span>))  </span><br><span class="line"></span><br><span class="line">file = open(<span class="string">&quot;ip.txt&quot;</span>)</span><br><span class="line"></span><br><span class="line">counter = <span class="number">0</span> </span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">while</span> <span class="number">1</span>:  </span><br><span class="line">	lines = file.readlines(<span class="number">100000</span>)  </span><br><span class="line">	<span class="keyword">if</span> <span class="keyword">not</span> lines:  </span><br><span class="line">		<span class="keyword">break</span>  </span><br><span class="line">	<span class="keyword">for</span> data <span class="keyword">in</span> lines:</span><br><span class="line">		counter += <span class="number">1</span>  </span><br><span class="line">		print((data.split(<span class="string">&quot;:&quot;</span>)[<span class="number">0</span>]))</span><br><span class="line">		print(<span class="string">&quot;cishu:&quot;</span>,counter)  </span><br><span class="line">	</span><br><span class="line">	   </span><br><span class="line"></span><br><span class="line">	 </span><br><span class="line">		verif_ip(data.split(<span class="string">&quot;:&quot;</span>)[<span class="number">0</span>],data.split(<span class="string">&quot;:&quot;</span>)[<span class="number">1</span>])</span><br></pre></td></tr></table></figure>
-<p>全部代码我已经打包放在我的Github上面了，直接下载即可。<a href="https://github.com/Vanlee0129/caoliaoscan">下载地址</a></p>
-<p>ip.txt文件就是用来存放代理ip的，相当于一个简陋的代理池，手动复制进去即可，我提供了一些，如果不够可以再自己去找一些。</p>
-<p>ip可以在66ip等网站去提取，用多少提多少。以后再也不担心刷二维码访客量啦！</p>
-]]></content>
-      <categories>
-        <category>Python</category>
-      </categories>
-      <tags>
-        <tag>小技巧</tag>
+        <tag>commonJS</tag>
+        <tag>webpack</tag>
       </tags>
   </entry>
   <entry>
@@ -432,41 +452,84 @@
       </tags>
   </entry>
   <entry>
-    <title>使用require.context导入多个模块</title>
-    <url>/requireContext/</url>
-    <content><![CDATA[<h2 id="使用契机"><a href="#使用契机" class="headerlink" title="使用契机"></a>使用契机</h2><p>将API接口文件分模块存放后需要导入统一的入口文件再统一导出，然后在<code>main.js</code>中引用。看着分门别类的接口文件很舒服，但是文件一多，导入统一入口文件<code>index.js</code>就显得很繁琐。效果如下:  </p>
-<p><img src="https://ftp.bmp.ovh/imgs/2020/10/76da31964bce1579.png" alt="api文件列表"></p>
-<p><img src="https://ftp.bmp.ovh/imgs/2020/10/44989b9516d6df61.png" alt="导入列表">  </p>
-<p><img src="https://ftp.bmp.ovh/imgs/2020/10/e18f9f04cb0884cf.png" alt="导入列表"></p>
-<p>说实话，这个看着越看越反人类。所以决定用更简洁的<code>require.context</code>来处理这个问题。  </p>
-<h2 id="require-context"><a href="#require-context" class="headerlink" title="require.context"></a>require.context</h2><p><code>require.context</code>是一个<code>webpack</code>的<code>api</code>,通过执行<code>require.context函数</code>获取一个特定的上下文,主要用来实现自动化导入模块,在前端工程中,如果遇到从一个文件夹引入很多模块的情况,可以使用这个<code>api</code>,它会遍历文件夹中的指定文件,然后自动导入,使得不需要每次显式的调用<code>import</code>导入模块  </p>
-<p><code>require.context函数</code>接受三个参数</p>
-<ul>
-<li><p><code>directory &#123;String&#125;</code> -读取文件的路径</p>
-</li>
-<li><p><code>useSubdirectories &#123;Boolean&#125;</code> -是否遍历文件的子目录</p>
-</li>
-<li><p><code>regExp &#123;RegExp&#125;</code> -匹配文件的正则</p>
-</li>
-</ul>
-<p>webpack官网给出的例子是这样的:  </p>
-<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="built_in">require</span>.context(<span class="string">&#x27;./test&#x27;</span>, <span class="literal">false</span>, <span class="regexp">/.test.js$/</span>)</span><br></pre></td></tr></table></figure>
-
-<h2 id="开始使用"><a href="#开始使用" class="headerlink" title="开始使用"></a>开始使用</h2><p>首先根据需要让<code>require.context</code>遍历<code>/src/api</code>目录。遍历的过程中肯定会把index.js也遍历进去，因为不想之后来处理遍历后的结果，所以先粗暴的用名称区分。  </p>
-<p>我将以前的模块名.js改成为了模块名.api.js。  </p>
-<p><img src="https://ftp.bmp.ovh/imgs/2020/10/f57afe8c22ddd303.png" alt="api文件列表"></p>
-<p>接着开始编写一个导入函数来处理<code>require.context</code>返回的结果。  </p>
-<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">// importAllModule.js</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@description </span>批量导入API</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param <span class="type">&#123;Object&#125;</span> </span>context 上下文对象</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param <span class="type">&#123;RegExp&#125;</span> </span>reg 匹配规则</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@returns <span class="type">&#123;Object&#125;</span> </span>对象</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">importAllModule</span>(<span class="params">context, reg</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">const</span> map = &#123;&#125;</span><br><span class="line">    <span class="keyword">let</span> tmp = &#123;&#125;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">let</span> key <span class="keyword">of</span> context.keys()) &#123;</span><br><span class="line">        <span class="keyword">const</span> keyArr = key.split(<span class="string">&#x27;/&#x27;</span>)</span><br><span class="line">        keyArr.shift()</span><br><span class="line">        map[keyArr.join(<span class="string">&#x27;.&#x27;</span>).replace(reg, <span class="string">&#x27;&#x27;</span>)] = context(key).default</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">let</span> key <span class="keyword">in</span> map) &#123;</span><br><span class="line">        tmp = &#123;</span><br><span class="line">            ...tmp,</span><br><span class="line">            ...map[key]</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> tmp</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> importAllModule </span><br></pre></td></tr></table></figure>
-<p>接着在<code>index.js</code>中导入<code>importAllModule.js</code>并调用导入函数。  </p>
-<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">// index.js  </span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> importAllModule <span class="keyword">from</span> <span class="string">&#x27;../common/js/importAllModule&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> api = importAllModule(<span class="built_in">require</span>.context(<span class="string">&#x27;api&#x27;</span>, <span class="literal">true</span>, <span class="regexp">/\.api.js$/</span>), <span class="regexp">/\.api.js$/g</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> api</span><br></pre></td></tr></table></figure>
-<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>经过<code>require.context</code>的改造，大大解放了生产力。首先是index.js变得更加的简洁和可维护。其次，只要按格式编写API文件的文件名，就会被<code>require.context</code>遍历到并导入到<code>index.js</code>中。</p>
+    <title>Python草料二维码等计数二维码刷访客量</title>
+    <url>/python/</url>
+    <content><![CDATA[<p>在生活中，很多时候被人邀请扫一扫二维码，刷一刷访客量。但是一个ip只能算作一个访问量，对此我们用Python来实现批量刷访客量。</p>
+<p>Python版本3.6</p>
+<p>首先上代码</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/python  </span></span><br><span class="line"><span class="comment"># -*- coding: UTF-8 -*-  </span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> urllib.parse  </span><br><span class="line"><span class="keyword">import</span> urllib.request  </span><br><span class="line"><span class="keyword">import</span> time  </span><br><span class="line"><span class="keyword">from</span> lxml <span class="keyword">import</span> etree</span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">from</span> selenium <span class="keyword">import</span> webdriver</span><br><span class="line"><span class="keyword">import</span> random</span><br><span class="line"></span><br><span class="line"><span class="comment"># 短网址还原 </span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">revertShortLink</span>(<span class="params">url</span>):</span></span><br><span class="line">	re = requests.head(url)</span><br><span class="line">	<span class="keyword">return</span> re.headers.get(<span class="string">&#x27;location&#x27;</span>)</span><br><span class="line"></span><br><span class="line">URL_1 = revertShortLink(<span class="string">&quot;your revertShortLink&quot;</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">global</span> url_path  </span><br><span class="line">url_path = [<span class="number">3</span>]  </span><br><span class="line">  </span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">verif_ip</span>(<span class="params">ip,port</span>):</span>    <span class="comment"># 验证ip有效性  </span></span><br><span class="line">	</span><br><span class="line">	test_url = URL_1</span><br><span class="line">	</span><br><span class="line">	browser = webdriver.Chrome()</span><br><span class="line"></span><br><span class="line">	browser.get(URL_1)</span><br><span class="line">	browser.quit()</span><br><span class="line">	time.sleep(random.randint(<span class="number">1</span>,<span class="number">20</span>))  </span><br><span class="line"></span><br><span class="line">file = open(<span class="string">&quot;ip.txt&quot;</span>)</span><br><span class="line"></span><br><span class="line">counter = <span class="number">0</span> </span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">while</span> <span class="number">1</span>:  </span><br><span class="line">	lines = file.readlines(<span class="number">100000</span>)  </span><br><span class="line">	<span class="keyword">if</span> <span class="keyword">not</span> lines:  </span><br><span class="line">		<span class="keyword">break</span>  </span><br><span class="line">	<span class="keyword">for</span> data <span class="keyword">in</span> lines:</span><br><span class="line">		counter += <span class="number">1</span>  </span><br><span class="line">		print((data.split(<span class="string">&quot;:&quot;</span>)[<span class="number">0</span>]))</span><br><span class="line">		print(<span class="string">&quot;cishu:&quot;</span>,counter)  </span><br><span class="line">	</span><br><span class="line">	   </span><br><span class="line"></span><br><span class="line">	 </span><br><span class="line">		verif_ip(data.split(<span class="string">&quot;:&quot;</span>)[<span class="number">0</span>],data.split(<span class="string">&quot;:&quot;</span>)[<span class="number">1</span>])</span><br></pre></td></tr></table></figure>
+<p>全部代码我已经打包放在我的Github上面了，直接下载即可。<a href="https://github.com/Vanlee0129/caoliaoscan">下载地址</a></p>
+<p>ip.txt文件就是用来存放代理ip的，相当于一个简陋的代理池，手动复制进去即可，我提供了一些，如果不够可以再自己去找一些。</p>
+<p>ip可以在66ip等网站去提取，用多少提多少。以后再也不担心刷二维码访客量啦！</p>
 ]]></content>
       <categories>
-        <category>ES6</category>
+        <category>Python</category>
       </categories>
       <tags>
-        <tag>commonJS</tag>
-        <tag>webpack</tag>
+        <tag>小技巧</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>useCallback和useEffect</title>
+    <url>/useCallbackAndUseEffect/</url>
+    <content><![CDATA[<h2 id="useCallback"><a href="#useCallback" class="headerlink" title="useCallback"></a>useCallback</h2><h3 id="从一个例子开始"><a href="#从一个例子开始" class="headerlink" title="从一个例子开始"></a>从一个例子开始</h3><figure class="highlight jsx"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 用于记录 getData 调用次数</span></span><br><span class="line"><span class="keyword">let</span> count = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">App</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> [val, setVal] = useState(<span class="string">&quot;&quot;</span>);</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">getData</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">setTimeout</span>(<span class="function">()=&gt;</span>&#123;</span><br><span class="line">      setVal(<span class="string">&#x27;new data &#x27;</span>+count);</span><br><span class="line">      count++;</span><br><span class="line">    &#125;, <span class="number">500</span>)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  useEffect(<span class="function">()=&gt;</span>&#123;</span><br><span class="line">    getData();</span><br><span class="line">  &#125;, []);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    &lt;div&gt;&#123;val&#125;&lt;/div&gt;</span><br><span class="line">  );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>getData</code>模拟发起网络请求。在这种场景下，没有<code>useCallback</code>什么事，组件本身是高内聚的。<br>如果涉及到组件通讯，情况就不一样了：</p>
+<figure class="highlight jsx"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 用于记录 getData 调用次数</span></span><br><span class="line"><span class="keyword">let</span> count = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">App</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> [val, setVal] = useState(<span class="string">&quot;&quot;</span>);</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">getData</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">setTimeout</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">      setVal(<span class="string">&quot;new data &quot;</span> + count);</span><br><span class="line">      count++;</span><br><span class="line">    &#125;, <span class="number">500</span>);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> <span class="xml"><span class="tag">&lt;<span class="name">Child</span> <span class="attr">val</span>=<span class="string">&#123;val&#125;</span> <span class="attr">getData</span>=<span class="string">&#123;getData&#125;</span> /&gt;</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Child</span>(<span class="params">&#123;val, getData&#125;</span>) </span>&#123;</span><br><span class="line">  useEffect(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">    getData();</span><br><span class="line">  &#125;, [getData]);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> <span class="xml"><span class="tag">&lt;<span class="name">div</span>&gt;</span>&#123;val&#125;<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>就这么轻轻松松，一个死循环就诞生了…</p>
+<p>先来分析下这段代码的用意，<code>Child</code>组件是一个纯展示型组件，其业务逻辑都是通过外部传进来的，这种场景在实际开发中很常见。</p>
+<p>再分析下代码的执行过程：</p>
+<ul>
+<li>App渲染<code>Child</code>，将val和<code>getData</code>传进去</li>
+<li><code>Child</code>使用useEffect获取数据。因为对<code>getData</code>有依赖，于是将其加入依赖列表</li>
+<li><code>getData</code>执行时，调用setVal，导致App重新渲染</li>
+<li>App重新渲染时生成新的<code>getData</code>方法，传给<code>Child</code></li>
+<li><code>Child</code>发现<code>getData</code>的引用变了，又会执行<code>getData</code></li>
+<li>3 -&gt; 5 是一个死循环</li>
+</ul>
+<p>如果明确<code>getData</code>只会执行一次，最简单的方式当然是将其从依赖列表中删除。但如果装了 <code>hook</code> 的<code>lint</code> 插件，会提示：React Hook useEffect has a missing dependency</p>
+<figure class="highlight jsx"><table><tr><td class="code"><pre><span class="line">useEffect(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">  getData();</span><br><span class="line">&#125;, []);</span><br></pre></td></tr></table></figure>
+
+<p>实际情况很可能是当<code>getData</code>改变的时候，是需要重新获取数据的。这时就需要通过<code>useCallback</code>来将引用固定住：</p>
+<figure class="highlight jsx"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> getData = useCallback(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">setTimeout</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">    setVal(<span class="string">&quot;new data &quot;</span> + count);</span><br><span class="line">    count++;</span><br><span class="line">  &#125;, <span class="number">500</span>);</span><br><span class="line">&#125;, []);</span><br></pre></td></tr></table></figure>
+
+<p>上面例子中<code>getData</code>的引用永远不会变，因为他它的依赖列表是空。可以根据实际情况将依赖加进去，就能确保依赖不变的情况下，函数的引用保持不变。</p>
+<h3 id="性能"><a href="#性能" class="headerlink" title="性能"></a>性能</h3><p>一般会觉得使用<code>useCallback</code>的性能会比普通重新定义函数的性能好， 如下面例子：</p>
+<figure class="highlight jsx"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">App</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> [val, setVal] = useState(<span class="string">&quot;&quot;</span>);</span><br><span class="line">  <span class="keyword">const</span> onChange = <span class="function">(<span class="params">evt</span>) =&gt;</span> &#123;</span><br><span class="line">    setVal(evt.target.value);</span><br><span class="line">  &#125;;</span><br><span class="line">  <span class="keyword">return</span> <span class="xml"><span class="tag">&lt;<span class="name">input</span> <span class="attr">val</span>=<span class="string">&#123;val&#125;</span> <span class="attr">onChange</span>=<span class="string">&#123;onChange&#125;</span> /&gt;</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>将<code>onChange</code>改为：</p>
+<figure class="highlight jsx"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> onChange = useCallback(<span class="function"><span class="params">evt</span> =&gt;</span> &#123;</span><br><span class="line">  setVal(evt.target.value);</span><br><span class="line">&#125;, []);</span><br></pre></td></tr></table></figure>
+
+<p>上面的写法几乎等同于下面：</p>
+<figure class="highlight jsx"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> temp = <span class="function"><span class="params">evt</span> =&gt;</span> &#123;</span><br><span class="line">  setVal(evt.target.value);</span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">const</span> onChange = useCallback(temp, []);</span><br></pre></td></tr></table></figure>
+
+<p>可以看到<code>onChange</code>的定义是省不了的，而且额外还要加上调用<code>useCallback</code>产生的开销，性能怎么可能会更好？</p>
+<h3 id="useCallback总结"><a href="#useCallback总结" class="headerlink" title="useCallback总结"></a>useCallback总结</h3><p><code>useCallback</code>缓存的是方法的引用，使用场景是减少不必要的子组件渲染。</p>
+<h2 id="useEffect"><a href="#useEffect" class="headerlink" title="useEffect"></a>useEffect</h2><h3 id="effect"><a href="#effect" class="headerlink" title="effect"></a>effect</h3><p><code>effect</code>就是我们常说的副作用。这个副作用不是额外的作用，而是指的是函数通过参数和返回值以外的渠道，和外界进行数据交换。比如，读取全局变量，修改全局变量，都叫作以隐式的方式和外界进行数据交换；比如，利用 <code>I/O API</code>（输入输出系统函数库）读取配置文件，或者输出到文件，打印到屏幕，都叫做隐式的方式和外界进行数据交换。</p>
+<p>所以我们的网络请求、订阅某个模块或者 <code>DOM</code> 操作都是副作用的例子。比如我们在发起一个网络请求时，我们的请求参数根据外部的变化而变化。</p>
+<p>这种操作我们就称之为<code>effect</code>操作，即副作用操作。</p>
+<h3 id="使用场景"><a href="#使用场景" class="headerlink" title="使用场景"></a>使用场景</h3><p><code>useEffect</code>主要就是用来处理副作用的。<code>useEffect</code>会在每次 <code>DOM</code> 渲染后执行，不会阻塞页面渲染。它同时具备<code>componentDidMount</code>、<code>componentDidUpdate</code>和<code>componentWillUnmount</code>三个生命周期函数的执行时机。</p>
+<p>以前我们写<code>class component</code>时，我们一般把请求放在<code>componentDidMount</code>这个钩子函数中。如果状态有变化需要重新请求我们就放在<code>componentDidUpdate</code>中，而<code>componentWillUnmount</code>主要是做一些清理工作，如定时器的清理。</p>
+<p>现在我们有了<code>effect</code>就可以使用这个一个hook区搞定以前需要三个生命周期函数才能搞定的事情。这就是<code>userEffect</code>的使用场景。</p>
+<h3 id="使用方式"><a href="#使用方式" class="headerlink" title="使用方式"></a>使用方式</h3><p>举个例子：</p>
+<figure class="highlight jsx"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 以前我们这样写</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Example</span> <span class="keyword">extends</span> <span class="title">React</span>.<span class="title">Component</span> </span>&#123;</span><br><span class="line">  <span class="keyword">constructor</span>(props) &#123;</span><br><span class="line">    <span class="built_in">super</span>(props);</span><br><span class="line">    <span class="built_in">this</span>.state = &#123;</span><br><span class="line">      count: <span class="number">0</span></span><br><span class="line">    &#125;;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  componentDidMount() &#123;</span><br><span class="line">    <span class="built_in">document</span>.title = <span class="string">`You clicked <span class="subst">$&#123;<span class="built_in">this</span>.state.count&#125;</span> times`</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  componentDidUpdate() &#123;</span><br><span class="line">    <span class="built_in">document</span>.title = <span class="string">`You clicked <span class="subst">$&#123;<span class="built_in">this</span>.state.count&#125;</span> times`</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  render() &#123;</span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">      &lt;div&gt;</span><br><span class="line">        &lt;p&gt;You clicked &#123;<span class="built_in">this</span>.state.count&#125; times&lt;/p&gt;</span><br><span class="line">        &lt;button onClick=&#123;<span class="function">() =&gt;</span> <span class="built_in">this</span>.setState(&#123; <span class="attr">count</span>: <span class="built_in">this</span>.state.count + <span class="number">1</span> &#125;)&#125;&gt;</span><br><span class="line">          Click me</span><br><span class="line">        &lt;/button&gt;</span><br><span class="line">      &lt;/div&gt;</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>可以看到<code>componentDidMount</code>和<code>componentDidUpdate</code>中的代码是一样的。而使用 <code>Effect Hook</code> 来改写就不会有这个问题。</p>
+<figure class="highlight jsx"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> React, &#123; useState, useEffect &#125; <span class="keyword">from</span> <span class="string">&#x27;react&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Example</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> [count, setCount] = useState(<span class="number">0</span>);</span><br><span class="line"></span><br><span class="line">  useEffect(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="built_in">document</span>.title = <span class="string">`You clicked <span class="subst">$&#123;count&#125;</span> times`</span>;</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    &lt;div&gt;</span><br><span class="line">      &lt;p&gt;You clicked &#123;count&#125; times&lt;/p&gt;</span><br><span class="line">      &lt;button onClick=&#123;<span class="function">() =&gt;</span> setCount(count + <span class="number">1</span>)&#125;&gt;</span><br><span class="line">        Click me</span><br><span class="line">      &lt;/button&gt;</span><br><span class="line">    &lt;/div&gt;</span><br><span class="line">  );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这时，<code>userEffect</code>会在每次渲染后执行。显然这是极其浪费的，所以我们可以传入第二个参数，也就是依赖。</p>
+<figure class="highlight jsx"><table><tr><td class="code"><pre><span class="line">useEffect(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">document</span>.title = <span class="string">`You clicked <span class="subst">$&#123;count&#125;</span> times`</span>;</span><br><span class="line">&#125;, [count]); <span class="comment">// 只有在 count 改变的时候才执行 Effect</span></span><br></pre></td></tr></table></figure>
+
+<p>这个时候，我们只会在<code>count</code>改变时才会去执行。</p>
+<p>当<code>useEffect</code>的返回值是一个函数的时候，<code>React</code> 会在下一次执行这个副作用之前执行一遍清理工作。</p>
+<h3 id="useEffect总结"><a href="#useEffect总结" class="headerlink" title="useEffect总结"></a>useEffect总结</h3><p><code>useEffect</code>就是在<code>react hooks</code>中来代替<code>componentDidMount</code>、<code>componentDidUpdate</code>和<code>componentWillUnmount</code>。</p>
+]]></content>
+      <categories>
+        <category>react</category>
+      </categories>
+      <tags>
+        <tag>hoosk</tag>
       </tags>
   </entry>
 </search>
