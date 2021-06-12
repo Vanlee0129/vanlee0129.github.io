@@ -52,34 +52,6 @@
       </tags>
   </entry>
   <entry>
-    <title>使用Docker快速安装Jenkins</title>
-    <url>/dockerInstallJenkins/</url>
-    <content><![CDATA[<h2 id="安装环境"><a href="#安装环境" class="headerlink" title="安装环境"></a>安装环境</h2><p>CentOS Linux release 7.6.1810 (Core)<br>Docker version 19.03.12  </p>
-<h2 id="拉取镜像"><a href="#拉取镜像" class="headerlink" title="拉取镜像"></a>拉取镜像</h2><p>我这里安装的版本是<code>jenkinsci/blueocean</code>，可以去这里获取你需要的版本: <a href="https://hub.docker.com/_/jenkins?tab=tags">dockerHub</a>，注意版本之间的区别。  </p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> docker pull jenkinsci/blueocean</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="创建本地数据卷"><a href="#创建本地数据卷" class="headerlink" title="创建本地数据卷"></a>创建本地数据卷</h2><p>映射本地数据卷的路径为/data/jenkins_home/，想放别的地方可以自行修改</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> mkdir -p /data/jenkins_home/</span></span><br></pre></td></tr></table></figure>
-<p>需要修改下目录权限，因为当映射本地数据卷时，/data/jenkins_home/目录的拥有者为root用户，而容器中jenkins用户的 uid 为 1000。  </p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> chown -R 1000:1000 /data/jenkins_home/</span></span><br></pre></td></tr></table></figure>
-<h2 id="创建容器"><a href="#创建容器" class="headerlink" title="创建容器"></a>创建容器</h2><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> docker run -d --name jenkins -p 9021:8080 -p 50000:50000 -v /data/jenkins_home:/var/jenkins_home jenkins/jenkins:2.222.3-centos</span></span><br></pre></td></tr></table></figure>
-<p><code>-d</code> 标识是让 docker 容器在后台运行<br><code>--name</code> 定义一个容器的名字，如果没有指定，那么会自动生成一个随机数字符串当做UUID<br><code>-p</code> 9021:8080 端口映射，不被占用的合法端口都可以使用，我用的9021<br><code>-p</code> 50000:50000 端口映射<br><code>-v</code> /data/jenkins_home:/var/jenkins_home 绑定一个数据卷，/data/jenkins_home是刚才创建的本地数据卷</p>
-<h2 id="配置-Jenkins"><a href="#配置-Jenkins" class="headerlink" title="配置 Jenkins"></a>配置 Jenkins</h2><h3 id="打开-Jenkins"><a href="#打开-Jenkins" class="headerlink" title="打开 Jenkins"></a>打开 Jenkins</h3><p>通过浏览器访问 <code>http://xx.xx.xx.xx:9021/</code>（注意替换成你自己的IP和端口）进入初始页，如果 Jenkins 还没有启动完成，会显示如下内容<br><img src="https://ftp.bmp.ovh/imgs/2020/10/cd62632b22fa7dc1.png" alt="初始化界面"></p>
-<h3 id="输入管理员密码"><a href="#输入管理员密码" class="headerlink" title="输入管理员密码"></a>输入管理员密码</h3><p><img src="https://ftp.bmp.ovh/imgs/2020/10/305ce3669e4731d4.png" alt="输入管理员密码"><br>这里要求输入初始的管理员密码，根据提示密码在/var/jenkins_home/secrets/initialAdminPassword这个文件中，注意这个路径是 Docker 容器中的，所以我们通过如下命令获取  </p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> cat /data/jenkins_home/secrets/initialAdminPassword </span></span><br></pre></td></tr></table></figure>
-<p>输入密码后，点击<code>继续</code>    </p>
-<hr>
-<p>到此Jenkins就安装完毕，安装插件时可以先换源再安装，不然速度会很慢 </p>
-]]></content>
-      <categories>
-        <category>实用工具</category>
-      </categories>
-      <tags>
-        <tag>Jenkins</tag>
-        <tag>Docker</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>深拷贝</title>
     <url>/deepCopy/</url>
     <content><![CDATA[<p>由于JS中的数据类型分为值类型和引用类型，所以对于引用类型来说变量储存的其实是地址而不是这个对象本身。考虑如下例子：  </p>
@@ -132,6 +104,49 @@
       <tags>
         <tag>JavaScript</tag>
         <tag>let</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>v-if失效时强制刷新</title>
+    <url>/forceUpdate/</url>
+    <content><![CDATA[<p><code>v-if</code>动态计算时，如果数据层级太深可能导致<code>render</code>函数没有自动刷新，所以需要手动刷新。此时可以调用<code>this.$forceUpdate()</code>强制刷新。</p>
+<p>使用示例：</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="built_in">this</span>.couponList[index].isSelected = <span class="literal">true</span></span><br><span class="line"><span class="comment">//赋值后调用强制刷新</span></span><br><span class="line"><span class="built_in">this</span>.$forceUpdate()</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>Vue</category>
+      </categories>
+      <tags>
+        <tag>JavaScript</tag>
+        <tag>v-if</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>使用Docker快速安装Jenkins</title>
+    <url>/dockerInstallJenkins/</url>
+    <content><![CDATA[<h2 id="安装环境"><a href="#安装环境" class="headerlink" title="安装环境"></a>安装环境</h2><p>CentOS Linux release 7.6.1810 (Core)<br>Docker version 19.03.12  </p>
+<h2 id="拉取镜像"><a href="#拉取镜像" class="headerlink" title="拉取镜像"></a>拉取镜像</h2><p>我这里安装的版本是<code>jenkinsci/blueocean</code>，可以去这里获取你需要的版本: <a href="https://hub.docker.com/_/jenkins?tab=tags">dockerHub</a>，注意版本之间的区别。  </p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> docker pull jenkinsci/blueocean</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="创建本地数据卷"><a href="#创建本地数据卷" class="headerlink" title="创建本地数据卷"></a>创建本地数据卷</h2><p>映射本地数据卷的路径为/data/jenkins_home/，想放别的地方可以自行修改</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> mkdir -p /data/jenkins_home/</span></span><br></pre></td></tr></table></figure>
+<p>需要修改下目录权限，因为当映射本地数据卷时，/data/jenkins_home/目录的拥有者为root用户，而容器中jenkins用户的 uid 为 1000。  </p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> chown -R 1000:1000 /data/jenkins_home/</span></span><br></pre></td></tr></table></figure>
+<h2 id="创建容器"><a href="#创建容器" class="headerlink" title="创建容器"></a>创建容器</h2><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> docker run -d --name jenkins -p 9021:8080 -p 50000:50000 -v /data/jenkins_home:/var/jenkins_home jenkins/jenkins:2.222.3-centos</span></span><br></pre></td></tr></table></figure>
+<p><code>-d</code> 标识是让 docker 容器在后台运行<br><code>--name</code> 定义一个容器的名字，如果没有指定，那么会自动生成一个随机数字符串当做UUID<br><code>-p</code> 9021:8080 端口映射，不被占用的合法端口都可以使用，我用的9021<br><code>-p</code> 50000:50000 端口映射<br><code>-v</code> /data/jenkins_home:/var/jenkins_home 绑定一个数据卷，/data/jenkins_home是刚才创建的本地数据卷</p>
+<h2 id="配置-Jenkins"><a href="#配置-Jenkins" class="headerlink" title="配置 Jenkins"></a>配置 Jenkins</h2><h3 id="打开-Jenkins"><a href="#打开-Jenkins" class="headerlink" title="打开 Jenkins"></a>打开 Jenkins</h3><p>通过浏览器访问 <code>http://xx.xx.xx.xx:9021/</code>（注意替换成你自己的IP和端口）进入初始页，如果 Jenkins 还没有启动完成，会显示如下内容<br><img src="https://ftp.bmp.ovh/imgs/2020/10/cd62632b22fa7dc1.png" alt="初始化界面"></p>
+<h3 id="输入管理员密码"><a href="#输入管理员密码" class="headerlink" title="输入管理员密码"></a>输入管理员密码</h3><p><img src="https://ftp.bmp.ovh/imgs/2020/10/305ce3669e4731d4.png" alt="输入管理员密码"><br>这里要求输入初始的管理员密码，根据提示密码在/var/jenkins_home/secrets/initialAdminPassword这个文件中，注意这个路径是 Docker 容器中的，所以我们通过如下命令获取  </p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> cat /data/jenkins_home/secrets/initialAdminPassword </span></span><br></pre></td></tr></table></figure>
+<p>输入密码后，点击<code>继续</code>    </p>
+<hr>
+<p>到此Jenkins就安装完毕，安装插件时可以先换源再安装，不然速度会很慢 </p>
+]]></content>
+      <categories>
+        <category>实用工具</category>
+      </categories>
+      <tags>
+        <tag>Jenkins</tag>
+        <tag>Docker</tag>
       </tags>
   </entry>
   <entry>
@@ -251,21 +266,6 @@
       </tags>
   </entry>
   <entry>
-    <title>v-if失效时强制刷新</title>
-    <url>/forceUpdate/</url>
-    <content><![CDATA[<p><code>v-if</code>动态计算时，如果数据层级太深可能导致<code>render</code>函数没有自动刷新，所以需要手动刷新。此时可以调用<code>this.$forceUpdate()</code>强制刷新。</p>
-<p>使用示例：</p>
-<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="built_in">this</span>.couponList[index].isSelected = <span class="literal">true</span></span><br><span class="line"><span class="comment">//赋值后调用强制刷新</span></span><br><span class="line"><span class="built_in">this</span>.$forceUpdate()</span><br></pre></td></tr></table></figure>
-]]></content>
-      <categories>
-        <category>Vue</category>
-      </categories>
-      <tags>
-        <tag>JavaScript</tag>
-        <tag>v-if</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>使用node加解密DES-CBC</title>
     <url>/node-des/</url>
     <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>为了保护请求内容不被抓包软件暴露出来，很多产品都采用了请求加密的方式。DES-CBC就是一种对称加密方式。在网上查资料时发现node的资料不多，所以研究之后记录一下使用node加解密DES-CBC。  </p>
@@ -284,26 +284,6 @@
         <tag>JavaScript</tag>
         <tag>des-cbc</tag>
         <tag>node</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>微信小程序分享API踩坑</title>
-    <url>/onShareAppMessage/</url>
-    <content><![CDATA[<p>微信小程序分享API <code>onShareAppMessage</code> 带的参数只能叫<code>id</code>，不能叫其他的，不然拿不到。  </p>
-<p>使用时可以在单页面使用，也可以使用全局混入，一般来说我们都使用全局混入的方式去做。  </p>
-<p>注意，这个函数是一个页面钩子函数，需要与onLoad等函数同级。  </p>
-<p>使用示例：</p>
-<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">//share.mixin.js</span></span><br><span class="line"><span class="keyword">export</span>  <span class="keyword">default</span> &#123;</span><br><span class="line">    data() &#123;</span><br><span class="line">        <span class="keyword">return</span> &#123;</span><br><span class="line">            share: &#123;</span><br><span class="line">                title: <span class="string">&#x27;你的标题&#x27;</span>,</span><br><span class="line">                path: <span class="string">&#x27;/pages/index/index&#x27;</span>,</span><br><span class="line">                imageUrl: <span class="string">&#x27;&#x27;</span>,</span><br><span class="line">                desc: <span class="string">&#x27;&#x27;</span>,</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;,</span><br><span class="line">    onShareAppMessage(res) &#123;</span><br><span class="line">        <span class="keyword">return</span> &#123;</span><br><span class="line">            <span class="comment">//标题</span></span><br><span class="line">            title: <span class="built_in">this</span>.share.title,</span><br><span class="line">            <span class="comment">//页面路径</span></span><br><span class="line">            path: <span class="built_in">this</span>.share.path,</span><br><span class="line">            <span class="comment">//分享后显示的图片的地址，默认为当前页面的截图</span></span><br><span class="line">            imageUrl: <span class="built_in">this</span>.share.imageUrl,</span><br><span class="line">            <span class="comment">//描述</span></span><br><span class="line">            desc: <span class="built_in">this</span>.share.desc,</span><br><span class="line">            <span class="comment">//内容</span></span><br><span class="line">            content: <span class="built_in">this</span>.share.content,</span><br><span class="line">            success(res) &#123;</span><br><span class="line">                uni.showToast(&#123;</span><br><span class="line">                    title: <span class="string">&#x27;分享成功&#x27;</span></span><br><span class="line">                &#125;)</span><br><span class="line">            &#125;,</span><br><span class="line">            fail(res) &#123;</span><br><span class="line">                uni.showToast(&#123;</span><br><span class="line">                    title: <span class="string">&#x27;分享失败&#x27;</span>,</span><br><span class="line">                    icon: <span class="string">&#x27;none&#x27;</span></span><br><span class="line">                &#125;)</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>在页面中使用：</p>
-<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">//example.vue</span></span><br><span class="line"><span class="keyword">async</span> onLoad(options) &#123;</span><br><span class="line">      <span class="built_in">console</span>.log(options);</span><br><span class="line">      <span class="keyword">if</span>(options.id) &#123; <span class="comment">//如果传过来是id则为分享页面进入的</span></span><br><span class="line">        <span class="built_in">this</span>.spu_id = options.id</span><br><span class="line">        <span class="built_in">this</span>.share.path = <span class="string">`/pages/index/goodsDetail?id=<span class="subst">$&#123;options.id&#125;</span>`</span></span><br><span class="line">        <span class="keyword">return</span></span><br><span class="line">      &#125;</span><br><span class="line">      <span class="built_in">this</span>.spu_id = options.spu_id;</span><br><span class="line">      <span class="built_in">this</span>.share.path = <span class="string">`/pages/index/goodsDetail?id=<span class="subst">$&#123;options.spu_id&#125;</span>`</span>;</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
-]]></content>
-      <categories>
-        <category>uniapp</category>
-      </categories>
-      <tags>
-        <tag>JavaScript</tag>
-        <tag>微信小程序</tag>
       </tags>
   </entry>
   <entry>
@@ -363,41 +343,41 @@
       </tags>
   </entry>
   <entry>
-    <title>使用require.context导入多个模块</title>
-    <url>/requireContext/</url>
-    <content><![CDATA[<h2 id="使用契机"><a href="#使用契机" class="headerlink" title="使用契机"></a>使用契机</h2><p>将API接口文件分模块存放后需要导入统一的入口文件再统一导出，然后在<code>main.js</code>中引用。看着分门别类的接口文件很舒服，但是文件一多，导入统一入口文件<code>index.js</code>就显得很繁琐。效果如下:  </p>
-<p><img src="https://ftp.bmp.ovh/imgs/2020/10/76da31964bce1579.png" alt="api文件列表"></p>
-<p><img src="https://ftp.bmp.ovh/imgs/2020/10/44989b9516d6df61.png" alt="导入列表">  </p>
-<p><img src="https://ftp.bmp.ovh/imgs/2020/10/e18f9f04cb0884cf.png" alt="导入列表"></p>
-<p>说实话，这个看着越看越反人类。所以决定用更简洁的<code>require.context</code>来处理这个问题。  </p>
-<h2 id="require-context"><a href="#require-context" class="headerlink" title="require.context"></a>require.context</h2><p><code>require.context</code>是一个<code>webpack</code>的<code>api</code>,通过执行<code>require.context函数</code>获取一个特定的上下文,主要用来实现自动化导入模块,在前端工程中,如果遇到从一个文件夹引入很多模块的情况,可以使用这个<code>api</code>,它会遍历文件夹中的指定文件,然后自动导入,使得不需要每次显式的调用<code>import</code>导入模块  </p>
-<p><code>require.context函数</code>接受三个参数</p>
-<ul>
-<li><p><code>directory &#123;String&#125;</code> -读取文件的路径</p>
-</li>
-<li><p><code>useSubdirectories &#123;Boolean&#125;</code> -是否遍历文件的子目录</p>
-</li>
-<li><p><code>regExp &#123;RegExp&#125;</code> -匹配文件的正则</p>
-</li>
-</ul>
-<p>webpack官网给出的例子是这样的:  </p>
-<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="built_in">require</span>.context(<span class="string">&#x27;./test&#x27;</span>, <span class="literal">false</span>, <span class="regexp">/.test.js$/</span>)</span><br></pre></td></tr></table></figure>
+    <title>微信小程序分享API踩坑</title>
+    <url>/onShareAppMessage/</url>
+    <content><![CDATA[<p>微信小程序分享API <code>onShareAppMessage</code> 带的参数只能叫<code>id</code>，不能叫其他的，不然拿不到。  </p>
+<p>使用时可以在单页面使用，也可以使用全局混入，一般来说我们都使用全局混入的方式去做。  </p>
+<p>注意，这个函数是一个页面钩子函数，需要与onLoad等函数同级。  </p>
+<p>使用示例：</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">//share.mixin.js</span></span><br><span class="line"><span class="keyword">export</span>  <span class="keyword">default</span> &#123;</span><br><span class="line">    data() &#123;</span><br><span class="line">        <span class="keyword">return</span> &#123;</span><br><span class="line">            share: &#123;</span><br><span class="line">                title: <span class="string">&#x27;你的标题&#x27;</span>,</span><br><span class="line">                path: <span class="string">&#x27;/pages/index/index&#x27;</span>,</span><br><span class="line">                imageUrl: <span class="string">&#x27;&#x27;</span>,</span><br><span class="line">                desc: <span class="string">&#x27;&#x27;</span>,</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;,</span><br><span class="line">    onShareAppMessage(res) &#123;</span><br><span class="line">        <span class="keyword">return</span> &#123;</span><br><span class="line">            <span class="comment">//标题</span></span><br><span class="line">            title: <span class="built_in">this</span>.share.title,</span><br><span class="line">            <span class="comment">//页面路径</span></span><br><span class="line">            path: <span class="built_in">this</span>.share.path,</span><br><span class="line">            <span class="comment">//分享后显示的图片的地址，默认为当前页面的截图</span></span><br><span class="line">            imageUrl: <span class="built_in">this</span>.share.imageUrl,</span><br><span class="line">            <span class="comment">//描述</span></span><br><span class="line">            desc: <span class="built_in">this</span>.share.desc,</span><br><span class="line">            <span class="comment">//内容</span></span><br><span class="line">            content: <span class="built_in">this</span>.share.content,</span><br><span class="line">            success(res) &#123;</span><br><span class="line">                uni.showToast(&#123;</span><br><span class="line">                    title: <span class="string">&#x27;分享成功&#x27;</span></span><br><span class="line">                &#125;)</span><br><span class="line">            &#125;,</span><br><span class="line">            fail(res) &#123;</span><br><span class="line">                uni.showToast(&#123;</span><br><span class="line">                    title: <span class="string">&#x27;分享失败&#x27;</span>,</span><br><span class="line">                    icon: <span class="string">&#x27;none&#x27;</span></span><br><span class="line">                &#125;)</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<h2 id="开始使用"><a href="#开始使用" class="headerlink" title="开始使用"></a>开始使用</h2><p>首先根据需要让<code>require.context</code>遍历<code>/src/api</code>目录。遍历的过程中肯定会把index.js也遍历进去，因为不想之后来处理遍历后的结果，所以先粗暴的用名称区分。  </p>
-<p>我将以前的模块名.js改成为了模块名.api.js。  </p>
-<p><img src="https://ftp.bmp.ovh/imgs/2020/10/f57afe8c22ddd303.png" alt="api文件列表"></p>
-<p>接着开始编写一个导入函数来处理<code>require.context</code>返回的结果。  </p>
-<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">// importAllModule.js</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@description </span>批量导入API</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param <span class="type">&#123;Object&#125;</span> </span>context 上下文对象</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param <span class="type">&#123;RegExp&#125;</span> </span>reg 匹配规则</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@returns <span class="type">&#123;Object&#125;</span> </span>对象</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">importAllModule</span>(<span class="params">context, reg</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">const</span> map = &#123;&#125;</span><br><span class="line">    <span class="keyword">let</span> tmp = &#123;&#125;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">let</span> key <span class="keyword">of</span> context.keys()) &#123;</span><br><span class="line">        <span class="keyword">const</span> keyArr = key.split(<span class="string">&#x27;/&#x27;</span>)</span><br><span class="line">        keyArr.shift()</span><br><span class="line">        map[keyArr.join(<span class="string">&#x27;.&#x27;</span>).replace(reg, <span class="string">&#x27;&#x27;</span>)] = context(key).default</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">let</span> key <span class="keyword">in</span> map) &#123;</span><br><span class="line">        tmp = &#123;</span><br><span class="line">            ...tmp,</span><br><span class="line">            ...map[key]</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> tmp</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> importAllModule </span><br></pre></td></tr></table></figure>
-<p>接着在<code>index.js</code>中导入<code>importAllModule.js</code>并调用导入函数。  </p>
-<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">// index.js  </span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> importAllModule <span class="keyword">from</span> <span class="string">&#x27;../common/js/importAllModule&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> api = importAllModule(<span class="built_in">require</span>.context(<span class="string">&#x27;api&#x27;</span>, <span class="literal">true</span>, <span class="regexp">/\.api.js$/</span>), <span class="regexp">/\.api.js$/g</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> api</span><br></pre></td></tr></table></figure>
-<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>经过<code>require.context</code>的改造，大大解放了生产力。首先是index.js变得更加的简洁和可维护。其次，只要按格式编写API文件的文件名，就会被<code>require.context</code>遍历到并导入到<code>index.js</code>中。</p>
+<p>在页面中使用：</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">//example.vue</span></span><br><span class="line"><span class="keyword">async</span> onLoad(options) &#123;</span><br><span class="line">      <span class="built_in">console</span>.log(options);</span><br><span class="line">      <span class="keyword">if</span>(options.id) &#123; <span class="comment">//如果传过来是id则为分享页面进入的</span></span><br><span class="line">        <span class="built_in">this</span>.spu_id = options.id</span><br><span class="line">        <span class="built_in">this</span>.share.path = <span class="string">`/pages/index/goodsDetail?id=<span class="subst">$&#123;options.id&#125;</span>`</span></span><br><span class="line">        <span class="keyword">return</span></span><br><span class="line">      &#125;</span><br><span class="line">      <span class="built_in">this</span>.spu_id = options.spu_id;</span><br><span class="line">      <span class="built_in">this</span>.share.path = <span class="string">`/pages/index/goodsDetail?id=<span class="subst">$&#123;options.spu_id&#125;</span>`</span>;</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
 ]]></content>
       <categories>
-        <category>ES6</category>
+        <category>uniapp</category>
       </categories>
       <tags>
-        <tag>commonJS</tag>
-        <tag>webpack</tag>
+        <tag>JavaScript</tag>
+        <tag>微信小程序</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Python草料二维码等计数二维码刷访客量</title>
+    <url>/python/</url>
+    <content><![CDATA[<p>在生活中，很多时候被人邀请扫一扫二维码，刷一刷访客量。但是一个ip只能算作一个访问量，对此我们用Python来实现批量刷访客量。</p>
+<p>Python版本3.6</p>
+<p>首先上代码</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/python  </span></span><br><span class="line"><span class="comment"># -*- coding: UTF-8 -*-  </span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> urllib.parse  </span><br><span class="line"><span class="keyword">import</span> urllib.request  </span><br><span class="line"><span class="keyword">import</span> time  </span><br><span class="line"><span class="keyword">from</span> lxml <span class="keyword">import</span> etree</span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">from</span> selenium <span class="keyword">import</span> webdriver</span><br><span class="line"><span class="keyword">import</span> random</span><br><span class="line"></span><br><span class="line"><span class="comment"># 短网址还原 </span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">revertShortLink</span>(<span class="params">url</span>):</span></span><br><span class="line">	re = requests.head(url)</span><br><span class="line">	<span class="keyword">return</span> re.headers.get(<span class="string">&#x27;location&#x27;</span>)</span><br><span class="line"></span><br><span class="line">URL_1 = revertShortLink(<span class="string">&quot;your revertShortLink&quot;</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">global</span> url_path  </span><br><span class="line">url_path = [<span class="number">3</span>]  </span><br><span class="line">  </span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">verif_ip</span>(<span class="params">ip,port</span>):</span>    <span class="comment"># 验证ip有效性  </span></span><br><span class="line">	</span><br><span class="line">	test_url = URL_1</span><br><span class="line">	</span><br><span class="line">	browser = webdriver.Chrome()</span><br><span class="line"></span><br><span class="line">	browser.get(URL_1)</span><br><span class="line">	browser.quit()</span><br><span class="line">	time.sleep(random.randint(<span class="number">1</span>,<span class="number">20</span>))  </span><br><span class="line"></span><br><span class="line">file = open(<span class="string">&quot;ip.txt&quot;</span>)</span><br><span class="line"></span><br><span class="line">counter = <span class="number">0</span> </span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">while</span> <span class="number">1</span>:  </span><br><span class="line">	lines = file.readlines(<span class="number">100000</span>)  </span><br><span class="line">	<span class="keyword">if</span> <span class="keyword">not</span> lines:  </span><br><span class="line">		<span class="keyword">break</span>  </span><br><span class="line">	<span class="keyword">for</span> data <span class="keyword">in</span> lines:</span><br><span class="line">		counter += <span class="number">1</span>  </span><br><span class="line">		print((data.split(<span class="string">&quot;:&quot;</span>)[<span class="number">0</span>]))</span><br><span class="line">		print(<span class="string">&quot;cishu:&quot;</span>,counter)  </span><br><span class="line">	</span><br><span class="line">	   </span><br><span class="line"></span><br><span class="line">	 </span><br><span class="line">		verif_ip(data.split(<span class="string">&quot;:&quot;</span>)[<span class="number">0</span>],data.split(<span class="string">&quot;:&quot;</span>)[<span class="number">1</span>])</span><br></pre></td></tr></table></figure>
+<p>全部代码我已经打包放在我的Github上面了，直接下载即可。<a href="https://github.com/Vanlee0129/caoliaoscan">下载地址</a></p>
+<p>ip.txt文件就是用来存放代理ip的，相当于一个简陋的代理池，手动复制进去即可，我提供了一些，如果不够可以再自己去找一些。</p>
+<p>ip可以在66ip等网站去提取，用多少提多少。以后再也不担心刷二维码访客量啦！</p>
+]]></content>
+      <categories>
+        <category>Python</category>
+      </categories>
+      <tags>
+        <tag>小技巧</tag>
       </tags>
   </entry>
   <entry>
@@ -452,21 +432,105 @@
       </tags>
   </entry>
   <entry>
-    <title>Python草料二维码等计数二维码刷访客量</title>
-    <url>/python/</url>
-    <content><![CDATA[<p>在生活中，很多时候被人邀请扫一扫二维码，刷一刷访客量。但是一个ip只能算作一个访问量，对此我们用Python来实现批量刷访客量。</p>
-<p>Python版本3.6</p>
-<p>首先上代码</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/python  </span></span><br><span class="line"><span class="comment"># -*- coding: UTF-8 -*-  </span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> urllib.parse  </span><br><span class="line"><span class="keyword">import</span> urllib.request  </span><br><span class="line"><span class="keyword">import</span> time  </span><br><span class="line"><span class="keyword">from</span> lxml <span class="keyword">import</span> etree</span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">from</span> selenium <span class="keyword">import</span> webdriver</span><br><span class="line"><span class="keyword">import</span> random</span><br><span class="line"></span><br><span class="line"><span class="comment"># 短网址还原 </span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">revertShortLink</span>(<span class="params">url</span>):</span></span><br><span class="line">	re = requests.head(url)</span><br><span class="line">	<span class="keyword">return</span> re.headers.get(<span class="string">&#x27;location&#x27;</span>)</span><br><span class="line"></span><br><span class="line">URL_1 = revertShortLink(<span class="string">&quot;your revertShortLink&quot;</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">global</span> url_path  </span><br><span class="line">url_path = [<span class="number">3</span>]  </span><br><span class="line">  </span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">verif_ip</span>(<span class="params">ip,port</span>):</span>    <span class="comment"># 验证ip有效性  </span></span><br><span class="line">	</span><br><span class="line">	test_url = URL_1</span><br><span class="line">	</span><br><span class="line">	browser = webdriver.Chrome()</span><br><span class="line"></span><br><span class="line">	browser.get(URL_1)</span><br><span class="line">	browser.quit()</span><br><span class="line">	time.sleep(random.randint(<span class="number">1</span>,<span class="number">20</span>))  </span><br><span class="line"></span><br><span class="line">file = open(<span class="string">&quot;ip.txt&quot;</span>)</span><br><span class="line"></span><br><span class="line">counter = <span class="number">0</span> </span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">while</span> <span class="number">1</span>:  </span><br><span class="line">	lines = file.readlines(<span class="number">100000</span>)  </span><br><span class="line">	<span class="keyword">if</span> <span class="keyword">not</span> lines:  </span><br><span class="line">		<span class="keyword">break</span>  </span><br><span class="line">	<span class="keyword">for</span> data <span class="keyword">in</span> lines:</span><br><span class="line">		counter += <span class="number">1</span>  </span><br><span class="line">		print((data.split(<span class="string">&quot;:&quot;</span>)[<span class="number">0</span>]))</span><br><span class="line">		print(<span class="string">&quot;cishu:&quot;</span>,counter)  </span><br><span class="line">	</span><br><span class="line">	   </span><br><span class="line"></span><br><span class="line">	 </span><br><span class="line">		verif_ip(data.split(<span class="string">&quot;:&quot;</span>)[<span class="number">0</span>],data.split(<span class="string">&quot;:&quot;</span>)[<span class="number">1</span>])</span><br></pre></td></tr></table></figure>
-<p>全部代码我已经打包放在我的Github上面了，直接下载即可。<a href="https://github.com/Vanlee0129/caoliaoscan">下载地址</a></p>
-<p>ip.txt文件就是用来存放代理ip的，相当于一个简陋的代理池，手动复制进去即可，我提供了一些，如果不够可以再自己去找一些。</p>
-<p>ip可以在66ip等网站去提取，用多少提多少。以后再也不担心刷二维码访客量啦！</p>
+    <title>__proto__ 和 prototype</title>
+    <url>/prototype/</url>
+    <content><![CDATA[<h2 id="为什么要学习proto-和-prototype"><a href="#为什么要学习proto-和-prototype" class="headerlink" title="为什么要学习proto 和 prototype"></a>为什么要学习<strong>proto</strong> 和 prototype</h2><blockquote>
+<p><code>proto</code> 和 <code>prototype</code> 是一个老生常谈的话题，也是作为一个前端开发人员必须搞懂的问题，且不应该有任何的折扣，这是通往高级前端开发的必经之路和必备技能。虽然实际开发中用的并不多，但是当你学习一些新的 js 框架乃至自己封装一些高性能的组件时是很有用的。</p>
+</blockquote>
+<h2 id="什么是-proto-高层三中被称之为-Prototype-什么是-prototype"><a href="#什么是-proto-高层三中被称之为-Prototype-什么是-prototype" class="headerlink" title="什么是 proto(高层三中被称之为 [[Prototype]]) ? 什么是 prototype"></a>什么是 proto(高层三中被称之为 [[Prototype]]) ? 什么是 prototype</h2><ul>
+<li>初学 javascript 我们就知道，万物皆对象，proto<strong>符号是用于指向 someObject 的原型，所有的对象都具有属性</strong>proto</li>
+<li>prototype 是 function 特有的属性，用来指向 function 的 原型。</li>
+</ul>
+<p>经典图片：</p>
+<p><a href="https://imgtu.com/i/25k9pT"><img src="https://z3.ax1x.com/2021/06/12/25k9pT.png" alt="25k9pT.png"></a></p>
+<p>将图片里的东西翻译成代码是这样的：</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="built_in">Function</span>.prototype.b = <span class="number">666</span>; <span class="comment">// Funciton 中添加属性b</span></span><br><span class="line"><span class="built_in">Object</span>.prototype.a = <span class="number">8888</span>; <span class="comment">//  Object 中添加属性a</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">foo</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">	<span class="built_in">this</span>.d = <span class="number">999</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 构造函数创建的实例</span></span><br><span class="line"><span class="keyword">var</span> f1 = <span class="keyword">new</span> foo(); <span class="comment">// 实例 object</span></span><br><span class="line"><span class="built_in">console</span>.log(f1.a); <span class="comment">// 8888</span></span><br><span class="line"><span class="built_in">console</span>.log(f1.b); <span class="comment">// undefined</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(foo.a); <span class="comment">// 8888</span></span><br><span class="line"><span class="built_in">console</span>.log(foo.b); <span class="comment">// 666</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> o1 = <span class="keyword">new</span> <span class="built_in">Object</span>();</span><br><span class="line"><span class="built_in">console</span>.log(o1.a); <span class="comment">// 8888</span></span><br><span class="line"><span class="built_in">console</span>.log(o1.b); <span class="comment">// undefined</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(<span class="built_in">Object</span>.a); <span class="comment">// 8888</span></span><br><span class="line"><span class="built_in">console</span>.log(<span class="built_in">Object</span>.b); <span class="comment">// 666</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>首先，我们分别在 Function 和 Object 的原型中分别添加了属性 b 和 a</li>
+<li>然后创建了一个构造函数 foo</li>
+<li>通过 new 构建了一个新的对象</li>
+</ul>
+<h2 id="构造函数继承"><a href="#构造函数继承" class="headerlink" title="构造函数继承"></a>构造函数继承</h2><p>接下来结合代码来看如下图中的关系：</p>
+<p><a href="https://imgtu.com/i/25kBuQ"><img src="https://z3.ax1x.com/2021/06/12/25kBuQ.png" alt="25kBuQ.png"></a></p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> f1 = <span class="keyword">new</span> foo(); <span class="comment">// 实例 object</span></span><br><span class="line"><span class="built_in">console</span>.log(f1.a); <span class="comment">// 8888</span></span><br><span class="line"><span class="built_in">console</span>.log(f1.b); <span class="comment">// undefined</span></span><br></pre></td></tr></table></figure>
+
+<p>通过 new 构造出来的实例 f1 的 proto 指向了构造函数【foo】的原型, foo 的 proto 直接指向了 Object.prototype ，我们刚才手动在 Object 的 prototype 上添加了属性 a。Object.prototype.a = 8888; 所以有了如下结果：</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="built_in">console</span>.log(f1.a); <span class="comment">// 8888</span></span><br></pre></td></tr></table></figure>
+
+<p>又因为 new 出来的 f1 仅仅是 Object 的实例，最终只能继承 Object 原型上的属性，所以对于没有的属性 b 自然就是 undefined</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="built_in">console</span>.log(f1.b); <span class="comment">// undefined</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="函数继承"><a href="#函数继承" class="headerlink" title="函数继承"></a>函数继承</h2><p>到此我们了解了构造函数实例、构造函数、以及构造函数 prototype 之间的关系，接下来，我们在剩余的部分，如图所示</p>
+<p><a href="https://imgtu.com/i/25kR3T"><img src="https://z3.ax1x.com/2021/06/12/25kR3T.png" alt="25kR3T.png"></a></p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="built_in">console</span>.log(foo.a); <span class="comment">// 8888</span></span><br><span class="line"><span class="built_in">console</span>.log(foo.b); <span class="comment">// 666</span></span><br></pre></td></tr></table></figure>
+
+<p>根据图中标号为 1 的线，我们知道 foo 的 proto 指向 Function.prototype 所以就有了</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="built_in">Function</span>.prototype.b = <span class="number">666</span>; <span class="comment">// Funciton 中添加属性b</span></span><br><span class="line"><span class="built_in">console</span>.log(foo.b); <span class="comment">// 666</span></span><br></pre></td></tr></table></figure>
+
+<p>根据图中的 4 号线的指向，Function.prototype 的 proto 指向 Object.prototype 所以就有了</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="built_in">Function</span>.prototype.b = <span class="number">666</span>; <span class="comment">// Funciton 中添加属性b</span></span><br><span class="line"><span class="built_in">console</span>.log(foo.a); <span class="comment">// 8888</span></span><br></pre></td></tr></table></figure>
+
+<p>也就是说 foo 同时继承了 Function.prototype 和 Object.prototype 的属性</p>
+<h2 id="对象的继承"><a href="#对象的继承" class="headerlink" title="对象的继承"></a>对象的继承</h2><figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> o1 = <span class="keyword">new</span> <span class="built_in">Object</span>();</span><br><span class="line"><span class="built_in">console</span>.log(o1.a); <span class="comment">// 8888</span></span><br><span class="line"><span class="built_in">console</span>.log(o1.b); <span class="comment">// undefined</span></span><br></pre></td></tr></table></figure>
+
+<p>o1 为 Object 的实例, Object 的原型指向 Object.prototype，所以 o1 自然而然的继承了 Object.prototype 的属性</p>
+<p>整个图中最难以理解的部分就是 Object 和 Function.prototype 的关系了，为啥 对象又函数扯上关系了，也不知道当初为什么这么设计，继续看代码</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="built_in">console</span>.log(<span class="built_in">Object</span>.a); <span class="comment">// 8888</span></span><br><span class="line"><span class="built_in">console</span>.log(<span class="built_in">Object</span>.b); <span class="comment">// 666</span></span><br></pre></td></tr></table></figure>
+
+<p>果然，Object 同时继承了 Object.prototype 和 Function.prototype 的属性</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ul>
+<li><strong>所有的 Object 都有 proto 属性</strong></li>
+<li><strong>prototype 是 function 所特有的</strong></li>
+<li><strong>通过 new 构造出来的 object，无论是 new foo() 还是 new Object() 所构造出来的 object，最终都会继承 Object.prototype</strong></li>
+<li><strong>new foo() 的实例既可以继承 foo.prototype 也可以继承 Object.prototype</strong></li>
+<li><strong>new Object() 只能继承 Object.prototype</strong></li>
+<li><strong>只有 Object 才可以继承 Function.prototype</strong></li>
+</ul>
 ]]></content>
       <categories>
-        <category>Python</category>
+        <category>JavaScript</category>
       </categories>
       <tags>
-        <tag>小技巧</tag>
+        <tag>prototype</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>使用require.context导入多个模块</title>
+    <url>/requireContext/</url>
+    <content><![CDATA[<h2 id="使用契机"><a href="#使用契机" class="headerlink" title="使用契机"></a>使用契机</h2><p>将API接口文件分模块存放后需要导入统一的入口文件再统一导出，然后在<code>main.js</code>中引用。看着分门别类的接口文件很舒服，但是文件一多，导入统一入口文件<code>index.js</code>就显得很繁琐。效果如下:  </p>
+<p><img src="https://ftp.bmp.ovh/imgs/2020/10/76da31964bce1579.png" alt="api文件列表"></p>
+<p><img src="https://ftp.bmp.ovh/imgs/2020/10/44989b9516d6df61.png" alt="导入列表">  </p>
+<p><img src="https://ftp.bmp.ovh/imgs/2020/10/e18f9f04cb0884cf.png" alt="导入列表"></p>
+<p>说实话，这个看着越看越反人类。所以决定用更简洁的<code>require.context</code>来处理这个问题。  </p>
+<h2 id="require-context"><a href="#require-context" class="headerlink" title="require.context"></a>require.context</h2><p><code>require.context</code>是一个<code>webpack</code>的<code>api</code>,通过执行<code>require.context函数</code>获取一个特定的上下文,主要用来实现自动化导入模块,在前端工程中,如果遇到从一个文件夹引入很多模块的情况,可以使用这个<code>api</code>,它会遍历文件夹中的指定文件,然后自动导入,使得不需要每次显式的调用<code>import</code>导入模块  </p>
+<p><code>require.context函数</code>接受三个参数</p>
+<ul>
+<li><p><code>directory &#123;String&#125;</code> -读取文件的路径</p>
+</li>
+<li><p><code>useSubdirectories &#123;Boolean&#125;</code> -是否遍历文件的子目录</p>
+</li>
+<li><p><code>regExp &#123;RegExp&#125;</code> -匹配文件的正则</p>
+</li>
+</ul>
+<p>webpack官网给出的例子是这样的:  </p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="built_in">require</span>.context(<span class="string">&#x27;./test&#x27;</span>, <span class="literal">false</span>, <span class="regexp">/.test.js$/</span>)</span><br></pre></td></tr></table></figure>
+
+<h2 id="开始使用"><a href="#开始使用" class="headerlink" title="开始使用"></a>开始使用</h2><p>首先根据需要让<code>require.context</code>遍历<code>/src/api</code>目录。遍历的过程中肯定会把index.js也遍历进去，因为不想之后来处理遍历后的结果，所以先粗暴的用名称区分。  </p>
+<p>我将以前的模块名.js改成为了模块名.api.js。  </p>
+<p><img src="https://ftp.bmp.ovh/imgs/2020/10/f57afe8c22ddd303.png" alt="api文件列表"></p>
+<p>接着开始编写一个导入函数来处理<code>require.context</code>返回的结果。  </p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">// importAllModule.js</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@description </span>批量导入API</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param <span class="type">&#123;Object&#125;</span> </span>context 上下文对象</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param <span class="type">&#123;RegExp&#125;</span> </span>reg 匹配规则</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@returns <span class="type">&#123;Object&#125;</span> </span>对象</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">importAllModule</span>(<span class="params">context, reg</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">const</span> map = &#123;&#125;</span><br><span class="line">    <span class="keyword">let</span> tmp = &#123;&#125;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">let</span> key <span class="keyword">of</span> context.keys()) &#123;</span><br><span class="line">        <span class="keyword">const</span> keyArr = key.split(<span class="string">&#x27;/&#x27;</span>)</span><br><span class="line">        keyArr.shift()</span><br><span class="line">        map[keyArr.join(<span class="string">&#x27;.&#x27;</span>).replace(reg, <span class="string">&#x27;&#x27;</span>)] = context(key).default</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">let</span> key <span class="keyword">in</span> map) &#123;</span><br><span class="line">        tmp = &#123;</span><br><span class="line">            ...tmp,</span><br><span class="line">            ...map[key]</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> tmp</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> importAllModule </span><br></pre></td></tr></table></figure>
+<p>接着在<code>index.js</code>中导入<code>importAllModule.js</code>并调用导入函数。  </p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">// index.js  </span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> importAllModule <span class="keyword">from</span> <span class="string">&#x27;../common/js/importAllModule&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> api = importAllModule(<span class="built_in">require</span>.context(<span class="string">&#x27;api&#x27;</span>, <span class="literal">true</span>, <span class="regexp">/\.api.js$/</span>), <span class="regexp">/\.api.js$/g</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> api</span><br></pre></td></tr></table></figure>
+<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>经过<code>require.context</code>的改造，大大解放了生产力。首先是index.js变得更加的简洁和可维护。其次，只要按格式编写API文件的文件名，就会被<code>require.context</code>遍历到并导入到<code>index.js</code>中。</p>
+]]></content>
+      <categories>
+        <category>ES6</category>
+      </categories>
+      <tags>
+        <tag>commonJS</tag>
+        <tag>webpack</tag>
       </tags>
   </entry>
   <entry>

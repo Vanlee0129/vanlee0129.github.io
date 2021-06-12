@@ -6,7 +6,7 @@
   <link href="https://vanlee0129.gitee.io/atom.xml" rel="self"/>
   
   <link href="https://vanlee0129.gitee.io/"/>
-  <updated>2021-05-03T12:32:32.492Z</updated>
+  <updated>2021-06-12T06:22:26.360Z</updated>
   <id>https://vanlee0129.gitee.io/</id>
   
   <author>
@@ -17,11 +17,36 @@
   <generator uri="https://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>__proto__ 和 prototype</title>
+    <link href="https://vanlee0129.gitee.io/prototype/"/>
+    <id>https://vanlee0129.gitee.io/prototype/</id>
+    <published>2021-06-01T05:34:44.000Z</published>
+    <updated>2021-06-12T06:22:26.360Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h2 id=&quot;为什么要学习proto-和-prototype&quot;&gt;&lt;a href=&quot;#为什么要学习proto-和-prototype&quot; class=&quot;headerlink&quot; title=&quot;为什么要学习proto 和</summary>
+        
+      
+    
+    
+    
+    <category term="JavaScript" scheme="https://vanlee0129.gitee.io/categories/JavaScript/"/>
+    
+    
+    <category term="prototype" scheme="https://vanlee0129.gitee.io/tags/prototype/"/>
+    
+  </entry>
+  
+  <entry>
     <title>useCallback和useEffect</title>
     <link href="https://vanlee0129.gitee.io/useCallbackAndUseEffect/"/>
     <id>https://vanlee0129.gitee.io/useCallbackAndUseEffect/</id>
     <published>2021-04-30T05:34:44.000Z</published>
-    <updated>2021-05-03T12:32:32.492Z</updated>
+    <updated>2021-05-03T12:40:05.255Z</updated>
     
     
       
